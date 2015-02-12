@@ -6,7 +6,7 @@ import org.apache.hadoop.mapred._
 import Utils._
 import org.apache.mahout.math._
 
-class UserVectorToCooccurrenceMapper extends MapReduceBase with Mapper[LongWritable, Text, VarLongWritable, VarLongWritable] {
+class WikipediaToItemPrefsMapper extends MapReduceBase with Mapper[LongWritable, Text, VarLongWritable, VarLongWritable] {
 
   val NUMBERS = Pattern compile "(\\d+)"
 
@@ -23,7 +23,7 @@ class UserVectorToCooccurrenceMapper extends MapReduceBase with Mapper[LongWrita
   }
 }
 
-class UserVectorToCooccurrenceReducer extends MapReduceBase with Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable] {
+class WikipediaToUserVectorReducer extends MapReduceBase with Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable] {
 
   override def reduce(userID: VarLongWritable, itemPrefs: Iterator[VarLongWritable], outputCollector: OutputCollector[VarLongWritable, VectorWritable], reporter: Reporter) = {
     val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
@@ -35,16 +35,16 @@ class UserVectorToCooccurrenceReducer extends MapReduceBase with Reducer[VarLong
 /**
  * Run the code for generate the co-ocorrence matrix
  */
-object GenerateCoocorrenceMatrix {
+object GenerateUserVectors {
   def main(args: Array[String]): Unit = {
-    val conf = new JobConf(classOf[UserVectorToCooccurrenceMapper])
+    val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
     conf setJobName "wiki parser"
 
     conf setOutputKeyClass classOf[VarLongWritable]
     conf setOutputValueClass classOf[VarLongWritable]
 
-    conf setMapperClass classOf[UserVectorToCooccurrenceMapper]
-    conf setReducerClass classOf[UserVectorToCooccurrenceReducer]
+    conf setMapperClass classOf[WikipediaToItemPrefsMapper]
+    conf setReducerClass classOf[WikipediaToUserVectorReducer]
 
     conf setInputFormat classOf[TextInputFormat]
     conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
