@@ -32,6 +32,9 @@ class UserVectorToCooccurrenceReducer extends MapReduceBase with Reducer[VarLong
   }
 }
 
+/**
+ * Run the code for generate the co-ocorrence matrix
+ */
 object GenerateCoocorrenceMatrix {
   def main(args: Array[String]): Unit = {
     val conf = new JobConf(classOf[UserVectorToCooccurrenceMapper])

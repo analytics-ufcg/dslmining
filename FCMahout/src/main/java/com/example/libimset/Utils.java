@@ -10,6 +10,12 @@ import java.util.stream.Stream;
 
 public class Utils {
 
+    /**
+     * @param filePath File for the genders.
+     * @return A FastIdSet array containing two elements, the first one only with men and the second one containing
+     * women.
+     * @throws IOException If the file does not exist.
+     */
     static FastIDSet[] parseMenWomen(String filePath) throws IOException {
         FastIDSet men = new FastIDSet(50000);
         FastIDSet women = new FastIDSet(50000);
@@ -17,10 +23,17 @@ public class Utils {
         readAndConsume(filePath, consumeGenres(men, women));
         men.rehash();
         women.rehash();
-        return new FastIDSet[] { men, women };
+        return new FastIDSet[]{men, women};
     }
 
-    static Consumer<String> consumeGenres(FastIDSet men, FastIDSet women){
+    /**
+     * Consume the genres and add each on a FastIdSet.
+     *
+     * @param men   The FastIdSet for the men.
+     * @param women The FastIdSet for the women.
+     * @return a Consumer for the the gender file.
+     */
+    private static Consumer<String> consumeGenres(FastIDSet men, FastIDSet women) {
         return line -> {
             String[] l = line.split(",");
             if (l[1].equals("M")) {
@@ -31,9 +44,15 @@ public class Utils {
         };
     }
 
+    /**
+     * Read a file and consume each line using a consumer.
+     *
+     * @param filePath Path for the file to be consumed.
+     * @param consumer A consumer to consume each line from the file.
+     * @throws IOException If the file does not exist.
+     */
     static void readAndConsume(String filePath, Consumer<String> consumer) throws IOException {
-        Stream<String> lines = null;
-        lines = Files.lines(Paths.get(filePath));
+        Stream<String> lines = Files.lines(Paths.get(filePath));
         lines.forEach(consumer);
     }
 }

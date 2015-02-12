@@ -1,6 +1,6 @@
-package com.example.libimset;
+package com.example;
 
-import com.example.WithAnonymousRecommender;
+import com.example.libimset.LibimsetRecommender;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
