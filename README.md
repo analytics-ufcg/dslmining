@@ -1,8 +1,10 @@
 # dslminig
 
+## Synopsis
+The purpose of this project is to create a DSL that facilitate the creation of Recommendation System Engines that use Big Data. 
+The DSL is being built using Scala. The code will be translated to a Scala code (or Java code) that uses Apache Mahout to make recommendations on top of Apache Hadoop.
 
-FCMahout is the example for the fifth chapter of the book mahout in action. Inside the Project there is
-a readme about the project.
+## Modules
 
-hadoop-wiki is the example for the sisth chapter of the book mahout in action. Inside the Project there is
-a readme about the project.
+### examples
+Folder that contains some examples involving Scala, Apache Mahout and Apache Hadoop. The team made this examples to study and understand these technologies.
