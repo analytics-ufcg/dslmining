@@ -1,4 +1,4 @@
-Exemple of the sixth chapter for hadoop in action write in scala
+Example of the sixth chapter for hadoop in action write in scala
 
 Before you run you must download the dataset from
 http://users.on.net/~henry/pagerank/links-simple-sorted.zip
