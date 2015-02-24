@@ -45,7 +45,7 @@ public class WordCount {
                 sum += val.get();
             }
 
-            //Emits the word (key) and the total of occurrences (value)
+            //Emit the word (key) and the total of occurrences (value)
             context.write(key, new IntWritable(sum));
         }
     }
