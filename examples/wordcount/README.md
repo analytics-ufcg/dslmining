@@ -5,7 +5,11 @@ To run you must execute the script run.sh in the root of this folder:
 ```
 sh run.sh [inputPath [outputPath]]
 ```
-example:
+examples:
+```
+sh run.sh
+```
+
 ```
 sh run.sh "data/words.txt" "data/wordcount"
 ```
