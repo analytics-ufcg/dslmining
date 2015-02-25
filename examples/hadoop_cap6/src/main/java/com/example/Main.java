@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-        String inputPath = (args.length > 0 && !args[0].isEmpty()) ? args[0] : "data/links-simple.txt";
+        String inputPath = (args.length > 0 && !args[0].isEmpty()) ? args[0] : "data/links-simple-1.txt";
         String outputPath = (args.length > 1 && !args[1].isEmpty()) ? args[1] : "data/wikipedia_output/";
         String outputPathUsersVectors = outputPath + "users_vectores/";
         String outputPathCoOcurrence = outputPath + "coocurrence/";
