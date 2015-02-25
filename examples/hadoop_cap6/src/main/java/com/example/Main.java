@@ -21,9 +21,11 @@ import java.io.IOException;
  * Created by andryw on 12/02/15.
  */
 public class Main {
+
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         String inputPath = (args.length > 0 && !args[0].isEmpty()) ? args[0] : "data/links-simple-1.txt";
-        String outputPath = (args.length > 1 && !args[1].isEmpty()) ? args[1] : "data/wikipedia_output/";
+        String outputPath = (args.length > 1 && !args[1].isEmpty()) ? args[1] : "data/";
+        outputPath += "wikipedia_output/";
         String outputPathUsersVectors = outputPath + "users_vectores/";
         String outputPathCoOcurrence = outputPath + "coocurrence/";
 
@@ -38,8 +40,7 @@ public class Main {
 
         System.out.println("=================================================");
         System.out.println("To see the results of the first Map Reduce open the folder " + outputPathUsersVectors);
-        System.out.println("To see the results of the first Map Reduce open the folder " + outputPathCoOcurrence);
-
+        System.out.println("To see the results of the second Map Reduce open the folder " + outputPathCoOcurrence);
         System.out.println("=================================================");
 
 

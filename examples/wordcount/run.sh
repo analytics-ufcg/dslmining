@@ -10,10 +10,10 @@ fi
 
 #if the outputPath is not passed, uses a default value
 if test -z "$2"
-	then outputPath="data/wordcount"
+	then outputPath="data"
 	else outputPath=$2
 fi
-
+outputPath="$outputPath/wordcount-output"
 #run the main class of the project using activator. 
 ./activator "run $inputPath $outputPath"
 

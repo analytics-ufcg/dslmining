@@ -75,9 +75,9 @@ public class WordCount {
         FileOutputFormat.setOutputPath(job, new Path(outputPath));
 
         //Delete the output path before run, to avoid exception
-        //FileSystem fs1 = FileSystem.get(conf);
-        //Path out1 = new Path(outputPath);
-        //fs1.delete(out1, true);
+        FileSystem fs1 = FileSystem.get(conf);
+        Path out1 = new Path(outputPath);
+        fs1.delete(out1, true);
 
         //Run!
         job.waitForCompletion(true);
