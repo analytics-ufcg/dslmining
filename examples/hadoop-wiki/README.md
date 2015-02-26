@@ -1,4 +1,4 @@
-##Hadoop Wiki Scala
+##Hadoop Wiki in Scala
 
 Example of the sixth chapter for hadoop in action write in scala
 
