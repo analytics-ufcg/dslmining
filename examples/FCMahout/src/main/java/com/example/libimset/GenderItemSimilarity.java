@@ -46,13 +46,24 @@ public class GenderItemSimilarity implements ItemSimilarity {
     /**
      * Calculates the similarity between a user and a collection of other users.
      *
-     * @param profileID1  User id for one user
-     * @param profilesIDs Array for user different for the ProfileID1
+     * @param itemID1  User id for one user
+     * @param itemID2s Array for user different for the ProfileID1
      * @return A double array containing similarities between -1.0 and 1.0, which -1.0 means no similarity and 1.0 mean
      * maximum similarity
      */
     @Override
-    public double[] itemSimilarities(long profileID1, long[] profilesIDs) throws TasteException {
+    public double[] itemSimilarities(long itemID1, long[] itemID2s) throws TasteException {
+        double[] result = new double[itemID2s.length];
+        for (int i = 0; i < itemID2s.length; i++) {
+            result[i] = itemSimilarity(itemID1, itemID2s[i]);
+        }
+        return result;
+    }
+
+
+    /*    public double[] itemSimilarities(long profileID1, long[] profilesIDs) throws TasteException {
+
+
         return Arrays.stream(profilesIDs).mapToDouble(itemID2 -> {
             try {
                 return itemSimilarity(profileID1, itemID2);
@@ -60,7 +71,8 @@ public class GenderItemSimilarity implements ItemSimilarity {
                 return 0.0;
             }
         }).toArray();
-    }
+    }*/
+
 
     /**
      * This method won't be implemented
