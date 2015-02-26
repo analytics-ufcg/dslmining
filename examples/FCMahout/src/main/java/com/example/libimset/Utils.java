@@ -1,12 +1,14 @@
 package com.example.libimset;
 
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
+import org.apache.mahout.common.iterator.FileLineIterable;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+/*import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.stream.Stream;*/
 
 public class Utils {
 
@@ -20,7 +22,19 @@ public class Utils {
         FastIDSet men = new FastIDSet(50000);
         FastIDSet women = new FastIDSet(50000);
 
-        readAndConsume(filePath, consumeGenres(men, women));
+        for (String line : new FileLineIterable(new File(filePath))) {
+            int comma = line.indexOf(',');
+            char gender = line.charAt(comma + 1);
+            long profileID = Long.parseLong(line.substring(0, comma));
+            if (gender == 'M') {
+                men.add(profileID);
+            } else {
+                women.add(profileID);
+            }
+
+        }
+
+//                readAndConsume(filePath, consumeGenres(men, women));
         men.rehash();
         women.rehash();
         return new FastIDSet[]{men, women};
@@ -33,7 +47,7 @@ public class Utils {
      * @param women The FastIdSet for the women.
      * @return a Consumer for the the gender file.
      */
-    private static Consumer<String> consumeGenres(FastIDSet men, FastIDSet women) {
+/*    private static Consumer<String> consumeGenres(FastIDSet men, FastIDSet women) {
         return line -> {
             String[] l = line.split(",");
             if (l[1].equals("M")) {
@@ -51,8 +65,8 @@ public class Utils {
      * @param consumer A consumer to consume each line from the file.
      * @throws IOException If the file does not exist.
      */
-    static void readAndConsume(String filePath, Consumer<String> consumer) throws IOException {
+   /* static void readAndConsume(String filePath, Consumer<String> consumer) throws IOException {
         Stream<String> lines = Files.lines(Paths.get(filePath));
         lines.forEach(consumer);
-    }
+    }*/
 }
