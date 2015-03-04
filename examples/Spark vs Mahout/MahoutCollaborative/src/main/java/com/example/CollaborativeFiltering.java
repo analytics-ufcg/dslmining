@@ -27,8 +27,8 @@ public class CollaborativeFiltering {
         };
 
         RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
-        double libimsetScore = evaluator.evaluate(recommenderBuilder, null, model, 0.9, 1);
+        double Score = evaluator.evaluate(recommenderBuilder, null, model, 0.9, 1);
 
-        System.out.println("libimsetScore = " + libimsetScore);
+        System.out.println("Score = " + Score);
     }
 }

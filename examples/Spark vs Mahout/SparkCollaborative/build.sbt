@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.10.4"
 
+mainClass in (Compile, run) := Some("com.example.CollaborativeFiltering")
+
 libraryDependencies ++= Seq(
   // Uncomment to use Akka
   //"com.typesafe.akka" % "akka-actor_2.11" % "2.3.9",

@@ -2,7 +2,6 @@ name := """ScalaCollaborative"""
 
 version := "1.0"
 
-//scalaVersion := "2.11.5"
 scalaVersion := "2.10.4"
 
 // Change this to another test framework if you prefer
