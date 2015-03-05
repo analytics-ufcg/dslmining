@@ -10,25 +10,35 @@ import org.apache.mahout.cf.taste.impl.recommender.svd.SVDRecommender;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class CollaborativeFiltering {
 
     public static void main(String... args) throws TasteException, IOException {
-        DataModel model = new FileDataModel(new File("data/ml-100k/ua.base"));
 
-        RecommenderBuilder recommenderBuilder = new RecommenderBuilder() {
-            public Recommender buildRecommender(DataModel model)
-                    throws TasteException {
-                return
-                        new SVDRecommender(model, new ALSWRFactorizer(model, 10, 0.01, 20));
-            }
-        };
+        String path = (args.length > 0 && !args[0].isEmpty()) ? args[0] : "data/ua.base";
+        String outputPath = (args.length > 1 && !args[1].isEmpty()) ? args[1] : "data/output";
 
-        RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
-        double Score = evaluator.evaluate(recommenderBuilder, null, model, 0.9, 1);
+        DataModel model = new FileDataModel(new File(path));
 
-        System.out.println("Score = " + Score);
+        long startTime = System.currentTimeMillis();
+
+        SVDRecommender svdRecommender = new SVDRecommender(model, new ALSWRFactorizer(model, 10, 0.01, 20));
+
+        long endTime = System.currentTimeMillis();
+
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(outputPath, "UTF-8");
+            writer.println("Time for run CollaborativeFiltering in Java Mahout: "+ (endTime - startTime)
+                    + " milli seconds");
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

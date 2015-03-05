@@ -1,6 +1,6 @@
-## Java Collaborative Filtering
+## Mahout Collaborative Filtering
 
-Implementation in java of collaborative filtering using ALS factorizer
+Implementation Mahout (java) of collaborative filtering using ALS factorizer
 
 ## Data 
 

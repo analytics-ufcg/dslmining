@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.5"
 
-mainClass in (Compile, run) := Some("com.example.CollaborativeFiltering")
+//mainClass in (Compile, run) := Some("com.example.CollaborativeFiltering")
 
 libraryDependencies ++= Seq(
   // Uncomment to use Akka
