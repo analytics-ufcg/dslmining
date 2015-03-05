@@ -9,7 +9,7 @@ example:
 
 InputPath is optional and represents the dataset path. If there is no inputPath the program is going to use the "data/ml-100k/ua.base3" as default. After that, the script will show two main class and ask you to pick one of them. The first one is going to calculate the time to train the model using ALS. The second one is only going to evaluate the model by measuring the Mean Squared Error.
 
-The dataset used as default is a small file. If you wish to use one bigger then you can download it from the "http://grouplens.org/datasets/movielens/" website. However, you do it you have to use the script format.sh which is going to format the file. For example:
+The dataset used as default is a small file. If you wish to use one bigger then you can download it from the "http://grouplens.org/datasets/movielens/" website. However, after you do it you have to use the script format.sh which is going to format the file. For example:
 
  bash format.sh /home/arthur/ratings.dat 
 
