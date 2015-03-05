@@ -3,12 +3,12 @@ Some examples of the tecnologies utilized on this project.
 
 ## RecSys
 
-FCMahout is the example for the fifth chapter of the book mahout in action. 
+RecSys is the example for the fifth chapter of the book mahout in action. 
 Inside the Project there is a readme about the project.
 
 ## MapReduce RecSys Scala
 
-hadoop-wiki is the example for the sixth chapter of the book mahout in action. It's a Scala implementation. 
+MapReduce RecSys is the example for the sixth chapter of the book mahout in action. It's a Scala implementation. 
 Inside the Project there is a readme about the project.
 
 ## MapReduce RecSys Java
