@@ -29,15 +29,13 @@ public class CollaborativeFiltering {
 
         PrintWriter writer;
         try {
-            writer = new PrintWriter(outputPath, "UTF-8");
+            writer = new PrintWriter(new FileOutputStream(new File(outputPath), false));
             writer.println("Time for run CollaborativeFiltering in Java Mahout: "+ (endTime - startTime)
                     + " milli seconds");
             writer.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        } 
 
 
     }
