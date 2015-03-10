@@ -8,6 +8,9 @@ sh run.sh [inputPath [outputPath]]
 examples:
 ```
 sh run.sh
+
+In this case the default input will be ./data/words.txt
+and the output default will be ./data/wordcount
 ```
 
 ```

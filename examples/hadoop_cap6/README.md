@@ -7,11 +7,15 @@ The purpose of this example is to understand the MapReduce and how to implement 
 To run you must execute the script run.sh in the root of this folder:
 ```
 sh run.sh [inputPath [outputPath]]
+
 ```
 examples:
 
 ```
 sh run.sh
+
+In this case the default input will be ./data/links-simple-1.txt
+and the output default will be ./data/wikipedia_output
 ```
 
 ```
