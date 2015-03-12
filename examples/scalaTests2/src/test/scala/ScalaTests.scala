@@ -3,7 +3,7 @@ import org.scalatest.matchers.ShouldMatchers
 
 class ScalaTests extends FlatSpec with Matchers {
 
-  def merge[A](l1: List[A], l2: List[A], f: (A, A) => A): List[A] = (l1 zip l2) map { case (a, b) => f(a, b)}
+
 
   "high order functions" should "merge two lists" in {
     val l1: List[Int] = 10 to 19 toList
