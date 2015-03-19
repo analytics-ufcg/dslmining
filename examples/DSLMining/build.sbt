@@ -2,6 +2,8 @@ name := """dslinaction-scala"""
 
 version := "1.0"
 
+mainClass in (Compile, run) := Some("main")
+
 scalaVersion := "2.11.5"
 
 // Change this to another test framework if you prefer
