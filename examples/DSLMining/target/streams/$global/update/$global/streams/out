@@ -1,0 +1,1052 @@
+[info] Updating {file:/home/andryw/Projects/dslinaction-scala/}dslinaction-scala...
+[debug] :: resolving dependencies :: default#dslinaction-scala_2.11;1.0
+[debug] 	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool]
+[debug] 	validate = true
+[debug] 	refresh = false
+[debug] resolving dependencies for configuration 'compile'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[info] Resolving org.scala-lang#scala-library;2.11.5 ...
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@ee688f7
+[debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.5
+[debug] 	found org.scala-lang#scala-library;2.11.5 in sbt-chain
+[debug] 	[2.11.5] org.scala-lang#scala-library;2.11.5
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[info] Resolving org.apache.mahout#mahout-core;0.9 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.mahout#mahout-core;0.9 {compile=[default(compile)]}
+[debug] sbt-chain: module revision found in cache: org.apache.mahout#mahout-core;0.9
+[debug] 	found org.apache.mahout#mahout-core;0.9 in sbt-chain
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[info] Resolving org.apache.mahout#mahout-math;0.9 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.mahout#mahout-math;0.9 {compile=[compile(*), master(*)], runtime=[runtime(*)], test=[runtime(*), master(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.mahout#mahout-math;0.9
+[debug] 	found org.apache.mahout#mahout-math;0.9 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[info] Resolving org.apache.commons#commons-math3;3.2 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.commons#commons-math3;3.2 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.commons#commons-math3;3.2
+[debug] 	found org.apache.commons#commons-math3;3.2 in sbt-chain
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[info] Resolving com.google.guava#guava;16.0 ...
+[debug] sbt-chain: Checking cache for: dependency: com.google.guava#guava;16.0 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: com.google.guava#guava;16.0
+[debug] 	found com.google.guava#guava;16.0 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[info] Resolving org.slf4j#slf4j-api;1.7.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-api;1.7.5
+[debug] 	found org.slf4j#slf4j-api;1.7.5 in sbt-chain
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[info] Resolving org.codehaus.jackson#jackson-core-asl;1.9.12 ...
+[debug] sbt-chain: Checking cache for: dependency: org.codehaus.jackson#jackson-core-asl;1.9.12 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.codehaus.jackson#jackson-core-asl;1.9.12
+[debug] 	found org.codehaus.jackson#jackson-core-asl;1.9.12 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[info] Resolving org.codehaus.jackson#jackson-mapper-asl;1.9.12 ...
+[debug] sbt-chain: Checking cache for: dependency: org.codehaus.jackson#jackson-mapper-asl;1.9.12 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.codehaus.jackson#jackson-mapper-asl;1.9.12
+[debug] 	found org.codehaus.jackson#jackson-mapper-asl;1.9.12 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[info] Resolving org.apache.commons#commons-lang3;3.1 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.commons#commons-lang3;3.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.commons#commons-lang3;3.1
+[debug] 	found org.apache.commons#commons-lang3;3.1 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[info] Resolving com.thoughtworks.xstream#xstream;1.4.4 ...
+[debug] sbt-chain: Checking cache for: dependency: com.thoughtworks.xstream#xstream;1.4.4 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: com.thoughtworks.xstream#xstream;1.4.4
+[debug] 	found com.thoughtworks.xstream#xstream;1.4.4 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[info] Resolving xmlpull#xmlpull;1.1.3.1 ...
+[debug] sbt-chain: Checking cache for: dependency: xmlpull#xmlpull;1.1.3.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: xmlpull#xmlpull;1.1.3.1
+[debug] 	found xmlpull#xmlpull;1.1.3.1 in sbt-chain
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[info] Resolving xpp3#xpp3_min;1.1.4c ...
+[debug] sbt-chain: Checking cache for: dependency: xpp3#xpp3_min;1.1.4c {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: xpp3#xpp3_min;1.1.4c
+[debug] 	found xpp3#xpp3_min;1.1.4c in sbt-chain
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[info] Resolving org.apache.lucene#lucene-core;4.6.1 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.lucene#lucene-core;4.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.lucene#lucene-core;4.6.1
+[debug] 	found org.apache.lucene#lucene-core;4.6.1 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[info] Resolving org.apache.lucene#lucene-analyzers-common;4.6.1 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.lucene#lucene-analyzers-common;4.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.lucene#lucene-analyzers-common;4.6.1
+[debug] 	found org.apache.lucene#lucene-analyzers-common;4.6.1 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[info] Resolving org.apache.mahout.commons#commons-cli;2.0-mahout ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.mahout.commons#commons-cli;2.0-mahout {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.mahout.commons#commons-cli;2.0-mahout
+[debug] 	found org.apache.mahout.commons#commons-cli;2.0-mahout in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[info] Resolving org.apache.solr#solr-commons-csv;3.5.0 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.solr#solr-commons-csv;3.5.0 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.apache.solr#solr-commons-csv;3.5.0
+[debug] 	found org.apache.solr#solr-commons-csv;3.5.0 in sbt-chain
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[info] Resolving org.slf4j#slf4j-simple;1.7.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]}
+[debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-simple;1.7.5
+[debug] 	found org.slf4j#slf4j-simple;1.7.5 in sbt-chain
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] resolving dependencies for configuration 'runtime'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [runtime]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[info] Resolving org.slf4j#slf4j-api;1.6.1 ...
+[debug] sbt-chain: Checking cache for: dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-api;1.6.1
+[debug] 	found org.slf4j#slf4j-api;1.6.1 in sbt-chain
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] resolving dependencies for configuration 'test'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [test]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [runtime]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] resolving dependencies for configuration 'provided'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [provided]
+[debug] resolving dependencies for configuration 'optional'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [optional]
+[debug] resolving dependencies for configuration 'compile-internal'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile-internal]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [optional]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [provided]
+[debug] resolving dependencies for configuration 'runtime-internal'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [runtime-internal]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [runtime]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [optional]
+[debug] resolving dependencies for configuration 'test-internal'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [test-internal]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [test]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [runtime]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->master(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [compile->compile(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.6.1 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(*)]} => dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->master(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->master(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [compile->compile(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->master(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-simple;1.7.5 {compile=[default(compile)]} => dependency: org.slf4j#slf4j-simple;1.6.1 {compile=[default(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.7 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout#mahout-math;0.9 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->com.google.guava#guava;16.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-math;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(*)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(*)]}
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.codehaus.jackson#jackson-mapper-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->runtime(*)]
+[debug] == resolving dependencies org.codehaus.jackson#jackson-mapper-asl;1.9.12->org.codehaus.jackson#jackson-core-asl;1.9.12 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-lang3;3.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->com.thoughtworks.xstream#xstream;1.4.4 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xmlpull#xmlpull;1.1.3.1 [runtime->compile]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->runtime(*)]
+[debug] == resolving dependencies com.thoughtworks.xstream#xstream;1.4.4->xpp3#xpp3_min;1.1.4c [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.lucene#lucene-analyzers-common;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.lucene#lucene-analyzers-common;4.6.1->org.apache.lucene#lucene-core;4.6.1 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.mahout.commons#commons-cli;2.0-mahout [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.commons#commons-math3;3.2 [runtime->compile]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.mahout#mahout-core;0.9->org.apache.solr#solr-commons-csv;3.5.0 [runtime->compile]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.solr#solr-commons-csv;3.5.0->org.slf4j#slf4j-api;1.6.1 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.apache.mahout#mahout-core;0.9 [compile->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->default(compile)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->compile]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->master(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [compile->compile(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.slf4j#slf4j-simple;1.7.5->org.slf4j#slf4j-api;1.7.5 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.slf4j#slf4j-simple;1.7.5 [compile->master]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [optional]
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [provided]
+[debug] resolving dependencies for configuration 'plugin'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [plugin]
+[debug] resolving dependencies for configuration 'sources'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [sources]
+[debug] resolving dependencies for configuration 'docs'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [docs]
+[debug] resolving dependencies for configuration 'pom'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [pom]
+[debug] resolving dependencies for configuration 'scala-tool'
+[debug] == resolving dependencies for default#dslinaction-scala_2.11;1.0 [scala-tool]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-compiler;2.11.5 [scala-tool->default]
+[info] Resolving org.scala-lang#scala-compiler;2.11.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scala-lang#scala-compiler;2.11.5 {scala-tool=[default, optional(default)]}
+[debug] sbt-chain: module revision found in cache: org.scala-lang#scala-compiler;2.11.5
+[debug] 	found org.scala-lang#scala-compiler;2.11.5 in sbt-chain
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-compiler;2.11.5 [scala-tool->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-compiler;2.11.5 [scala-tool->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->default]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->runtime]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->master]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->optional(default)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [compile->master(*)]
+[info] Resolving org.scala-lang#scala-reflect;2.11.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scala-lang#scala-reflect;2.11.5 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.scala-lang#scala-reflect;2.11.5
+[debug] 	found org.scala-lang#scala-reflect;2.11.5 in sbt-chain
+[debug] 	[2.11.5] org.scala-lang#scala-reflect;2.11.5
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang#scala-reflect;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang#scala-reflect;2.11.5->org.scala-lang#scala-library;2.11.5 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [compile->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [compile->compile]
+[debug] == resolving dependencies org.scala-lang#scala-reflect;2.11.5->org.scala-lang#scala-library;2.11.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-reflect;2.11.5->org.scala-lang#scala-library;2.11.5 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->master(*)]
+[info] Resolving org.scala-lang.modules#scala-xml_2.11;1.0.3 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scala-lang.modules#scala-xml_2.11;1.0.3 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-xml_2.11;1.0.3
+[debug] 	found org.scala-lang.modules#scala-xml_2.11;1.0.3 in sbt-chain
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.4 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.4 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->compile]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.4 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-xml_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->master(*)]
+[info] Resolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 ...
+[debug] sbt-chain: Checking cache for: dependency: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3
+[debug] 	found org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 in sbt-chain
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.2 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.2 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [compile->compile(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->compile]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3->org.scala-lang#scala-library;2.11.5 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-library;2.11.5 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang#scala-reflect;2.11.5 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-xml_2.11;1.0.3 [runtime->compile]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [runtime->runtime(*)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [runtime->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-compiler;2.11.5 [scala-tool->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-compiler;2.11.5 [scala-tool->optional(default)]
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->jline#jline;2.12 [optional->master(*)]
+[info] Resolving jline#jline;2.12 ...
+[debug] sbt-chain: Checking cache for: dependency: jline#jline;2.12 {optional=[compile(*), master(*)]}
+[debug] sbt-chain: module revision found in cache: jline#jline;2.12
+[debug] 	found jline#jline;2.12 in sbt-chain
+[debug] == resolving dependencies org.scala-lang#scala-compiler;2.11.5->jline#jline;2.12 [optional->compile(*)]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [scala-tool->default]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [scala-tool->runtime]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [scala-tool->compile]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [scala-tool->master]
+[debug] == resolving dependencies default#dslinaction-scala_2.11;1.0->org.scala-lang#scala-library;2.11.5 [scala-tool->optional(default)]
+[debug] 	resolved ivy file produced in cache
+[debug] :: downloading artifacts ::
+[debug] 	[NOT REQUIRED] org.scala-lang#scala-library;2.11.5!scala-library.jar
+[debug] 	[NOT REQUIRED] org.apache.mahout#mahout-core;0.9!mahout-core.jar
+[debug] 	[NOT REQUIRED] org.slf4j#slf4j-simple;1.7.5!slf4j-simple.jar
+[debug] 	[NOT REQUIRED] org.apache.mahout#mahout-math;0.9!mahout-math.jar
+[debug] 	[NOT REQUIRED] org.codehaus.jackson#jackson-core-asl;1.9.12!jackson-core-asl.jar
+[debug] 	[NOT REQUIRED] org.codehaus.jackson#jackson-mapper-asl;1.9.12!jackson-mapper-asl.jar
+[debug] 	[NOT REQUIRED] org.slf4j#slf4j-api;1.7.5!slf4j-api.jar
+[debug] 	[NOT REQUIRED] org.apache.commons#commons-lang3;3.1!commons-lang3.jar
+[debug] 	[NOT REQUIRED] com.thoughtworks.xstream#xstream;1.4.4!xstream.jar
+[debug] 	[NOT REQUIRED] org.apache.lucene#lucene-core;4.6.1!lucene-core.jar
+[debug] 	[NOT REQUIRED] org.apache.lucene#lucene-analyzers-common;4.6.1!lucene-analyzers-common.jar
+[debug] 	[NOT REQUIRED] org.apache.mahout.commons#commons-cli;2.0-mahout!commons-cli.jar
+[debug] 	[NOT REQUIRED] org.apache.commons#commons-math3;3.2!commons-math3.jar
+[debug] 	[NOT REQUIRED] org.apache.solr#solr-commons-csv;3.5.0!solr-commons-csv.jar
+[debug] 	[NOT REQUIRED] com.google.guava#guava;16.0!guava.jar(bundle)
+[debug] 	[NOT REQUIRED] xmlpull#xmlpull;1.1.3.1!xmlpull.jar
+[debug] 	[NOT REQUIRED] xpp3#xpp3_min;1.1.4c!xpp3_min.jar
+[debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.5!scala-compiler.jar
+[debug] 	[NOT REQUIRED] org.scala-lang#scala-reflect;2.11.5!scala-reflect.jar
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.3!scala-xml_2.11.jar(bundle)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3!scala-parser-combinators_2.11.jar(bundle)
+[debug] 	[NOT REQUIRED] jline#jline;2.12!jline.jar
+[debug] :: resolution report :: resolve 951ms :: artifacts dl 29ms
+[debug] 	report for default#dslinaction-scala_2.11;1.0 compile produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-compile.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 runtime produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-runtime.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 test produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-test.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 provided produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-provided.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 optional produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-optional.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 compile-internal produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-compile-internal.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 runtime-internal produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-runtime-internal.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 test-internal produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-test-internal.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 plugin produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-plugin.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 sources produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-sources.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 docs produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-docs.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 pom produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-pom.xml
+[debug] 	report for default#dslinaction-scala_2.11;1.0 scala-tool produced in /home/andryw/Projects/dslinaction-scala/target/resolution-cache/reports/default-dslinaction-scala_2.11-scala-tool.xml
+[debug] 	resolve done (951ms resolve - 29ms download)
+[info] Done updating.
