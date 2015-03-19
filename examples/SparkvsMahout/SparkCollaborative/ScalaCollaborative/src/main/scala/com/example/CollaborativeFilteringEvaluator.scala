@@ -44,7 +44,7 @@ object CollaborativeFilteringEvaluator {
       val err = (r1 - r2)
       err * err
     }.mean()
-
+    println("====================================Mean Squared Error = " + MSE + "\n")
     fw.write("Mean Squared Error = " + MSE + "\n")
     fw.close()
   }

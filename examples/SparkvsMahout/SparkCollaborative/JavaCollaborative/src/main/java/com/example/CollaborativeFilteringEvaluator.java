@@ -85,6 +85,7 @@ public class CollaborativeFilteringEvaluator {
         PrintWriter writer;
         try {
             writer = new PrintWriter(outputPath, "UTF-8");
+		System.out.println("===================================================Mean Squared Error = " + MSE);
             writer.println("Mean Squared Error = " + MSE);
             writer.close();
         } catch (FileNotFoundException e) {

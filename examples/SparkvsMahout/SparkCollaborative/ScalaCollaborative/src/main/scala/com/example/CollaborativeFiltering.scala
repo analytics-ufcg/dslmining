@@ -29,7 +29,7 @@ object CollaborativeFiltering {
     time =  System.currentTimeMillis - time
 
     val fw = new FileWriter("data/output.txt", false) ;
-
+    println("====================================Execution time for training: " + time + "\n")
     fw.write("Execution time for training: " + time + "\n")
     fw.close()
   }

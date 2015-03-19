@@ -2,9 +2,11 @@
 Example of DSL created using Scala. The DSL allows an user scientist to train a user-based recommender and do recommendations to an user.
 
 ## Execution
-To run you must use the scripts named activator in the root of this folder:
+To run you must use the script run.sh:
 
-"./activator run"
+```
+sh run.sh
+```
 
 ## Example
 ```

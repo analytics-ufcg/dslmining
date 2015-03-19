@@ -46,6 +46,7 @@ public class CollaborativeFiltering {
 
         PrintWriter writer;
         try {
+		System.out.println("=================================Time for model training in Java Spark: "+ (endTime - startTime) + " milli seconds");
             writer = new PrintWriter(new FileOutputStream(new File(outputPath), false));
             writer.println("Time for model training in Java Spark: "+ (endTime - startTime)
                     + " milli seconds");
