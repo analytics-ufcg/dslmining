@@ -3,13 +3,18 @@
    It is a implementation of a recommender from the spark website using Scala.
 
 ##Execution
-In oder to execute the script you have to run the the script run.sh inside in the root of this folder.
+In order to execute the script you have to run the the script run.sh inside in the root of this folder.
 example:
 	./run.sh [inputPath]
 
 InputPath is optional and represents the dataset path. If there is no inputPath the program is going to use the "data/ml-100k/ua.base3" as default. After that, the script will show two main class and ask you to pick one of them. The first one is going to calculate the time to train the model using ALS. The second one is only going to evaluate the model by measuring the Mean Squared Error.
 
-The dataset used as default is a small file. If you wish to use one bigger then you can download it from the "http://grouplens.org/datasets/movielens/" website. However, after you do it you have to use the script format.sh which is going to format the file. For example:
+##Data
+The default dataset used as default is in this format:
+
+User, Movie, Rank
+
+It's a small file. If you wish to use one bigger then you can download it from the "http://grouplens.org/datasets/movielens/" website. However, after you do it you have to use the script format.sh which is going to format the file. For example:
 
  bash format.sh /home/arthur/ratings.dat 
 
