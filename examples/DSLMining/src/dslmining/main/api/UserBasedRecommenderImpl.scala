@@ -15,9 +15,7 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood
 import org.apache.mahout.cf.taste.recommender.{RecommendedItem, Recommender}
 import org.apache.mahout.cf.taste.similarity.UserSimilarity
 
-/**
- * Created by andryw on 17/03/15.
- */
+//Class that receives the parameters to create a UserBased Recommender.
 case class UserBasedRecommenderImpl (val path: WithPath, val recomType: RecommendationType, val similarityType: SimilarityType, val neighbourHoodSize: NeighbourHoodSize){
 
     var dataModel:DataModel = new FileDataModel(new File(path))
@@ -28,12 +26,13 @@ case class UserBasedRecommenderImpl (val path: WithPath, val recomType: Recommen
 
     var recommender:Recommender = new GenericUserBasedRecommender (dataModel, neighborhood, similarity);
 
-
-    def to(userId: UserId):UserBasedHelper  ={
-    new UserBasedHelper(recommender,userId)
+    //Function that receiveis the userID that will receive the recommendations. The alias is 'to' because 'to userID recommends numberOfItems'
+    //The class UserBasedHelper will make the recommendations
+    def to(userId: UserId):UserBasedHelper  = {
+      new UserBasedHelper(recommender,userId)
   }
 
-
+  //Implicitly check the SimilarityType and returns a UserSimiliarity (of Mahout) object
   implicit def  similarityTypeToSimilarityObject(tuple: (SimilarityType,DataModel)): UserSimilarity ={
     tuple match {
       case (PEARSON_CORRELATION,dataModel:DataModel) => new PearsonCorrelationSimilarity(dataModel)
@@ -42,8 +41,12 @@ case class UserBasedRecommenderImpl (val path: WithPath, val recomType: Recommen
   }
 }
 
+//Class that receives a recommender and a userID to recommends to him a numberOfItems recommendations.
 case class UserBasedHelper(recommender:Recommender,userId:UserId){
-  def recommends (numberOfItems: Int): List[RecommendedItem] ={
+
+  //Function thar recomends to the userID a numberOfItems recommendations
+  def recommends (numberOfItems: Int): List[RecommendedItem] = {
+    //As recommender returns a Java List, asScalaBuffer convert this list to a Scala Buffer.
     asScalaBuffer(recommender.recommend(userId,numberOfItems)).toList
 
   }

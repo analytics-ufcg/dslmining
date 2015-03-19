@@ -3,11 +3,10 @@ package dsl
 import api.UserBasedRecommenderImpl
 import dsl.Implicits.WithPath
 
-/**
- * Created by andryw on 17/03/15.
- */
 object Implicits {
 
+  //Types that abstract the parameters of the DSL code. They will be used in implicit function, that returns objects with functions that represents
+  //the names on doce DSL code (like using SIMILARITY_TYPE, a RECOMMENDATION_TYPE)
   type WithPath = String
   type NeighbourHoodSize = Int
   type WithRecommendationType = (WithPath,RecommendationType)
