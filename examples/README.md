@@ -1,24 +1,20 @@
 # Examples
 Some examples of the tecnologies utilized on this project.
 
-## RecSys
+## LearningHadoop
+Examples of Hadoop:
+1. the wordcount problem 
+2. example of the initial phase of a Recommender System, similar to the RecommenderJob class of Apache Mahout
+Both the examples were made in Scala and Java
 
+## LearningMahout/RecSys
 RecSys is the example for the fifth chapter of the book mahout in action. 
-Inside the Project there is a readme about the project.
 
-## MapReduce RecSys Scala
+## SparkvsMahout
+Comparison of an Matrix Factorization recommender made in Spark MLlib and Mahout.
 
-MapReduce RecSys is the example for the sixth chapter of the book mahout in action. It's a Scala implementation. 
-Inside the Project there is a readme about the project.
+## scalaTest
+Suite of Scala tests that address basic topics like classes and function.
 
-## MapReduce RecSys Java
-
-Example of the initial phase of a Recommender System, similar to the RecommenderJob class of Apache Mahout. The example was extracted from the sixth chapter of the book Mahout in Action. It's a Java implementation.
-Inside the Project there is a readme about the project.
-
-## WordCount
-
-Example of Word Count utilizing Hadoop Map Reduce. Inside the Project there is
-a readme about the project.
-
-
+## scalaTest2
+Suite of Scala tests about high-order functions
