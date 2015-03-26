@@ -72,7 +72,73 @@
             </div>
             <div class="col-lg-9 col-lg-offset-1">
 
-                <h2>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Criando um User Based Recommender</h3>
+                    </div>
+                    <div class="panel-body">
+                     <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
+                        neighbourhood_size 10</code>
+                    </div>
+                </div>
+
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Criando um Item Based Recommender</h3>
+                    </div>
+                    <div class="panel-body">
+                     <code>val rec = train on_dataset "data.csv" a ITEM_BASED_RECOMMENDER using
+                    PEARSON_CORRELATION</code>
+
+                    </div>
+                </div>
+
+                 <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Criando um Matrix Factorization Recommender</h3>
+                    </div>
+                    <div class="panel-body">
+                    <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
+                    ALS_FACTORIZER features 5
+                    lambda 0.5 iterations 50</code>
+
+                    </div>
+                </div>
+
+                <!--  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Criando um Matrix Factorization Recommender</h3>
+                    </div>
+                    <div class="panel-body">
+                    <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
+                    ALS_FACTORIZER features 5
+                    lambda 0.5 iterations 50</code>
+
+                    </div>
+                </div> -->
+
+
+                <!-- <h2>
+                    <li>Criando um User Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
+                    neighbourhood_size 10</code> -->
+
+               <!--  <h2>
+                    <li>Criando um Item Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a ITEM_BASED_RECOMMENDER using
+                    PEARSON_CORRELATION</code> -->
+
+                <!-- <h2>
+                    <li>Criando um Matrix Factorization Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
+                    ALS_FACTORIZER features 5
+                    lambda 0.5 iterations 50</code> -->
+
+                <!-- <h2>
                     <li>Criando um User Based Recommender</li>
                 </h2>
                 <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
@@ -89,26 +155,7 @@
                 </h2>
                 <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
                     ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
-
-                <h2>
-                    <li>Criando um User Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
-                    neighbourhood_size 10</code>
-
-                <h2>
-                    <li>Criando um Item Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data.csv" a ITEM_BASED_RECOMMENDER using
-                    PEARSON_CORRELATION</code>
-
-                <h2>
-                    <li>Criando um Matrix Factorization Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
-                    ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
+                    lambda 0.5 iterations 50</code> -->
             </div>
             <!--end section Exemplos-->
         </section>
@@ -120,7 +167,62 @@
             </div>
             <div class="row documentação">
                 <div class="col-lg-9 col-lg-offset-1">
-                    <ul>
+
+                     <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">on_dataset</h3>
+                    </div>
+                    <div class="panel-body">
+                   <p>Solid assimilations lead to the ellipse.CursusRemTo the
+                            iced avocado add onion, rhubarb, rum and instant
+                            shrimps.arkable paralysis lead to the mind.
+                            primus acipenser est.</p>
+
+                    </div>
+                </div>
+
+                 <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">a</h3>
+                    </div>
+                    <div class="panel-body">
+                    <p>Solid assimilations lead to the ellipse.CursusRemTo the
+                            iced avocado add onion, rhubarb, rum and instant
+                            shrimps.arkable paralysis lead to the mind.
+                            primus acipenser est.</p>
+
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">using</h3>
+                    </div>
+                    <div class="panel-body">
+                    <p>Solid assimilations lead to the ellipse.CursusRemTo the
+                            iced avocado add onion, rhubarb, rum and instant
+                            shrimps.arkable paralysis lead to the mind.
+                            primus acipenser est.</p>
+
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">neighbourhood_size</h3>
+                    </div>
+                    <div class="panel-body">
+                    <p>Solid assimilations lead to the ellipse.CursusRemTo the
+                            iced avocado add onion, rhubarb, rum and instant
+                            shrimps.arkable paralysis lead to the mind.
+                            primus acipenser est.</p>
+
+                    </div>
+                </div>
+
+                
+
+                   <!--  <ul>
                         <h2>
                             <li>on_dataset</li>
                         </h2>
@@ -152,7 +254,7 @@
                             iced avocado add onion, rhubarb, rum and instant
                             shrimps.arkable paralysis lead to the mind.
                             primus acipenser est.</p>
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
             <!--end section Documentação-->
@@ -222,7 +324,7 @@
                                     <figure class="image feature">
                                         <img src="images/equipe/Lucas.jpg" class="img-responsive img-circle right" alt="" width="25%">
                                     </figure>
-                                    <h2><b>Lucas Miguel Bolato</b></h2>
+                                    <h2><b>Lucas Bonatto Miguel</b></h2>
                                     <h3><b>Product Owner<b></b></h3>
                                     <figure>
                                         <a href="https://br.linkedin.com/in/lucasbonatto/en" target="_blank"><img src="images/icons/social/linkedin.png"/></a>
