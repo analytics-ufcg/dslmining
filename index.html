@@ -64,6 +64,54 @@
 </header>
 <main>
     <div class="container-fluid">
+        <section id="Exemplos" class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h1 class="margin-title">Exemplos</h1>
+                </div>
+            </div>
+            <div class="col-lg-9 col-lg-offset-1">
+
+                <h2>
+                    <li>Criando um User Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
+                    neighbourhood_size 10</code>
+
+                <h2>
+                    <li>Criando um Item Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a ITEM_BASED_RECOMMENDER using
+                    PEARSON_CORRELATION</code>
+
+                <h2>
+                    <li>Criando um Matrix Factorization Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
+                    ALS_FACTORIZER features 5
+                    lambda 0.5 iterations 50</code>
+
+                <h2>
+                    <li>Criando um User Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
+                    neighbourhood_size 10</code>
+
+                <h2>
+                    <li>Criando um Item Based Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a ITEM_BASED_RECOMMENDER using
+                    PEARSON_CORRELATION</code>
+
+                <h2>
+                    <li>Criando um Matrix Factorization Recommender</li>
+                </h2>
+                <code>val rec = train on_dataset "data.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
+                    ALS_FACTORIZER features 5
+                    lambda 0.5 iterations 50</code>
+            </div>
+            <!--end section Exemplos-->
+        </section>
         <section id="Documentação">
             <div class="row">
                 <div class="col-lg-12 text-center ">
@@ -110,54 +158,7 @@
             <!--end section Documentação-->
         </section>
 
-        <section id="Exemplos" class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h1 class="margin-title">Exemplos</h1>
-                </div>
-            </div>
-            <div class="col-lg-9 col-lg-offset-1">
-
-                <h2>
-                    <li>Criando um User Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
-                    neighbourhood_size 10</code>
-
-                <h2>
-                    <li>Criando um Item Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using
-                    PEARSON_CORRELATION</code>
-
-                <h2>
-                    <li>Criando um Matrix Factorization Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
-                    ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
-
-                <h2>
-                    <li>Criando um User Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
-                    neighbourhood_size 10</code>
-
-                <h2>
-                    <li>Criando um Item Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using
-                    PEARSON_CORRELATION</code>
-
-                <h2>
-                    <li>Criando um Matrix Factorization Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
-                    ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
-            </div>
-            <!--end section Exemplos-->
-        </section>
+        
     </div>
     <div>
         <section id="Equipe" class="container-fluid">
