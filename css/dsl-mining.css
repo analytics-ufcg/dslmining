@@ -15,7 +15,7 @@ header{
 
 #Equipe{
     background: #0088aa;
-    margin-top: 5%;
+    /*margin-top: 5%;*/
     font-size: 110%;
     width: 100%;
     color: #01f0ff;
@@ -61,10 +61,33 @@ header{
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: 700;
+    background-color: #0088aa;
+}
+
+
+.navbar a:focus {
+    outline: 0;
+}
+
+.navbar .navbar-nav {
+    letter-spacing: 1px;
+}
+
+.navbar .navbar-nav li a:focus {
+    outline: 0;
+}
+
+.navbar-default,
+.navbar-inverse {
+    border: 0;
 }
 
 main{
 alignment: center;
+}
+
+#mainContainer{
+    background-color: #ceeae5;
 }
 
 footer{
