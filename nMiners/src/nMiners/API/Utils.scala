@@ -1,11 +1,9 @@
-import java.util.function.Consumer
 import java.util.regex.Matcher
 
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{BooleanWritable, FloatWritable, IntWritable, LongWritable, Text, UTF8}
 import org.apache.mahout.math.{VarIntWritable, RandomAccessSparseVector, VectorWritable}
 
-import scala.collection.immutable.IndexedSeq
 
 object Utils {
 
@@ -82,11 +80,11 @@ object Utils {
 
   implicit def randomAccessSparseVector2VectorWritable(v: RandomAccessSparseVector) = new VectorWritable(v)
 
-  implicit def function2Consumer[T](f: Function[T, Unit]) = {
-    new Consumer[T] {
-      override def accept(t: T) = f(t)
-    }
-  }
+//  implicit def function2Consumer[T](f: Function[T, Unit]) = {
+//    new Consumer[T] {
+//      override def accept(t: T) = f(t)
+//    }
+//  }
 
   implicit def matcher2Iterator(m: Matcher) = new Iterator[String]{
     def hasNext = m find

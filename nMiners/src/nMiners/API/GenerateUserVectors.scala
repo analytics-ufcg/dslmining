@@ -16,10 +16,11 @@ class WikipediaToItemPrefsMapper extends MapReduceBase with Mapper[LongWritable,
     m find
     val userID = new VarLongWritable(m.group toLong)
     val itemID = new VarLongWritable()
-    m foreach (item => {
-      itemID.set(item toLong);
+    while (m find){
+      itemID.set(m group() toLong);
       output.collect(userID, itemID);
-    })
+
+    }
   }
 }
 
@@ -27,7 +28,7 @@ class WikipediaToUserVectorReducer extends MapReduceBase with Reducer[VarLongWri
 
   override def reduce(userID: VarLongWritable, itemPrefs: Iterator[VarLongWritable], outputCollector: OutputCollector[VarLongWritable, VectorWritable], reporter: Reporter) = {
     val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
-    itemPrefs.forEachRemaining((item: VarLongWritable) => userVector set(item.get toInt, 1.0f))
+    itemPrefs.foreach((item: VarLongWritable) => userVector set(item.get toInt, 1.0f))
     outputCollector.collect(userID, new VectorWritable(userVector))
   }
 }
