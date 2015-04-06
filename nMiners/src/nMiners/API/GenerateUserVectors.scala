@@ -50,7 +50,7 @@ object GenerateUserVectors {
     conf setInputFormat classOf[TextInputFormat]
     conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
 
-    conf setJar "hadoop.jar"
+//    conf setJar "hadoop.jar"
     conf setCompressMapOutput true
 
     FileInputFormat setInputPaths(conf, args(0))
