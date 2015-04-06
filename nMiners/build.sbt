@@ -1,4 +1,4 @@
-name := """n.Miners"""
+name := """nMiners"""
 
 version := "1.0"
 
