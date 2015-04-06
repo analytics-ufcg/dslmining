@@ -53,7 +53,11 @@ object Implicits {
 
   class SimilarityHelper(tuple: WithRecommendationType){
     def using(similarity:SimilarityType): withSimilarity = {
-      new withSimilarity(tuple._1,tuple._2,similarity)
+      tuple match {
+        case (path,recommenderType) =>
+          new withSimilarity(path,recommenderType,similarity)
+
+      }
     }
   }
 
