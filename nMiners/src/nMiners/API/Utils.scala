@@ -1,7 +1,9 @@
+package API
 import java.util.regex.Matcher
 
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{BooleanWritable, FloatWritable, IntWritable, LongWritable, Text, UTF8}
+import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.{VarIntWritable, RandomAccessSparseVector, VectorWritable}
 
 
@@ -78,6 +80,13 @@ object Utils {
     def next = value.next.toString
   }
 
+  implicit def javaIterator2ElementIterator(value: java.util.Iterator[Element]) = new Iterator[Element] {
+    def hasNext = value.hasNext
+
+    def next = value.next
+  }
+
+  implicit def javaDouble2Double(value: double)
   implicit def randomAccessSparseVector2VectorWritable(v: RandomAccessSparseVector) = new VectorWritable(v)
 
 //  implicit def function2Consumer[T](f: Function[T, Unit]) = {
