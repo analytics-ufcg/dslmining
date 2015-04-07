@@ -8,20 +8,56 @@ import org.apache.mahout.math.{VectorWritable, VarLongWritable}
  */
 object Main {
   def main(args: Array[String]): Unit = {
-    val inputPath = args(0)
-    val outPutPath = args(1)
+    generateUserVectors()
+
+  }
+
+  def generateUserVectors() = {
+    val inputPath = "/home/arthur/dslminig/nMiners/src/data/new_file.txtac"
+    val outPutPath = "/home/arthur/dslminig/nMiners/src/output"
 
     val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
     conf setJobName "wiki parser"
 
     conf setOutputKeyClass classOf[VarLongWritable]
-    conf setOutputValueClass classOf[VarLongWritable]
+    conf setOutputValueClass classOf[VectorWritable]
+
+    conf setMapOutputKeyClass classOf[VarLongWritable]
+    conf setMapOutputValueClass  classOf[VarLongWritable]
 
     conf setMapperClass classOf[WikipediaToItemPrefsMapper]
     conf setReducerClass classOf[WikipediaToUserVectorReducer]
 
     conf setInputFormat classOf[TextInputFormat]
-    conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
+    conf setOutputFormat classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]]
+
+    //    conf setJar "hadoop.jar"
+    conf setCompressMapOutput true
+
+    FileInputFormat setInputPaths(conf, inputPath)
+    FileOutputFormat setOutputPath(conf, outPutPath)
+
+    JobClient runJob conf
+  }
+
+  def coocurrence() = {
+    val inputPath = "/home/arthur/dslminig/nMiners/src/data/new_file.txtac"
+    val outPutPath = "/home/arthur/dslminig/nMiners/src/output"
+
+    val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
+    conf setJobName "wiki parser"
+
+    conf setOutputKeyClass classOf[VarLongWritable]
+    conf setOutputValueClass classOf[VectorWritable]
+
+    conf setMapOutputKeyClass classOf[VarLongWritable]
+    conf setMapOutputValueClass  classOf[VarLongWritable]
+
+    conf setMapperClass classOf[WikipediaToItemPrefsMapper]
+    conf setReducerClass classOf[WikipediaToUserVectorReducer]
+
+    conf setInputFormat classOf[TextInputFormat]
+    conf setOutputFormat classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]]
 
     //    conf setJar "hadoop.jar"
     conf setCompressMapOutput true
