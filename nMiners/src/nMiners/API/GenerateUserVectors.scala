@@ -1,5 +1,4 @@
 package API
-
 import java.util.Iterator
 import java.util.regex.Pattern
 
@@ -7,6 +6,8 @@ import org.apache.hadoop.io._
 import org.apache.hadoop.mapred._
 import Utils._
 import org.apache.mahout.math._
+
+
 
 class WikipediaToItemPrefsMapper extends MapReduceBase with Mapper[LongWritable, Text, VarLongWritable, VarLongWritable] {
 
@@ -38,26 +39,6 @@ class WikipediaToUserVectorReducer extends MapReduceBase with Reducer[VarLongWri
 /**
  * Run the code for generate the co-ocorrence matrix
  */
-object GenerateUserVectors {
-  def main(args: Array[String]): Unit = {
-    val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
-    conf setJobName "wiki parser"
-
-    conf setOutputKeyClass classOf[VarLongWritable]
-    conf setOutputValueClass classOf[VarLongWritable]
-
-    conf setMapperClass classOf[WikipediaToItemPrefsMapper]
-    conf setReducerClass classOf[WikipediaToUserVectorReducer]
-
-    conf setInputFormat classOf[TextInputFormat]
-    conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
-
-//    conf setJar "hadoop.jar"
-    conf setCompressMapOutput true
-
-    FileInputFormat setInputPaths(conf, args(0))
-    FileOutputFormat setOutputPath(conf, args(1))
-
-    JobClient runJob conf
-  }
-}
+//object GenerateUserVectors {
+//
+//}
