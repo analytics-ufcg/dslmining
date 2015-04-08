@@ -39,6 +39,8 @@ object Utils {
 
   implicit def string2path(value: String) = new Path(value)
 
+  implicit def floatToDouble(value: Float) = value toFloat
+
   implicit def javaIterator2Iterator[A](value: java.util.Iterator[A]) = new Iterator[A] {
     def hasNext = value.hasNext
 
@@ -73,6 +75,12 @@ object Utils {
     def hasNext = value.hasNext
 
     def next = value.next.toString
+  }
+
+  implicit def javaIterator2VectorWritableIterator(value: java.util.Iterator[VectorWritable]) = new Iterator[VectorWritable] {
+    def hasNext = value.hasNext
+
+    def next = value.next
   }
 
   implicit def javaIterator2UTF8Iterator(value: java.util.Iterator[UTF8]) = new Iterator[String] {
