@@ -12,16 +12,19 @@ import org.apache.mahout.math.{VarIntWritable, RandomAccessSparseVector, VectorW
 class UserVectorToCooccurenceReduce extends MapReduceBase with Reducer[VarIntWritable,VarIntWritable,VarIntWritable,VectorWritable]{
 
   override def reduce(itemIndex1: VarIntWritable, itemIndex2s: Iterator[VarIntWritable], outputCollector: OutputCollector[VarIntWritable, VectorWritable], reporter: Reporter) = {
-/*
-    Vector cooccureenceRow = new RandomAccessSparseVector(Integer.MAX_VALUE,100);
-    for (VarIntWritable indexWritable2 : itemIndex2s){
-      int index2 = indexWritable2.get();
-      cooccureenceRow.set(index2,cooccureenceRow.get(index2)+1);
-    }
-    context.write(itemIndex1,new VectorWritable(cooccureenceRow));
-*/
-    val cooccureenceRow = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
-    itemIndex2s.foreach((item: VarIntWritable) => cooccureenceRow set(item.get, cooccureenceRow get(item.get  + 1)))
+
+    var cooccureenceRow = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
+    println(itemIndex2s.isEmpty)
+
+
+    itemIndex2s.foreach((item: VarIntWritable) => {
+      val itemIndex2 = item.get();
+
+      val oldValue = cooccureenceRow get (itemIndex2)
+      cooccureenceRow set(itemIndex2, oldValue + 1)
+
+    })
+
     outputCollector.collect(itemIndex1,new VectorWritable(cooccureenceRow))
   }
 

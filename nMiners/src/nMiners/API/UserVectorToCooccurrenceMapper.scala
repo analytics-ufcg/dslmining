@@ -12,17 +12,8 @@ import org.apache.mahout.math.{VarIntWritable, VectorWritable, VarLongWritable}
 class UserVectorToCooccurrenceMapper extends MapReduceBase with Mapper[VarLongWritable,VectorWritable,VarIntWritable,VarIntWritable]{
 
   def map( userID : VarLongWritable, userVector:VectorWritable , output: OutputCollector[VarIntWritable, VarIntWritable], reporter: Reporter) = {
-    /*Iterator<Vector.Element> it = userVector.get().iterateNonZero();
-    while (it.hasNext()){
-      int index1 = it.next().index();
-      Iterator<Vector.Element> it2 = userVector.get().iterateNonZero();
-      while (it2.hasNext()){
-        int index2 = it2.next().index();
-        context.write(new VarIntWritable(index1), new VarIntWritable(index2));
-      }
 
-    }*/
-     val it  = userVector get() nonZeroes() iterator()
+    val it  = userVector get() nonZeroes() iterator()
     it.foreach((item: Element) => {
       val it2  = userVector get() nonZeroes() iterator()
       val index1 = item.index()
