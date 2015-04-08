@@ -5,7 +5,7 @@ version := "1.0"
 scalaVersion := "2.11.5"
 
 mainClass in (Compile, run) := Some("Main")
-
+//mainClass in (Compile, run) := Some("com.example.Main")
 libraryDependencies ++= Seq(
   "org.apache.hadoop" % "hadoop-core" % "1.2.1",
   "org.apache.mahout" % "mahout-core" % "0.9",
