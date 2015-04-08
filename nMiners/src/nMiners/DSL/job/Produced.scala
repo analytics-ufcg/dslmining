@@ -1,3 +1,5 @@
 package DSL.job
 
-class Produced (var name: String)
+class Produced (var name: String) {
+  override def toString = name
+}
