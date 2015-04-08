@@ -86,7 +86,6 @@ object Utils {
     def next = value.next
   }
 
-  implicit def javaDouble2Double(value: double)
   implicit def randomAccessSparseVector2VectorWritable(v: RandomAccessSparseVector) = new VectorWritable(v)
 
 //  implicit def function2Consumer[T](f: Function[T, Unit]) = {
