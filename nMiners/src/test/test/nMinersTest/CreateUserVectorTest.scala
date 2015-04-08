@@ -2,6 +2,7 @@ package nMinersTest
 
 import API.{WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
 import API.Utils._
+import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapred._
 import org.apache.mahout.math.{VectorWritable, VarLongWritable}
 import org.scalatest.{Matchers, FlatSpec}
@@ -15,6 +16,7 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val inputPath = BASE_PHATH+"input_test_level1.txt"
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
+
     val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
     conf setJobName "wiki parser"
     conf setMapperClass classOf[WikipediaToItemPrefsMapper]
@@ -26,11 +28,15 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     conf setOutputKeyClass classOf[VarLongWritable]
     conf setOutputValueClass classOf[VarLongWritable]
 
-    //    conf setJar "hadoop.jar"
     conf setCompressMapOutput true
 
     FileInputFormat setInputPaths(conf, inputPath)
     FileOutputFormat setOutputPath(conf, namePath)
+
+    //Delete the output path before run, to avoid exception
+    val fs1: FileSystem = FileSystem.get(conf);
+    val out1 = namePath;
+    fs1.delete(out1, true);
 
     JobClient runJob conf
 
@@ -39,7 +45,10 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val fileLinesOutput = io.Source.fromFile(namePath + "/part-00000").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
+
+
+
     println(outputTest.equals(output))
-    outputTest should be equals output
+    outputTest should equal (output)
   }
 }
