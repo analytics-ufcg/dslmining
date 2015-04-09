@@ -8,7 +8,8 @@ import Implicits._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.io.Text
-import org.apache.hadoop.mapred._
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.apache.mahout.math.{VectorWritable, VarLongWritable}
 import org.scalatest.{Matchers, FlatSpec}
 
@@ -23,7 +24,7 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
 
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
       classOf[VarLongWritable],classOf[Text],classOf[VarLongWritable],classOf[VarLongWritable],
-      TextInputFormat[VarLongWritable,Text],TextOutputFormat[VarLongWritable, VectorWritable],inputPath,namePath)
+      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,namePath)
 
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level1.txt").getLines.toList
