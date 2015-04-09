@@ -23,12 +23,12 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
-      classOf[VarLongWritable],classOf[Text],classOf[VarLongWritable],classOf[VarLongWritable],
-      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,namePath)
+      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],
+      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,namePath,true)
 
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level1.txt").getLines.toList
-    val fileLinesOutput = io.Source.fromFile(namePath + "/input_test_level3.txt").getLines.toList
+    val fileLinesOutput = io.Source.fromFile(namePath + "/part-r-00000").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
 

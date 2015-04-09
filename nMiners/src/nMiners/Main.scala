@@ -22,7 +22,6 @@ object Main {
     //prepare()
   }
 
-
 //  def generateUserVectors() = {
 //    val inputPath = "src/test/data/input_test_level1.txt"
 //    val outPutPath = "src/output"

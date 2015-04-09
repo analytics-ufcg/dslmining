@@ -2,7 +2,9 @@ package API
 
 import java.util.Iterator
 import Utils.Implicits
-import org.apache.hadoop.mapred._
+
+import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+//import org.apache.hadoop.mapred._
 import org.apache.mahout.cf.taste.hadoop.item.VectorOrPrefWritable
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable, Vector}
@@ -11,10 +13,10 @@ import Implicits.javaIterator2ElementIterator
  * Created by andryw on 06/04/15.
  */
 
-class CooccurrenceColumnWrapperMapper extends MapReduceBase with Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
+class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
 
-  override def  map(key: VarIntWritable, value: VectorWritable , output: OutputCollector[VarIntWritable, VectorOrPrefWritable] ,reporter: Reporter) = {
-    output.collect(key, new VectorOrPrefWritable(value.get()))
+  override def  map(key: VarIntWritable, value: VectorWritable , context:Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable]#Context) = {
+    context write (key, new VectorOrPrefWritable(value.get()))
   }
 
 }
@@ -30,8 +32,8 @@ class CooccurrenceColumnWrapperMapper extends MapReduceBase with Mapper[VarIntWr
 
 
 
-class UserVectorSplitterMapper extends MapReduceBase with Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
-  def map(key: VarLongWritable , value:VectorWritable,  output: OutputCollector[VarIntWritable,VectorOrPrefWritable] ,reporter: Reporter) = {
+class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
+  override def map(key: VarLongWritable , value:VectorWritable,  context:Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable]#Context) = {
     val userID:Long = key get
     val userVector:Vector = value get
     val it = userVector.nonZeroes() iterator
@@ -42,7 +44,7 @@ class UserVectorSplitterMapper extends MapReduceBase with Mapper[VarLongWritable
       val itemIndex = e.index();
       val preferenceValue:Double = e get;
       itemIndexWritable.set(itemIndex);
-      output.collect(itemIndexWritable,  new VectorOrPrefWritable(userID,preferenceValue toFloat))
+      context write(itemIndexWritable,  new VectorOrPrefWritable(userID,preferenceValue toFloat))
     })
   }
 }
