@@ -1,5 +1,12 @@
 package DSL.job
 
+import API.{WikipediaToItemPrefsMapper, WikipediaToUserVectorReducer}
+import Utils.MapReduceUtils
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
+import org.apache.mahout.math.{VarLongWritable, VectorWritable}
+
+
 trait Job {
   var name : String
 
@@ -15,7 +22,7 @@ trait Job {
     this
   }
 
-  def run() = println(s"Running: $name")
+  def run() = Console.err.println(s"\n\nRunning: $name")
 
   def then (exec: execute.type) = {
     Context.jobs += this
@@ -34,9 +41,9 @@ abstract class Consumer extends Job
 class Parallel(val jobs: List[Job]) extends Job {
 
   override def run() = {
-    println("Running in parallel\n{")
+    Console.err.println("\n\nRunning in parallel\n{")
     jobs.foreach(_.run)
-    println("}")
+    Console.err.println("}")
   }
 
   override var name: String = "Parallel"
@@ -52,6 +59,13 @@ object parse_data extends Applier {
     this
   }
   override var name: String = ""
+
+  override def run = {
+    super.run
+    MapReduceUtils.runJob(name,classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
+      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],
+      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],path,"data/test",true)
+  }
 }
 
 object coocurrence_matrix extends Producer {
