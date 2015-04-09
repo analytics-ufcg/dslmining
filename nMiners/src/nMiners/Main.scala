@@ -13,8 +13,8 @@ object Main {
   }
 
   def generateUserVectors() = {
-    val inputPath = "/home/arthur/dslminig/nMiners/src/test/data/input_test_level2.txt"
-    val outPutPath = "/home/arthur/dslminig/nMiners/src/output"
+    val inputPath = "/home/tales/DSL/dslminig/nMiners/src/test/data/input_test_level1.txt"
+    val outPutPath = "/home/tales/DSL/dslminig/nMiners/src/output"
 
     val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
     conf setJobName "wiki parser"
@@ -29,8 +29,8 @@ object Main {
     conf setReducerClass classOf[WikipediaToUserVectorReducer]
 
     conf setInputFormat classOf[TextInputFormat]
-    conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
-//    conf setOutputFormat classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]]
+//    conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
+    conf setOutputFormat classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]]
 
     //    conf setJar "hadoop.jar"
     conf setCompressMapOutput true
@@ -42,8 +42,8 @@ object Main {
   }
 
   def coocurrence() = {
-    val inputPath = "/home/arthur/dslminig/nMiners/src/output/part-00000"
-    val outPutPath = "/home/arthur/dslminig/nMiners/src/output1"
+    val inputPath = "/home/tales/DSL/dslminig/nMiners/src/output/part-00000"
+    val outPutPath = "/home/tales/DSL/dslminig/nMiners/src/output1"
 
     val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
     conf setJobName "wiki parser"

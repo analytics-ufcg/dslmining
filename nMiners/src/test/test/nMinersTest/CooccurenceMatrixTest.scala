@@ -10,7 +10,7 @@ import org.scalatest.{Matchers, FlatSpec}
 /**
  * Created by leonardo on 08/04/15.
  */
-class CreateUserVectorTest extends FlatSpec with Matchers{
+class CooccurenceMatrixTest extends FlatSpec with Matchers{
   val BASE_PHATH = "src/test/data/"
   "Level one" should "execute first mapreduce" in {
     val inputPath = BASE_PHATH+"input_test_level1.txt"
@@ -34,10 +34,9 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     FileOutputFormat setOutputPath(conf, namePath)
 
     //Delete the output path before run, to avoid exception
-    Utils.cleanTrash(conf,namePath)
-//    val fs1: FileSystem = FileSystem.get(conf);
-//    val out1 = namePath;
-//    fs1.delete(out1, true);
+    val fs1: FileSystem = FileSystem.get(conf);
+    val out1 = namePath;
+    fs1.delete(out1, true);
 
     JobClient runJob conf
 
