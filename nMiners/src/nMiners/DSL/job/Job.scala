@@ -1,6 +1,15 @@
 package DSL.job
 
+import API.{WikipediaToItemPrefsMapper, WikipediaToUserVectorReducer}
+import Utils.MapReduceUtils
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
+import org.apache.mahout.math.{VarLongWritable, VectorWritable}
+
+
 trait Job {
+  var name : String
+
   var pathToOutput = "default"
 
   def then(job: Job): Job = {
@@ -13,7 +22,7 @@ trait Job {
     this
   }
 
-  def run()
+  def run() = Console.err.println(s"\n\nRunning: $name")
 
   def then (exec: execute.type) = {
     Context.jobs += this
@@ -23,44 +32,56 @@ trait Job {
 
 object execute
 
-class Producer extends Job {
-  override def run() = println("rodando Producer")
-}
+abstract class Producer extends Job
 
-class Applier extends Job {
-  override def run() = println("rodando Applier")
-}
+abstract class Applier extends Job
 
-class Consumer extends Job {
-  override def run() = println("rodando Consumer")
-}
+abstract class Consumer extends Job
 
-class ParallelJobs(val jobs: List[Job]) extends Job {
+class Parallel(val jobs: List[Job]) extends Job {
 
   override def run() = {
-    println("rodando PARALEL")
+    Console.err.println("\n\nRunning in parallel\n{")
     jobs.foreach(_.run)
-    println("terminei PARALEL")
+    Console.err.println("}")
   }
+
+  override var name: String = "Parallel"
 }
 
 object parse_data extends Applier {
-  def on(path: String): Job = this
-  override def run() = println("rodando parse_data")
-}
 
-object preference_item_vector extends Producer {
-  override def run() = println("rodando preference_item_vector")
+  var path = ""
+
+  def on(path: String): Job = {
+    this.path = path
+    name = this.getClass.getSimpleName + s" on $path"
+    this
+  }
+  override var name: String = ""
+
+  override def run = {
+    super.run
+    MapReduceUtils.runJob(name,classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
+      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],
+      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],path,"data/test",true)
+  }
 }
 
 object coocurrence_matrix extends Producer {
-  override def run() = println("rodando coocurrence_matrix")
+  override var name: String = this.getClass.getSimpleName
+
 }
 
 object user_vector extends Producer {
-  override def run() = println("rodando user_vector")
+  override var name: String = this.getClass.getSimpleName
+
 }
 
 object recommendation extends Producer {
-  override def run() = println("rodando recommendation")
+  override var name: String = this.getClass.getSimpleName
+}
+
+class Multiplier(val a: Produced, val b: Produced) extends Consumer {
+  override var name: String = this.getClass.getSimpleName + s" $a by $b"
 }
