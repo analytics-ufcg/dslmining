@@ -59,9 +59,6 @@ class CooccurenceMatrixTest extends FlatSpec with Matchers{
 
       */
 
-    FileInputFormat setInputPaths(conf, inputPath)
-    FileOutputFormat setOutputPath(conf, dirOutputName)
-
     //Delete the output path before run, to avoid exception
     val fs1: FileSystem = FileSystem.get(conf);
     val out1 = dirOutputName;
