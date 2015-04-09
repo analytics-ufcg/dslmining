@@ -5,7 +5,7 @@ import java.util.regex.Matcher
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{BooleanWritable, FloatWritable, IntWritable, LongWritable, Text, UTF8}
 import org.apache.mahout.math.Vector.Element
-import org.apache.mahout.math.{RandomAccessSparseVector, VarIntWritable, VectorWritable}
+import org.apache.mahout.math.{VarLongWritable, RandomAccessSparseVector, VarIntWritable, VectorWritable}
 
 
 object Implicits {
@@ -19,6 +19,8 @@ object Implicits {
   implicit def int2writable(value: Int) = new IntWritable(value)
 
   implicit def int2Varwritable(value: Int) = new VarIntWritable(value)
+
+  implicit def int2Longwritable(value: Int) = new VarLongWritable(value)
 
   implicit def writable2long(value: LongWritable) = value.get
 

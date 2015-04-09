@@ -22,8 +22,11 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val inputPath = BASE_PHATH+"input_test_level1.txt"
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 2543556fcdb7bda353aca21ea7c540ac7db6a8b4
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
       classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],
       classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,namePath,true)

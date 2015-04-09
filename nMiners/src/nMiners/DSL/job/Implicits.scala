@@ -8,15 +8,13 @@ object Implicits {
 
   implicit def job2PimpedJob(job: Job): PimpedJob = new PimpedJob(job)
 
-  implicit def jobList2PimpedListJob(list: List[Job]): PimpedListJob = new PimpedListJob(list)
-
   implicit def string2pimpedString(str: String) = new PimpedString(str)
 
   implicit def stringTuple2ProducedTuple(tuple: (String, String)): (Produced, Produced) = tuple match {
     case (name1, name2) => {
-      val produced1 : Produced = Context.produceds.filter(_.name equals name1).headOption.
+      val produced1 : Produced = Context.produceds.find(_.name equals name1).
         getOrElse(throw new IllegalArgumentException(s"there is no produced named $name1"))
-      val produced2 : Produced = Context.produceds.filter(_.name equals name2).headOption.
+      val produced2 : Produced = Context.produceds.find(_.name equals name2).
         getOrElse(throw new IllegalArgumentException(s"there is no produced named $name2"))
       (produced1, produced2)
     }
@@ -28,14 +26,10 @@ object Implicits {
 
   class PimpedJob(val job: Job) {
     def and(j: Job) = List(job, j)
-  }
-
-  class PimpedListJob(val list: List[Job]) {
-    def and(j: Job) = list :+ j
+    def and(l: List[Job]) :List[Job]= job +: l
   }
 
   class PimpedString(val str: String) {
     def by(that: String) = (str, that)
   }
-
 }
