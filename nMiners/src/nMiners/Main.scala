@@ -13,7 +13,7 @@ object Main {
   }
 
   def generateUserVectors() = {
-    val inputPath = "/home/arthur/dslminig/nMiners/src/test/data/input_test_level2.txt"
+    val inputPath = "/home/arthur/dslminig/nMiners/src/test/data/input_test_level1.txt"
     val outPutPath = "/home/arthur/dslminig/nMiners/src/output"
 
     val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
