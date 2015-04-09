@@ -1,5 +1,7 @@
 package API
-import Utils._
+
+import Utils.Implicits
+import Implicits._
 
 import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.hadoop.mapred.{Reporter, OutputCollector, Mapper, MapReduceBase}

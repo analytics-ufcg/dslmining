@@ -1,48 +1,77 @@
 package nMinersTest
 
-import API.{WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
-import API.Utils._
+import Utils._
+import API.{UserVectorToCooccurenceReduce, UserVectorToCooccurrenceMapper, WikipediaToItemPrefsMapper, WikipediaToUserVectorReducer}
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapred._
-import org.apache.mahout.math.{VectorWritable, VarLongWritable}
-import org.scalatest.{Matchers, FlatSpec}
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
+import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * Created by leonardo on 08/04/15.
  */
 class CooccurenceMatrixTest extends FlatSpec with Matchers{
+
+//  def cleanDataTrash() = {
+//    return "Not implemented yet";
+//  }
+
+
   val BASE_PHATH = "src/test/data/"
   "Level one" should "execute first mapreduce" in {
-    val inputPath = BASE_PHATH+"input_test_level1.txt"
-    val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
+    val inputPath = BASE_PHATH+"input_test_level2"
+    val dirOutputName = BASE_PHATH+"output_test_level2"; // Path da pasta e nao do arquivo
+
+    MapReduceUtils.runJob(
+      "Second Phase",
+      classOf[WikipediaToItemPrefsMapper],
+      classOf[UserVectorToCooccurenceReduce],
+      classOf[VarIntWritable],
+      classOf[VarIntWritable],
+      classOf[VarLongWritable],
+      classOf[VectorWritable],
+      classOf[SequenceFileInputFormat[VarLongWritable, VectorWritable]],
+      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],
+      inputPath,
+      dirOutputName,
+      true)
 
 
-    val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
-    conf setJobName "wiki parser"
-    conf setMapperClass classOf[WikipediaToItemPrefsMapper]
-    conf setReducerClass classOf[WikipediaToUserVectorReducer]
+    /*
+      val conf = new JobConf(classOf[WikipediaToItemPrefsMapper])
+      conf setJobName "wiki parser"
 
-    conf setInputFormat classOf[TextInputFormat]
+      conf setOutputKeyClass classOf[VarLongWritable]
+      conf setOutputValueClass classOf[VectorWritable]
 
-    conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
-    conf setOutputKeyClass classOf[VarLongWritable]
-    conf setOutputValueClass classOf[VarLongWritable]
+      conf setMapOutputKeyClass classOf[VarIntWritable]
+      conf setMapOutputValueClass classOf[VarIntWritable]
 
-    conf setCompressMapOutput true
+      conf setMapperClass classOf[UserVectorToCooccurrenceMapper]
+      conf setReducerClass classOf[UserVectorToCooccurenceReduce]
+
+      conf setInputFormat classOf[SequenceFileInputFormat[VarLongWritable, VectorWritable]]
+      conf setOutputFormat classOf[TextOutputFormat[VarLongWritable, VectorWritable]]
+
+      conf setCompressMapOutput true
+
+      */
 
     FileInputFormat setInputPaths(conf, inputPath)
-    FileOutputFormat setOutputPath(conf, namePath)
+    FileOutputFormat setOutputPath(conf, dirOutputName)
 
     //Delete the output path before run, to avoid exception
     val fs1: FileSystem = FileSystem.get(conf);
-    val out1 = namePath;
+    val out1 = dirOutputName;
     fs1.delete(out1, true);
 
     JobClient runJob conf
 
 
-    val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level1.txt").getLines.toList
-    val fileLinesOutput = io.Source.fromFile(namePath + "/part-00000").getLines.toList
+    val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level2.txt").getLines.toList
+    val fileLinesOutput = io.Source.fromFile(dirOutputName + "/part-00000").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
 

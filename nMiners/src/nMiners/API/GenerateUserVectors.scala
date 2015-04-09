@@ -1,19 +1,19 @@
 package API
-import java.util.Iterator
 import java.util.regex.Pattern
 
+import Utils.Implicits
 import org.apache.hadoop.io._
-import org.apache.hadoop.mapred._
-import Utils._
+import Implicits._
+import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.mahout.math._
 
 
 
-class WikipediaToItemPrefsMapper extends MapReduceBase with Mapper[LongWritable, Text, VarLongWritable, VarLongWritable] {
+class WikipediaToItemPrefsMapper extends Mapper[LongWritable, Text, VarLongWritable, VarLongWritable] {
 
   val NUMBERS = Pattern compile "(\\d+)"
 
-  def map(key: LongWritable, value: Text, output: OutputCollector[VarLongWritable, VarLongWritable], reporter: Reporter) = {
+  override def map(key: LongWritable, value: Text, context: Mapper[LongWritable,Text,VarLongWritable,VarLongWritable]#Context) = {
 
     val m = NUMBERS matcher value
     m find
@@ -21,24 +21,17 @@ class WikipediaToItemPrefsMapper extends MapReduceBase with Mapper[LongWritable,
     val itemID = new VarLongWritable()
     while (m find){
       itemID.set(m group() toLong);
-      output.collect(userID, itemID);
+      context write (userID, itemID);
 
     }
   }
 }
 
-class WikipediaToUserVectorReducer extends MapReduceBase with Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable] {
+class WikipediaToUserVectorReducer extends Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable] {
 
-  override def reduce(userID: VarLongWritable, itemPrefs: Iterator[VarLongWritable], outputCollector: OutputCollector[VarLongWritable, VectorWritable], reporter: Reporter) = {
+  override def reduce(userID: VarLongWritable, itemPrefs: java.lang.Iterable[VarLongWritable], context:  Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable]#Context) = {
     val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
     itemPrefs.foreach((item: VarLongWritable) => userVector set(item.get toInt, 1.0f))
-    outputCollector.collect(userID, new VectorWritable(userVector))
+    context write(userID, new VectorWritable(userVector))
   }
 }
-
-/**
- * Run the code for generate the co-ocorrence matrix
- */
-//object GenerateUserVectors {
-//
-//}
