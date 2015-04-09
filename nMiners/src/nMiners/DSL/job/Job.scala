@@ -54,10 +54,6 @@ object parse_data extends Applier {
   override var name: String = ""
 }
 
-object preference_item_vector extends Producer {
-  override var name: String = this.getClass.getSimpleName
-}
-
 object coocurrence_matrix extends Producer {
   override var name: String = this.getClass.getSimpleName
 
