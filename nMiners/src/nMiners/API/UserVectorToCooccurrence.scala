@@ -10,11 +10,11 @@ import org.apache.mahout.math._
 /**
  * Created by arthur on 07/04/15.
  */
-class UserVectorToCooccurrenceMapper extends Mapper [LongWritable, VectorWritable, VarLongWritable, VarLongWritable]{
+class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWritable, VarIntWritable, VarIntWritable]{
 
   val NUMBERS = Pattern compile "(\\d+)"
 
-  override def map( userID : LongWritable, userVector:VectorWritable , context: Mapper[LongWritable,VectorWritable,VarLongWritable,VarLongWritable]#Context) = {
+  override def map( userID : VarLongWritable, userVector:VectorWritable , context: Mapper[VarLongWritable,VectorWritable,VarIntWritable,VarIntWritable]#Context) = {
     val it  = userVector get() nonZeroes() iterator()
     it.foreach((item: Element) => {
       val it2  = userVector get() nonZeroes() iterator()
