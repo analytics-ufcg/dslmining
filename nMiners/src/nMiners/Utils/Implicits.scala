@@ -1,13 +1,14 @@
-package API
+package Utils
+
 import java.util.regex.Matcher
 
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{BooleanWritable, FloatWritable, IntWritable, LongWritable, Text, UTF8}
 import org.apache.mahout.math.Vector.Element
-import org.apache.mahout.math.{VarIntWritable, RandomAccessSparseVector, VectorWritable}
+import org.apache.mahout.math.{VarLongWritable, RandomAccessSparseVector, VarIntWritable, VectorWritable}
 
 
-object Utils {
+object Implicits {
 
   implicit def writable2boolean(value: BooleanWritable) = value.get
 
@@ -18,6 +19,8 @@ object Utils {
   implicit def int2writable(value: Int) = new IntWritable(value)
 
   implicit def int2Varwritable(value: Int) = new VarIntWritable(value)
+
+  implicit def int2Longwritable(value: Int) = new VarLongWritable(value)
 
   implicit def writable2long(value: LongWritable) = value.get
 
@@ -41,10 +44,10 @@ object Utils {
 
   implicit def floatToDouble(value: Float) = value toFloat
 
-  implicit def javaIterator2Iterator[A](value: java.util.Iterator[A]) = new Iterator[A] {
-    def hasNext = value.hasNext
+  implicit def javaIterator2Iterator[A](value: java.lang.Iterable[A]) = new Iterator[A] {
+    def hasNext = value.iterator().hasNext
 
-    def next = value.next
+    def next = value.iterator().next
   }
 
   implicit def javaIterator2BooleanIterator(value: java.util.Iterator[BooleanWritable]) = new Iterator[Boolean] {

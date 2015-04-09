@@ -3,6 +3,7 @@ package API
 import java.util
 import java.util.{Collections, PriorityQueue, Iterator}
 
+import Utils.Implicits
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.IntWritable
@@ -17,7 +18,7 @@ import org.apache.mahout.common.iterator.FileLineIterable
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.map.OpenIntLongHashMap
 import org.apache.mahout.math.{Vector, VarLongWritable, VectorWritable}
-import Utils._
+import Implicits._
 
 class PartialMultiplyMapper extends MapReduceBase with Mapper[IntWritable,VectorAndPrefsWritable,  VarLongWritable,VectorWritable] {
 
