@@ -37,8 +37,8 @@ class CooccurenceMatrixTest extends FlatSpec with Matchers{
       dirOutputName,
       true)
 
-    GenerateUSerVector.Run()
-    Uservectcocourue.Run(input,output)
+//    GenerateUSerVector.Run()
+//    Uservectcocourue.Run(input,output)
 
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level2.txt").getLines.toList
