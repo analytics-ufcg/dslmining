@@ -2,7 +2,10 @@ package API
 import java.util.regex.Pattern
 
 import Utils.Implicits._
+import Utils.MapReduceUtils
 import org.apache.hadoop.io._
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
@@ -48,6 +51,27 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
     context write(itemIndex1,new VectorWritable(cooccureenceRow))
   }
 
+}
+
+
+object MatrixGenerator{
+
+  def runJOb(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
+    MapReduceUtils.runJob(
+      "Second Phase",
+      classOf[UserVectorToCooccurrenceMapper],
+      classOf[UserVectorToCooccurenceReduce],
+      classOf[VarIntWritable],
+      classOf[VarIntWritable],
+      classOf[VarLongWritable],
+      classOf[VectorWritable],
+      inputFormatClass,
+      outputFormatClass,
+      inputPath,
+      dirOutputName,
+      deleteFolder)
+  }
 }
 
 

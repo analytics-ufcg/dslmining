@@ -1,6 +1,6 @@
 package nMinersTest
 
-import API.{WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
+import API.{UserVectorGenerator, WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
 import Utils.MapReduceUtils
 
 //import Utils._
@@ -22,19 +22,8 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val inputPath = BASE_PHATH+"input_test_level1.txt"
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
-    MapReduceUtils.runJob("First Phase",
-      classOf[WikipediaToItemPrefsMapper],
-      classOf[WikipediaToUserVectorReducer],
-      classOf[VarLongWritable],
-      classOf[VarLongWritable],
-      classOf[VarLongWritable],
-      classOf[VarLongWritable],
-      classOf[TextInputFormat],
-      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],
-      inputPath,
-      namePath,
-      true)
-
+    UserVectorGenerator.runJob(inputPath,namePath, classOf[TextInputFormat],
+      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true)
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level1.txt").getLines.toList
     val fileLinesOutput = io.Source.fromFile(namePath + "/part-r-00000").getLines.toList

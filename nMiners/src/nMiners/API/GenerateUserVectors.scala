@@ -1,9 +1,11 @@
 package API
 import java.util.regex.Pattern
 
-import Utils.Implicits
+import Utils.{MapReduceUtils, Implicits}
 import org.apache.hadoop.io._
 import Implicits._
+import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, FileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, FileOutputFormat}
 import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.mahout.math._
 
@@ -33,5 +35,23 @@ class WikipediaToUserVectorReducer extends Reducer[VarLongWritable, VarLongWrita
     val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
     itemPrefs.foreach((item: VarLongWritable) => userVector set(item.get toInt, 1.0f))
     context write(userID, new VectorWritable(userVector))
+  }
+}
+
+object UserVectorGenerator{
+  def runJob(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
+    MapReduceUtils.runJob("First Phase",
+      classOf[WikipediaToItemPrefsMapper],
+      classOf[WikipediaToUserVectorReducer],
+      classOf[VarLongWritable],
+      classOf[VarLongWritable],
+      classOf[VarLongWritable],
+      classOf[VarLongWritable],
+     inputFormatClass,
+     outputFormatClass,
+      inputPath,
+      dirOutputName,
+      deleteFolder)
   }
 }
