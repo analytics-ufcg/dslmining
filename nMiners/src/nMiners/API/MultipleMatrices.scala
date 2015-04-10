@@ -78,8 +78,9 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
   override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] , context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context ) = {
 
     var predictions: Vector = null
-    var valores = values.toBuffer
-    valores.foreach((item) =>{
+    //var valores = values.toBuffer
+    values.foreach((item) =>{
+      println(item)
       if (predictions == null) predictions = item.get()
       else predictions.assign(item.get(), Functions.PLUS);
 

@@ -20,25 +20,25 @@ import org.apache.mahout.math.{VarIntWritable, VectorWritable, VarLongWritable}
  */
 object Main {
 
-  def generateMap() = {
-    val inputPath = "src/test/data/input_test_level1.txt"
-    val outPutPath = "src/outputMap"
-
-    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
-      classOf[VarLongWritable],classOf[VarLongWritable],
-      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
-  }
+//  def generateMap() = {
+//    val inputPath = "src/test/data/input_test_level1.txt"
+//    val outPutPath = "src/outputMap"
+//
+//    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
+//      classOf[VarLongWritable],classOf[VarLongWritable],
+//      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
+//  }
 
   def main(args: Array[String]): Unit = {
-    //generateMap()
-  //  generateUserVectors()
+    //generateUserVectors()
+
     //coocurrence()
-   // prepare()
+    //prepare()
     multiply()
   }
 
   def generateUserVectors() = {
-    val inputPath = "src/test/data/input_test_level1.txt"
+    val inputPath = "src/test/data/data_2/input_test_level1.txt"
     val outPutPath = "src/output"
 
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
@@ -60,8 +60,8 @@ object Main {
 
   def prepare() = {
 
-    val inputPath1 = "src/test/data/input_test_level3_2.dat"
-    val inputPath2 = "src/test/data/input_test_level3_1.dat"
+    val inputPath1 = "src/output1/part-r-00000"
+    val inputPath2 = "src/output/part-r-00000"
 
     val outPutPath = "src/output2"
 
@@ -75,7 +75,7 @@ object Main {
 
   def multiply() = {
 
-    val inputPath = "src/test/data/input_test_level4.dat"
+    val inputPath = "src/output2/part-r-00000"
     val outPutPath = "src/output3"
 
     val job = MapReduceUtils.prepareJob("Prepare",classOf[PartialMultiplyMapper],classOf[AggregateAndRecommendReducer],
