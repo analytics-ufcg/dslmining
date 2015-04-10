@@ -3,7 +3,10 @@ package API
 import java.{util, lang}
 import java.util.{RandomAccess, Iterator}
 import Utils.Implicits._
+import Utils.MapReduceUtils
 import com.google.common.collect.Lists
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 
 import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
@@ -79,4 +82,16 @@ class ToVectorAndPrefReducer extends Reducer[VarIntWritable, VectorOrPrefWritabl
     }
 
   }
+}
+
+
+object PrepareMatrixGenerator {
+      def runJob(inputPath1:String,inputPath2:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
+                 outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean): Unit ={
+        MapReduceUtils.run2MappersJob("Prepare",classOf[CooccurrenceColumnWrapperMapper],classOf[UserVectorSplitterMapper],   classOf[ToVectorAndPrefReducer],
+          mapOutputKeyClass = classOf[VarIntWritable],mapOutputValueClass = classOf[VectorOrPrefWritable],
+          classOf[VarIntWritable], classOf[VectorAndPrefsWritable],
+          inputFormatClass,inputFormatClass,
+          outputFormatClass,inputPath1,inputPath2,outPutPath,deleteFolder)
+      }
 }
