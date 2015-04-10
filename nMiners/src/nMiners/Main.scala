@@ -9,6 +9,7 @@ import org.apache.hadoop.io.LongWritable
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, SequenceFileInputFormat, MultipleInputs}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
+import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, SimilarityMatrixRowWrapperMapper, VectorOrPrefWritable}
 import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.CooccurrenceCountSimilarity
@@ -21,7 +22,8 @@ object Main {
   def main(args: Array[String]): Unit = {
   //  generateUserVectors()
     //coocurrence()
-    prepare()
+   // prepare()
+    multiply()
   }
 
   def generateUserVectors() = {
@@ -56,7 +58,27 @@ object Main {
       mapOutputKeyClass = classOf[VarIntWritable],mapOutputValueClass = classOf[VectorOrPrefWritable],
       classOf[VarIntWritable], classOf[VectorAndPrefsWritable],
       classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-      classOf[TextOutputFormat[VarIntWritable,VectorAndPrefsWritable]],inputPath1,inputPath2,outPutPath,true)
+      classOf[SequenceFileOutputFormat[VarIntWritable,VectorAndPrefsWritable]],inputPath1,inputPath2,outPutPath,true)
 
+  }
+
+  def multiply() = {
+
+    val inputPath = "src/test/data/input_test_level4.dat"
+    val outPutPath = "src/output3"
+
+    val job = MapReduceUtils.prepareJob("Prepare",classOf[PartialMultiplyMapper],classOf[AggregateAndRecommendReducer],
+      classOf[VarLongWritable], classOf[VectorWritable],
+      classOf[VarLongWritable], classOf[RecommendedItemsWritable],
+      classOf[SequenceFileInputFormat[VarIntWritable,VectorAndPrefsWritable]],
+      classOf[TextOutputFormat[VarLongWritable,RecommendedItemsWritable]],inputPath,outPutPath)
+
+    var conf : Configuration = job getConfiguration ()
+    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,"")
+    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+
+    println(job.getConfiguration().getInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS,1))
+    MapReduceUtils.deleteFolder(outPutPath,conf)
+    job.waitForCompletion(true)
   }
 }

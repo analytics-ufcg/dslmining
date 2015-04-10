@@ -66,9 +66,18 @@ object MapReduceUtils {
              inputPath:String,
              outputPath:String,
              deleteFolder:Boolean) = {
-    var conf : Configuration = new Configuration();
 
-    var job: Job = new Job(conf,jobName);
+      var  job: Job = prepareJob(jobName, mapperClass, reducerClass, mapOutputKeyClass, mapOutputValueClass, outputKeyClass, outputValueClass, inputFormatClass, outputFormatClass, inputPath, outputPath)
+    var conf = job getConfiguration()
+    if (deleteFolder) this.deleteFolder(outputPath,conf);
+
+    job.waitForCompletion(true);
+  }
+
+  def prepareJob(jobName: String, mapperClass: Class[_ <: Mapper[_, _, _, _]], reducerClass: Class[_ <: Reducer[_, _, _, _]], mapOutputKeyClass: Class[_], mapOutputValueClass: Class[_], outputKeyClass: Class[_], outputValueClass: Class[_], inputFormatClass: Class[_ <: FileInputFormat[_, _]], outputFormatClass: Class[_ <: FileOutputFormat[_, _]], inputPath: String, outputPath: String): Job = {
+    var conf: Configuration = new Configuration();
+
+    var job: Job = new Job(conf, jobName);
 
     //Set Mapper and Reducer Classes
     job.setMapperClass(mapperClass);
@@ -90,9 +99,6 @@ object MapReduceUtils {
     //Set the input and output path
     FileInputFormat.addInputPath(job, inputPath);
     FileOutputFormat.setOutputPath(job, outputPath);
-
-    if (deleteFolder) this.deleteFolder(outputPath,conf);
-
-    job.waitForCompletion(true);
+    job
   }
 }
