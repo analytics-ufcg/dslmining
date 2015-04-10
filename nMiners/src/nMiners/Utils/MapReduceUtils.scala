@@ -19,20 +19,27 @@ object MapReduceUtils {
   }
 
   def run2MappersJob(jobName:String,mapper1Class:Class[_<:Mapper[_,_,_,_]],  mapper2Class:Class[_<:Mapper[_,_,_,_]],
+                     reducerClass:Class[_<:Reducer[_,_,_,_]],
+                     mapOutputKeyClass:Class[_], mapOutputValueClass:Class[_],
                      outputKeyClass:Class[_],  outputValueClass:Class[_],
              inputFormat1Class:Class[_<:FileInputFormat[_,_]], inputFormat2Class:Class[_<:FileInputFormat[_,_]],
         outputFormatClass:Class[_<:FileOutputFormat[_,_]],   inputPath1:String, inputPath2:String, outputPath:String,deleteFolder:Boolean) = {
 
 
-    var conf : Configuration = new Configuration();
+    var conf : Configuration = new Configuration()
 
-    var job: Job = new Job(conf,jobName);
+    var job: Job = new Job(conf,jobName)
 
-    job.setOutputKeyClass(outputKeyClass);
-    job.setOutputValueClass(outputValueClass);
+    job.setReducerClass(reducerClass);
+
+    job.setOutputKeyClass(outputKeyClass)
+    job.setOutputValueClass(outputValueClass)
+
+    job.setMapOutputKeyClass(mapOutputKeyClass)
+    job.setMapOutputValueClass(mapOutputValueClass)
 
     //Set the input and output.
-    job.setOutputFormatClass(outputFormatClass);
+    job.setOutputFormatClass(outputFormatClass)
 
     //Set the input and output path
     MultipleInputs.addInputPath(job,inputPath1,inputFormat1Class,mapper1Class);

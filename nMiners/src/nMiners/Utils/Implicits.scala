@@ -4,6 +4,7 @@ import java.util.regex.Matcher
 
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{BooleanWritable, FloatWritable, IntWritable, LongWritable, Text, UTF8}
+import org.apache.mahout.cf.taste.hadoop.item.VectorOrPrefWritable
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.{VarLongWritable, RandomAccessSparseVector, VarIntWritable, VectorWritable}
 
@@ -44,7 +45,7 @@ object Implicits {
 
   implicit def floatToDouble(value: Float) = value toFloat
 
-  implicit def javaIterator2Iterator[A](value: java.lang.Iterable[A]) = new Iterator[A] {
+  implicit def javaIterator2Iterator[A](value: java.lang.Iterable[A]): Iterator[A] with Object {def next: A; def hasNext: Boolean} = new Iterator[A] {
     def hasNext = value.iterator().hasNext
 
     def next = value.iterator().next
@@ -81,6 +82,12 @@ object Implicits {
   }
 
   implicit def javaIterator2VectorWritableIterator(value: java.util.Iterator[VectorWritable]) = new Iterator[VectorWritable] {
+    def hasNext = value.hasNext
+
+    def next = value.next
+  }
+
+  implicit def javaIterator2VectorOrPrefWritable(value: java.util.Iterator[VectorOrPrefWritable]) = new Iterator[VectorOrPrefWritable] {
     def hasNext = value.hasNext
 
     def next = value.next
