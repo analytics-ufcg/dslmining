@@ -1,17 +1,13 @@
 package nMinersTest
 
-import Utils.Implicits
-import Utils.MapReduceUtils
+import API.UserVectorGenerator
 
-import API.{WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
-import Implicits._
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.io.Text
+//import Utils._
+
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
-import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
-import org.apache.mahout.math.{VectorWritable, VarLongWritable}
-import org.scalatest.{Matchers, FlatSpec}
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
+import org.apache.mahout.math.{VarLongWritable, VectorWritable}
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * Created by leonardo on 08/04/15.
@@ -22,10 +18,8 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val inputPath = BASE_PHATH+"input_test_level1.txt"
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
-    MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
-      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VectorWritable],
-      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,namePath,true)
-
+    UserVectorGenerator.runJob(inputPath,namePath, classOf[TextInputFormat],
+      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true)
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"output_test_level1.txt").getLines.toList
     val fileLinesOutput = io.Source.fromFile(namePath + "/part-r-00000").getLines.toList

@@ -2,11 +2,15 @@ package API
 import java.util.regex.Pattern
 
 import Utils.Implicits._
+<<<<<<< HEAD
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
+=======
 import Utils.MapReduceUtils
 import org.apache.hadoop.io._
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+>>>>>>> c0fbd48b8d8119dd732230c65cf53afd272ed1b3
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
 
@@ -48,7 +52,6 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
 
     context write(itemIndex1,new VectorWritable(cooccureenceRow))
   }
-
 }
 
 
