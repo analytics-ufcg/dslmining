@@ -54,4 +54,17 @@ object UserVectorGenerator{
       dirOutputName,
       deleteFolder)
   }
+
+//  def runMap(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
+//             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
+//    MapReduceUtils.runMap("First Phase",
+//      classOf[WikipediaToItemPrefsMapper],
+//      classOf[VarLongWritable],
+//      classOf[VarLongWritable],
+//      inputFormatClass,
+//      outputFormatClass,
+//      inputPath,
+//      dirOutputName,
+//      deleteFolder)
+//  }
 }

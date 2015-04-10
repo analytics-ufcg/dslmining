@@ -15,9 +15,12 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem
 import org.apache.mahout.common.HadoopUtil
 import org.apache.mahout.common.iterator.FileLineIterable
 import org.apache.mahout.math.Vector.Element
+import org.apache.mahout.math.function.Functions
 import org.apache.mahout.math.map.OpenIntLongHashMap
 import org.apache.mahout.math.{VarIntWritable, Vector, VarLongWritable, VectorWritable}
 import Implicits._
+
+import scala.collection.mutable.ArrayBuffer
 
 class PartialMultiplyMapper extends Mapper[VarIntWritable,VectorAndPrefsWritable,  VarLongWritable,VectorWritable] {
 
@@ -74,11 +77,32 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
 
   override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] , context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context ) = {
 
-    var recommendationVector:Vector = null;
-    values.foreach((vectorWritable) =>{
-      recommendationVector = if (recommendationVector == null)   vectorWritable.get() else  recommendationVector.plus(vectorWritable.get());
+    var predictions: Vector = null
+    var valores = values.toBuffer
+    valores.foreach((item) =>{
+      if (predictions == null) predictions = item.get()
+      else predictions.assign(item.get(), Functions.PLUS);
 
     })
+
+
+
+
+
+
+
+
+
+
+//    var recommendationVector:Vector = null;
+//    valores.foreach((vectorWritable) =>{
+//      recommendationVector = if (recommendationVector == null)   vectorWritable.get() else  recommendationVector.plus(vectorWritable.get());
+//
+//    })
+
+    var recommendationVector = predictions
+
+    //WRITE!!!!!!!!
 
     val topItems: PriorityQueue[RecommendedItem] = new PriorityQueue[RecommendedItem]( recommendationsPerUser + 1,
       Collections.reverseOrder(ByValueRecommendedItemComparator.getInstance()));

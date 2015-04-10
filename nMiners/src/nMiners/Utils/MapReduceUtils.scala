@@ -1,16 +1,47 @@
 package Utils
 
+import API.WikipediaToItemPrefsMapper
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapreduce.{Reducer, Mapper, Job}
 import Implicits._
 import org.apache.hadoop.mapreduce.lib.input.{MultipleInputs, FileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.mahout.math.VarLongWritable
 
 /**
  * Created by andryw on 08/04/15.
  */
 object MapReduceUtils {
+  def runMap(jobName: String, mapperClass: Class[WikipediaToItemPrefsMapper],
+             outputKeyClass: Class[_], outputValueClass: Class[_],
+             inputFormatClass: Class[_ <: FileInputFormat[_, _]], outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
+             inputPath: String, outputPath: String, deleteFolder: Boolean) = {
+
+
+    var conf: Configuration = new Configuration();
+
+    var job: Job = new Job(conf, jobName);
+
+    //Set Mapper and Reducer Classes
+    job.setMapperClass(mapperClass);
+
+    job.setOutputKeyClass(outputKeyClass);
+    job.setOutputValueClass(outputValueClass);
+
+    //Set the input and output.
+    job.setInputFormatClass(inputFormatClass);
+    job.setOutputFormatClass(outputFormatClass);
+
+    //Set the input and output path
+    FileInputFormat.addInputPath(job, inputPath);
+    FileOutputFormat.setOutputPath(job, outputPath);
+
+    if (deleteFolder) this.deleteFolder(outputPath,conf);
+
+    job.waitForCompletion(true);
+  }
+
 
   def deleteFolder(outputPath:String, conf:Configuration) = {
     //Delete the output path before run, to avoid exception

@@ -19,7 +19,18 @@ import org.apache.mahout.math.{VarIntWritable, VectorWritable, VarLongWritable}
  * Created by arthur on 06/04/15.
  */
 object Main {
+
+  def generateMap() = {
+    val inputPath = "src/test/data/input_test_level1.txt"
+    val outPutPath = "src/outputMap"
+
+    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
+      classOf[VarLongWritable],classOf[VarLongWritable],
+      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
+  }
+
   def main(args: Array[String]): Unit = {
+    //generateMap()
   //  generateUserVectors()
     //coocurrence()
    // prepare()
@@ -81,4 +92,6 @@ object Main {
     MapReduceUtils.deleteFolder(outPutPath,conf)
     job.waitForCompletion(true)
   }
+
+
 }
