@@ -1,9 +1,10 @@
 package DSL.job
 
-import API.{UserVectorToCooccurenceReduce, UserVectorToCooccurrenceMapper, WikipediaToItemPrefsMapper, WikipediaToUserVectorReducer}
+import API._
 import Utils.MapReduceUtils.runJob
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, SequenceFileOutputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
+import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 
 trait Job {
@@ -48,9 +49,11 @@ class Parallel(val jobs: List[Job]) extends Job {
     Console.err.println("}")
   }
 
-  override def then(job : Job) = {
+  override def then(job: Job) = {
     val ret = super.then(job)
-    jobs foreach {_.pathToInput = pathToOutput + "/part-r-00000"}
+    jobs foreach {
+      _.pathToInput = pathToOutput + "/part-r-00000"
+    }
     ret
   }
 
@@ -93,7 +96,7 @@ object coocurrence_matrix extends Producer {
       mapOutputValueClass = classOf[VarIntWritable], outputKeyClass = classOf[VarIntWritable],
       outputValueClass = classOf[VectorWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-      outputFormatClass = classOf[TextOutputFormat[VarIntWritable, VectorWritable]], pathToInput, pathToOutput,
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], pathToInput, pathToOutput,
       deleteFolder = false)
   }
 }
@@ -101,6 +104,18 @@ object coocurrence_matrix extends Producer {
 object user_vector extends Producer {
   override var name: String = this.getClass.getSimpleName
 
+  pathToOutput = "data/test3"
+
+  override def run = {
+    super.run
+
+    var path1 = "data/test2/part-r-00000"
+    var path2 = "data/test/part-r-00000"
+
+    PrepareMatrixGenerator.runJob(inputPath1 = path1,inputPath2 = path2, outPutPath =pathToOutput,
+      inputFormatClass=classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
+      outputFormatClass =classOf[TextOutputFormat[VarIntWritable,VectorAndPrefsWritable]] , deleteFolder = true)
+  }
 }
 
 object recommendation extends Producer {
