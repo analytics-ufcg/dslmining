@@ -53,9 +53,19 @@ object MapReduceUtils {
   }
 
 
-  def runJob(jobName:String,mapperClass:Class[_<:Mapper[_,_,_,_]],  reducerClass:Class[_<:Reducer[_,_,_,_]],  mapOutputKeyClass:Class[_],
-     mapOutputValueClass:Class[_],  outputKeyClass:Class[_],  outputValueClass:Class[_],
-     inputFormatClass:Class[_<:FileInputFormat[_,_]], outputFormatClass:Class[_<:FileOutputFormat[_,_]],   inputPath:String, outputPath:String,deleteFolder:Boolean) = {
+    def runJob(
+              jobName:String,
+             mapperClass:Class[_<:Mapper[_,_,_,_]],
+             reducerClass:Class[_<:Reducer[_,_,_,_]],
+             mapOutputKeyClass:Class[_],
+             mapOutputValueClass:Class[_],
+             outputKeyClass:Class[_],
+             outputValueClass:Class[_],
+             inputFormatClass:Class[_<:FileInputFormat[_,_]],
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]],
+             inputPath:String,
+             outputPath:String,
+             deleteFolder:Boolean) = {
     var conf : Configuration = new Configuration();
 
     var job: Job = new Job(conf,jobName);
