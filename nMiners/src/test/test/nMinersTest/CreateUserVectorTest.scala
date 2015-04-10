@@ -1,17 +1,13 @@
 package nMinersTest
 
-import API.{UserVectorGenerator, WikipediaToUserVectorReducer, WikipediaToItemPrefsMapper}
-import Utils.MapReduceUtils
+import API.UserVectorGenerator
 
 //import Utils._
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
-import org.apache.mahout.math.{VectorWritable, VarLongWritable}
-import org.scalatest.{Matchers, FlatSpec}
+import org.apache.mahout.math.{VarLongWritable, VectorWritable}
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * Created by leonardo on 08/04/15.

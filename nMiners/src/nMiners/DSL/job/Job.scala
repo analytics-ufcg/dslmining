@@ -1,18 +1,24 @@
 package DSL.job
 
-import API.{WikipediaToItemPrefsMapper, WikipediaToUserVectorReducer}
+import API._
 import Utils.MapReduceUtils
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
-import org.apache.mahout.math.{VarLongWritable, VectorWritable}
-
+import Utils.MapReduceUtils.runJob
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
+import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
+import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
+import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 
 trait Job {
-  var name : String
+  var name: String
 
-  var pathToOutput = "default"
+  var pathToOutput = "data/test"
+
+  var pathToInput = ""
 
   def then(job: Job): Job = {
+    job.pathToInput = pathToOutput + "/part-r-00000"
     Context.jobs += this
     job
   }
@@ -24,7 +30,7 @@ trait Job {
 
   def run() = Console.err.println(s"\n\nRunning: $name")
 
-  def then (exec: execute.type) = {
+  def then(exec: execute.type) = {
     Context.jobs += this
     Context.jobs.foreach(_.run)
   }
@@ -46,6 +52,15 @@ class Parallel(val jobs: List[Job]) extends Job {
     Console.err.println("}")
   }
 
+  override def then(job: Job) = {
+    val ret = super.then(job)
+    job.pathToInput = "data/test3"
+    jobs foreach {
+      _.pathToInput = pathToOutput + "/part-r-00000"
+    }
+    ret
+  }
+
   override var name: String = "Parallel"
 }
 
@@ -58,24 +73,53 @@ object parse_data extends Applier {
     name = this.getClass.getSimpleName + s" on $path"
     this
   }
+
   override var name: String = ""
 
   override def run = {
     super.run
-    MapReduceUtils.runJob(name,classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
-      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],
-      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],path,"data/test",true)
+    runJob(name, mapperClass = classOf[WikipediaToItemPrefsMapper], reducerClass = classOf[WikipediaToUserVectorReducer],
+      mapOutputKeyClass = classOf[VarLongWritable], mapOutputValueClass = classOf[VarLongWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[VectorWritable],
+      inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],
+      inputPath = path, outputPath = pathToOutput, deleteFolder = false)
   }
 }
 
 object coocurrence_matrix extends Producer {
   override var name: String = this.getClass.getSimpleName
 
+  pathToOutput = "data/test2"
+
+  override def run = {
+    super.run
+
+    runJob(name, mapperClass = classOf[UserVectorToCooccurrenceMapper],
+      reducerClass = classOf[UserVectorToCooccurenceReduce], mapOutputKeyClass = classOf[VarIntWritable],
+      mapOutputValueClass = classOf[VarIntWritable], outputKeyClass = classOf[VarIntWritable],
+      outputValueClass = classOf[VectorWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], pathToInput, pathToOutput,
+      deleteFolder = false)
+  }
 }
 
 object user_vector extends Producer {
   override var name: String = this.getClass.getSimpleName
 
+  pathToOutput = "data/test3"
+
+  override def run = {
+    super.run
+
+    var path1 = "data/test2/part-r-00000"
+    var path2 = "data/test/part-r-00000"
+
+    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput,
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]], deleteFolder = true)
+  }
 }
 
 object recommendation extends Producer {
@@ -84,4 +128,24 @@ object recommendation extends Producer {
 
 class Multiplier(val a: Produced, val b: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $a by $b"
+
+  pathToOutput = "data/test4"
+
+  override def run = {
+    super.run
+
+    val j = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      mapOutputValueClass = classOf[VectorWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]], pathToInput, pathToOutput)
+
+    var conf: Configuration = j getConfiguration()
+    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
+    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+
+    MapReduceUtils.deleteFolder(pathToOutput, conf)
+    j.waitForCompletion(true)
+  }
 }

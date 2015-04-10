@@ -1,11 +1,9 @@
 package nMinersTest
 
-import Utils._
 import API._
-import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
-import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import org.apache.mahout.math.{VarLongWritable, VectorWritable}
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
