@@ -8,5 +8,4 @@ object main extends App {
     produce(user_vector as "user_vectors")) then
     multiply("coocurrence" by "user_vectors") then
     produce(recommendation as "recs") write_on "output.dat" then execute
-
 }

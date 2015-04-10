@@ -2,8 +2,7 @@ package API
 import java.util.regex.Pattern
 
 import Utils.Implicits._
-import org.apache.hadoop.io._
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
 
@@ -34,8 +33,6 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
   override def reduce(itemIndex1: VarIntWritable, itemIndex2s: java.lang.Iterable[VarIntWritable], context:  Reducer[VarIntWritable,VarIntWritable,VarIntWritable,VectorWritable]#Context) = {
 
     var cooccureenceRow = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
-    println(itemIndex2s.isEmpty)
-
 
     itemIndex2s.foreach((item: VarIntWritable) => {
       val itemIndex2 = item.get()
@@ -47,7 +44,6 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
 
     context write(itemIndex1,new VectorWritable(cooccureenceRow))
   }
-
 }
 
 

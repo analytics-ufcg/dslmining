@@ -1,7 +1,9 @@
 package DSL.job
 
 object JobUtils {
-  def in_parallel(jobs: List[Job]) = new Parallel(jobs)
+  def in_parallel(jobs: List[Job]) = {
+    new Parallel(jobs)
+  }
 
   def produce(tuple: (Producer, String)): Job = produce(tuple._1, tuple._2)
 
