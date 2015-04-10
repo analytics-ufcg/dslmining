@@ -1,9 +1,12 @@
 package DSL.job
 
 import API._
+import Utils.MapReduceUtils
 import Utils.MapReduceUtils.runJob
+import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
+import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 
@@ -51,6 +54,7 @@ class Parallel(val jobs: List[Job]) extends Job {
 
   override def then(job: Job) = {
     val ret = super.then(job)
+    job.pathToInput = "data/test3"
     jobs foreach {
       _.pathToInput = pathToOutput + "/part-r-00000"
     }
@@ -112,9 +116,9 @@ object user_vector extends Producer {
     var path1 = "data/test2/part-r-00000"
     var path2 = "data/test/part-r-00000"
 
-    PrepareMatrixGenerator.runJob(inputPath1 = path1,inputPath2 = path2, outPutPath =pathToOutput,
-      inputFormatClass=classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
-      outputFormatClass =classOf[TextOutputFormat[VarIntWritable,VectorAndPrefsWritable]] , deleteFolder = true)
+    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput,
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]], deleteFolder = true)
   }
 }
 
@@ -124,4 +128,24 @@ object recommendation extends Producer {
 
 class Multiplier(val a: Produced, val b: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $a by $b"
+
+  pathToOutput = "data/test4"
+
+  override def run = {
+    super.run
+
+    val j = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      mapOutputValueClass = classOf[VectorWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]], pathToInput, pathToOutput)
+
+    var conf: Configuration = j getConfiguration()
+    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
+    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+
+    MapReduceUtils.deleteFolder(pathToOutput, conf)
+    j.waitForCompletion(true)
+  }
 }
