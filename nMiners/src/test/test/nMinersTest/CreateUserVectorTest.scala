@@ -27,8 +27,6 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val output = fileLinesOutput.reduce(_ + _)
 
 
-
-    println(outputTest.equals(output))
     outputTest should equal (output)
   }
 }
