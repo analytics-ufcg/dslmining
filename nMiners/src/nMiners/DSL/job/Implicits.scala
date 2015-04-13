@@ -1,7 +1,7 @@
 package DSL.job
 
 object Implicits {
-  type Dataset = String
+  type DataSet = String
   type WithName = (Producer, String)
 
   implicit def producer2withName(prod: Producer): PimpedProducer = new PimpedProducer(prod)
@@ -10,6 +10,7 @@ object Implicits {
 
   implicit def string2pimpedString(str: String) = new PimpedString(str)
 
+  // Find produced
   implicit def stringTuple2ProducedTuple(tuple: (String, String)): (Produced, Produced) = tuple match {
     case (name1, name2) => {
       val produced1 : Produced = Context.produceds.find(_.name equals name1).

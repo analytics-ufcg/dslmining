@@ -17,6 +17,7 @@ trait Job {
 
   var pathToInput = ""
 
+  // Add jobs to context jobs
   def then(job: Job): Job = {
     job.pathToInput = pathToOutput + "/part-r-00000"
     Context.jobs += this
@@ -30,6 +31,7 @@ trait Job {
 
   def run() = Console.err.println(s"\n\nRunning: $name")
 
+  // Run all jobs
   def then(exec: execute.type) = {
     Context.jobs += this
     Context.jobs.foreach(_.run)
@@ -46,12 +48,14 @@ abstract class Consumer extends Job
 
 class Parallel(val jobs: List[Job]) extends Job {
 
+  // Run each job
   override def run() = {
     Console.err.println("\n\nRunning in parallel\n{")
     jobs.foreach(_.run)
     Console.err.println("}")
   }
 
+  // Add each job to a queue
   override def then(job: Job) = {
     val ret = super.then(job)
     job.pathToInput = "data/test3"
@@ -134,18 +138,18 @@ class Multiplier(val a: Produced, val b: Produced) extends Consumer {
   override def run = {
     super.run
 
-    val j = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
       mapOutputValueClass = classOf[VectorWritable],
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
       outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]], pathToInput, pathToOutput)
 
-    var conf: Configuration = j getConfiguration()
+    var conf: Configuration = job getConfiguration()
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
     MapReduceUtils.deleteFolder(pathToOutput, conf)
-    j.waitForCompletion(true)
+    job.waitForCompletion(true)
   }
 }
