@@ -1,9 +1,10 @@
-package DSL.job
+package DSL
 
-import DSL.job.JobUtils._
 import DSL.job.Implicits._
+import DSL.job.JobUtils._
+import DSL.job._
 
-object main extends App {
+object RunDsl extends App {
   parse_data on "src/test/data/data_1/input_test_level1.txt" then in_parallel(produce(coocurrence_matrix as
     "coocurrence") and produce(user_vector as "user_vectors")) then
     multiply("coocurrence" by "user_vectors") then
