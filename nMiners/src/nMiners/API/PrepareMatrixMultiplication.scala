@@ -15,13 +15,10 @@ import org.apache.mahout.math._
 
 import scala.collection.mutable.{ListBuffer, ArrayBuffer}
 
-//import Implicits.javaIterator2Iterator
-
 /**
- * Created by andryw on 06/04/15.
+ * This class represents the first step towards performing matrix multiplication between the co-occurrence matrix and
+ * the item-user vectors: it reads the preference values matrix from file.
  */
-
-
 class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
   val vectorOrPref: VectorOrPrefWritable = new VectorOrPrefWritable
 
@@ -37,6 +34,9 @@ class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritab
 
 }
 
+/**
+ * This step is necessary to fit the need of having an item-user vector instead of user-item vector.
+ */
 class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
   override def map(key: VarLongWritable ,
                    value:VectorWritable,
@@ -55,6 +55,9 @@ class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  V
   }
 }
 
+/**
+ * Combines the output from the previous two steps, then starts the multiplication of the item-item co-occurrence matrix with the item-user vectors.
+ */
 class ToVectorAndPrefReducer extends Reducer[VarIntWritable, VectorOrPrefWritable, VarIntWritable, VectorAndPrefsWritable]{
   val vectorAndPrefs: VectorAndPrefsWritable = new VectorAndPrefsWritable
 
