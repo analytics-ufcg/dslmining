@@ -113,13 +113,14 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
     recommendationVectorIterator.foreach((element: Element) => {
 
       val index = element.index();
-      val value =  element.get();
-
-      if (topItems.size() < recommendationsPerUser) {
-        topItems.add(new GenericRecommendedItem(index, value toFloat));
-      } else if (value > topItems.peek().getValue()) {
-        topItems.add(new GenericRecommendedItem(index, value toFloat));
-        topItems.poll();
+      val value =  element.get() toFloat;
+      if (!(value equals Float.NaN) ){
+        if (topItems.size() < recommendationsPerUser) {
+          topItems.add(new GenericRecommendedItem(index, value));
+        } else if (value > topItems.peek().getValue()) {
+          topItems.add(new GenericRecommendedItem(index, value));
+          topItems.poll();
+        }
       }
 
     })

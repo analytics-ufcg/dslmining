@@ -23,9 +23,16 @@ import scala.collection.mutable.{ListBuffer, ArrayBuffer}
 
 
 class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
+  val vectorOrPref: VectorOrPrefWritable = new VectorOrPrefWritable
 
   override def  map(key: VarIntWritable, value: VectorWritable , context:Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable]#Context) = {
-    context write (key, new VectorOrPrefWritable(value.get()))
+    //context write (key, new VectorOrPrefWritable(value.get()))
+
+    val similarityMatrixRow:Vector = value.get()
+    /* remove self similarity */
+    similarityMatrixRow.set(key.get(), Double.NaN)
+
+    context.write(key, new VectorOrPrefWritable(similarityMatrixRow))
   }
 
 }

@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOut
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, SimilarityMatrixRowWrapperMapper, VectorOrPrefWritable}
 import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob
+import org.apache.mahout.cf.taste.impl.common.FastIDSet
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.CooccurrenceCountSimilarity
 import org.apache.mahout.math.{VarIntWritable, VectorWritable, VarLongWritable}
 
@@ -35,6 +36,8 @@ object Main {
     //coocurrence()
     //prepare()
     multiply()
+    var itemsToRecommendFor: FastIDSet = null
+  //  itemsToRecommendFor.
   }
 
   def generateUserVectors() = {
