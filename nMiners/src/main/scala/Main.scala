@@ -1,20 +1,12 @@
-import java.util.Iterator
-
-import Utils.{MapReduceUtils, Implicits}
-import Implicits._
 import API._
+import Utils.MapReduceUtils
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.LongWritable
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, SequenceFileInputFormat, MultipleInputs}
+import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
-import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, SimilarityMatrixRowWrapperMapper, VectorOrPrefWritable}
-import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob
+import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
 import org.apache.mahout.cf.taste.impl.common.FastIDSet
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.CooccurrenceCountSimilarity
-import org.apache.mahout.math.{VarIntWritable, VectorWritable, VarLongWritable}
+import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 
 /**
  * Created by arthur on 06/04/15.
