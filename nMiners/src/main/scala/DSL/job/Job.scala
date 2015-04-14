@@ -13,6 +13,8 @@ import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 trait Job {
   var name: String
 
+  var nodes: Int = 1
+
   var pathToOutput = "data/test"
 
   var pathToInput = ""
@@ -35,6 +37,11 @@ trait Job {
   def then(exec: execute.type) = {
     Context.jobs += this
     Context.jobs.foreach(_.run)
+  }
+
+  def number_of_nodes(nodes : Int): Job = {
+    this.nodes = nodes
+    this
   }
 }
 
@@ -66,6 +73,7 @@ class Parallel(val jobs: List[Job]) extends Job {
   }
 
   override var name: String = "Parallel"
+
 }
 
 object parse_data extends Applier {
