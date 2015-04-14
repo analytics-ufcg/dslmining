@@ -118,7 +118,6 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
     var predictions: Vector = null
     //var valores = values.toBuffer
     values.foreach((item) =>{
-      println(item)
       if (predictions == null) predictions = item.get()
       else predictions.assign(item.get(), Functions.PLUS);
 

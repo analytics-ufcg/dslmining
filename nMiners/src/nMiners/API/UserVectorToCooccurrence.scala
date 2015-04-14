@@ -11,7 +11,7 @@ import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
 
 /**
- * Created by arthur on 07/04/15.
+ * This step computes the co-occurrence of each pair of items accessed by a user, for all users.
  */
 class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWritable, VarIntWritable, VarIntWritable]{
 
@@ -30,7 +30,8 @@ class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWrit
 }
 
 /**
- * Created by arthur on 06/04/15.
+ * This step builds, for all items, a vector with its items co-occurrences and a number that counts how many times this
+ * co-occurrence was occurr.
  */
 class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritable,VarIntWritable,VectorWritable]{
 
