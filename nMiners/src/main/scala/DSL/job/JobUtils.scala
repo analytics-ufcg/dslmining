@@ -19,7 +19,4 @@ object JobUtils {
   def multiply(a: Produced, b: Produced): Job = new Multiplier(a, b)
 
   def run = Context.jobs.foreach(_.run)
-
-
-
 }
