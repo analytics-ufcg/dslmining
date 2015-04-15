@@ -31,7 +31,13 @@ trait Job {
     this
   }
 
-  def run() = Console.err.println(s"\n\nRunning: $name")
+  def run() = {
+    Console.err.println(s"\n\nRunning: $name")
+    print("\n")
+    print(this.name)
+    print("\n")
+    print(this.nodes)
+  }
 
   // Run all jobs
   def then(exec: execute.type) = {
@@ -95,13 +101,13 @@ object parse_data extends Applier {
   override def run = {
     print("\nParse Data\n")
     print(this.nodes)
-    /*super.run
+    super.run
     runJob(name, mapperClass = classOf[WikipediaToItemPrefsMapper], reducerClass = classOf[WikipediaToUserVectorReducer],
       mapOutputKeyClass = classOf[VarLongWritable], mapOutputValueClass = classOf[VarLongWritable],
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[VectorWritable],
       inputFormatClass = classOf[TextInputFormat],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],
-      inputPath = path, outputPath = pathToOutput, deleteFolder = false)*/
+      inputPath = path, outputPath = pathToOutput, deleteFolder = false)
   }
 }
 
@@ -113,7 +119,7 @@ object coocurrence_matrix extends Producer {
   override def run = {
     print("\nCoocurrence\n")
     print(this.nodes)
-    /*super.run
+    super.run
 
     runJob(name, mapperClass = classOf[UserVectorToCooccurrenceMapper],
       reducerClass = classOf[UserVectorToCooccurenceReduce], mapOutputKeyClass = classOf[VarIntWritable],
@@ -121,7 +127,7 @@ object coocurrence_matrix extends Producer {
       outputValueClass = classOf[VectorWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], pathToInput, pathToOutput,
-      deleteFolder = false)*/
+      deleteFolder = false)
   }
 }
 
@@ -133,14 +139,14 @@ object user_vector extends Producer {
   override def run = {
     print("\nuser_vector\n")
     print(this.nodes)
-    /*super.run
+    super.run
 
     var path1 = "data/test2/part-r-00000"
     var path2 = "data/test/part-r-00000"
 
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]], deleteFolder = true)*/
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]], deleteFolder = true)
   }
 }
 
@@ -156,7 +162,7 @@ class Multiplier(val a: Produced, val b: Produced) extends Consumer {
   override def run = {
     print("\nMultiplier\n")
     print(this.nodes)
-    /*super.run
+    super.run
 
     val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
@@ -170,6 +176,6 @@ class Multiplier(val a: Produced, val b: Produced) extends Consumer {
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
     MapReduceUtils.deleteFolder(pathToOutput, conf)
-    job.waitForCompletion(true)*/
+    job.waitForCompletion(true)
   }
 }
