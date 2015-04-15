@@ -21,6 +21,12 @@ object Implicits {
     }
   }
 
+  implicit def int2node(int: Int) = new Node(int)
+
+//  class Pimped(val int: Int){
+//    def nodes() = int
+//  }
+
   class PimpedProducer(val prod: Producer) {
     def as(name: String): WithName = (prod, name)
   }
@@ -33,4 +39,8 @@ object Implicits {
   class PimpedString(val str: String) {
     def by(that: String) = (str, that)
   }
+}
+
+class Node(int: Int){
+  def nodes = int
 }
