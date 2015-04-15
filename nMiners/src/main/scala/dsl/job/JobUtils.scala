@@ -1,4 +1,4 @@
-package DSL.job
+package dsl.job
 
 object JobUtils {
   def in_parallel(jobs: List[Job]) = {

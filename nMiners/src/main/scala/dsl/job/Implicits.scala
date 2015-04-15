@@ -1,4 +1,4 @@
-package DSL.job
+package dsl.job
 
 object Implicits {
   type DataSet = String

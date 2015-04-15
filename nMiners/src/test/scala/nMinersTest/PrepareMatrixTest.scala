@@ -1,6 +1,6 @@
 package nMinersTest
 
-import API.{PrepareMatrixGenerator}
+import api.{PrepareMatrixGenerator}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable

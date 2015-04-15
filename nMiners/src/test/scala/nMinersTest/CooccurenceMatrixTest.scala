@@ -1,6 +1,6 @@
 package nMinersTest
 
-import API._
+import api._
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.apache.mahout.math.{VarLongWritable, VectorWritable}

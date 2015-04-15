@@ -1,9 +1,9 @@
-package API
+package api
 
 import java.{util, lang}
 import java.util.{RandomAccess, Iterator}
-import Utils.Implicits._
-import Utils.MapReduceUtils
+import utils.Implicits._
+import utils.MapReduceUtils
 import com.google.common.collect.Lists
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}

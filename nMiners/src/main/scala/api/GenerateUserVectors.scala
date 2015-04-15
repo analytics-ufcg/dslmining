@@ -1,7 +1,7 @@
-package API
+package api
 import java.util.regex.Pattern
 
-import Utils.{MapReduceUtils, Implicits}
+import utils.{MapReduceUtils, Implicits}
 import org.apache.hadoop.io._
 import Implicits._
 import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, FileInputFormat}

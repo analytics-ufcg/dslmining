@@ -1,6 +1,6 @@
-package Utils
+package utils
 
-import API.WikipediaToItemPrefsMapper
+import api.WikipediaToItemPrefsMapper
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapreduce.{Reducer, Mapper, Job}

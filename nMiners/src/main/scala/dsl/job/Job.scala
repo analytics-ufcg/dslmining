@@ -1,16 +1,23 @@
-package DSL.job
+package dsl.job
 
-import API._
-import Utils.MapReduceUtils
-import Utils.MapReduceUtils.runJob
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+
+import api._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import utils.MapReduceUtils
+import utils.MapReduceUtils.runJob
 
 trait Job {
+
+  val defaultOutPath = ""
+
   var name: String
 
   var nodes: Int = 1
@@ -19,6 +26,8 @@ trait Job {
 
   var pathToInput = ""
 
+  var pathToOut = defaultOutPath
+
   // Add jobs to context jobs
   def then(job: Job): Job = {
     job.pathToInput = pathToOutput + "/part-r-00000"
@@ -26,8 +35,18 @@ trait Job {
     job
   }
 
+  def afterJob() = {}
+
+  private def after() = {
+    if (!(pathToOut equals defaultOutPath)) {
+      Files.copy(Paths.get(pathToOutput + "/part-r-00000"), Paths.get(pathToOut), REPLACE_EXISTING)
+    }
+    this.afterJob()
+  }
+
   def write_on(path: String) = {
-    pathToOutput = path
+    println("path = " + path)
+    pathToOut = path
     this
   }
 
@@ -39,13 +58,18 @@ trait Job {
     print(this.nodes)
   }
 
+  private def exec = {
+    run()
+    after()
+  }
+
   // Run all jobs
   def then(exec: execute.type) = {
     Context.jobs += this
-    Context.jobs.foreach(_.run)
+    Context.jobs.foreach(_.exec)
   }
 
-  def number_of_nodes(nodes : Int) = {
+  def number_of_nodes(nodes: Int) = {
     this.nodes = nodes
     this
   }
