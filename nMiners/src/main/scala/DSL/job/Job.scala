@@ -26,11 +26,13 @@ trait Job {
     job
   }
 
+  // Write on path
   def write_on(path: String) = {
     pathToOutput = path
     this
   }
 
+  // Execute the Job
   def run() = {
     Console.err.println(s"\n\nRunning: $name")
     print("\n")
@@ -45,6 +47,7 @@ trait Job {
     Context.jobs.foreach(_.run)
   }
 
+  // Setup the number of nodes
   def in(nodes : Int) = {
     this.nodes = nodes
     this
@@ -68,6 +71,7 @@ class Parallel(val jobs: List[Job]) extends Job {
     //Console.err.println("}")
   }
 
+  // Setup the number of nodes
   override def in(nodes: Int) = {
     jobs.foreach(_.in(nodes))
     this
@@ -90,6 +94,7 @@ object parse_data extends Applier {
 
   var path = ""
 
+  // Get a data file
   def on(path: String): Job = {
     this.path = path
     name = this.getClass.getSimpleName + s" on $path"
@@ -98,6 +103,7 @@ object parse_data extends Applier {
 
   override var name: String = ""
 
+  // Run the job
   override def run = {
     print("\nParse Data\n")
     print(this.nodes)
@@ -116,6 +122,8 @@ object coocurrence_matrix extends Producer {
 
   pathToOutput = "data/test2"
 
+
+  // Run the job
   override def run = {
     print("\nCoocurrence\n")
     print(this.nodes)
@@ -136,6 +144,7 @@ object user_vector extends Producer {
 
   pathToOutput = "data/test3"
 
+  // Run the job
   override def run = {
     print("\nuser_vector\n")
     print(this.nodes)
@@ -159,6 +168,7 @@ class Multiplier(val a: Produced, val b: Produced) extends Consumer {
 
   pathToOutput = "data/test4"
 
+  // Run the job
   override def run = {
     print("\nMultiplier\n")
     print(this.nodes)
