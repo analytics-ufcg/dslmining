@@ -5,8 +5,6 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 import api._
-import utils.MapReduceUtils
-import utils.MapReduceUtils.runJob
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
@@ -37,6 +35,7 @@ trait Job {
     job
   }
 
+<<<<<<< HEAD:nMiners/src/main/scala/dsl/job/Job.scala
   def afterJob() = {}
 
   private def after() = {
@@ -46,9 +45,12 @@ trait Job {
     this.afterJob()
   }
 
+=======
   // Write on path
+>>>>>>> eec8bf8c7ce47995ac57d20b40c18e52a2ce70e0:nMiners/src/main/scala/DSL/job/Job.scala
   def write_on(path: String) = {
-    pathToOutput = path
+    println("path = " + path)
+    pathToOut = path
     this
   }
 
@@ -72,8 +74,12 @@ trait Job {
     Context.jobs.foreach(_.exec)
   }
 
+<<<<<<< HEAD:nMiners/src/main/scala/dsl/job/Job.scala
+  def number_of_nodes(nodes: Int) = {
+=======
   // Setup the number of nodes
   def in(nodes : Int) = {
+>>>>>>> eec8bf8c7ce47995ac57d20b40c18e52a2ce70e0:nMiners/src/main/scala/DSL/job/Job.scala
     this.nodes = nodes
     this
   }
