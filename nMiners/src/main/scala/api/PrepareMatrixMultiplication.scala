@@ -97,11 +97,12 @@ class ToVectorAndPrefReducer extends Reducer[VarIntWritable, VectorOrPrefWritabl
 
 object PrepareMatrixGenerator {
       def runJob(inputPath1:String,inputPath2:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
-                 outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean): Unit ={
+                 outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,
+                 numMapTasks : Option[Int] = None): Unit ={
         MapReduceUtils.run2MappersJob("Prepare",classOf[CooccurrenceColumnWrapperMapper],classOf[UserVectorSplitterMapper],   classOf[ToVectorAndPrefReducer],
           mapOutputKeyClass = classOf[VarIntWritable],mapOutputValueClass = classOf[VectorOrPrefWritable],
           classOf[VarIntWritable], classOf[VectorAndPrefsWritable],
           inputFormatClass,inputFormatClass,
-          outputFormatClass,inputPath1,inputPath2,outPutPath,deleteFolder)
+          outputFormatClass,inputPath1,inputPath2,outPutPath,deleteFolder, numMapTasks)
       }
 }

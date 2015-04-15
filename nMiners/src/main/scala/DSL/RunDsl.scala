@@ -1,8 +1,8 @@
 package DSL
 
-import DSL.job.Implicits._
-import DSL.job.JobUtils._
-import DSL.job._
+import dsl.job.Implicits._
+import dsl.job.JobUtils._
+import dsl.job._
 
 object RunDsl extends App {
   parse_data on "src/test/data/data_2/input_test_level1.txt" in (5 nodes) then

@@ -3,65 +3,90 @@ package utils
 import api.WikipediaToItemPrefsMapper
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.mapreduce.{Reducer, Mapper, Job}
-import Implicits._
-import org.apache.hadoop.mapreduce.lib.input.{MultipleInputs, FileInputFormat}
+import org.apache.hadoop.mapred.JobConf
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, MultipleInputs}
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
-import org.apache.mahout.math.VarLongWritable
+import org.apache.hadoop.mapreduce.{Job, Mapper, Reducer}
+import utils.Implicits._
 
-/**
- * Created by andryw on 08/04/15.
- */
 object MapReduceUtils {
-  def runMap(jobName: String, mapperClass: Class[WikipediaToItemPrefsMapper],
-             outputKeyClass: Class[_], outputValueClass: Class[_],
-             inputFormatClass: Class[_ <: FileInputFormat[_, _]], outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
-             inputPath: String, outputPath: String, deleteFolder: Boolean) = {
+
+  def runMap(jobName: String,
+             mapperClass: Class[WikipediaToItemPrefsMapper],
+             outputKeyClass: Class[_],
+             outputValueClass: Class[_],
+             inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+             outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
+             inputPath: String,
+             outputPath: String,
+             deleteFolder: Boolean,
+             numMapTasks: Option[Int] = None) = {
 
 
-    var conf: Configuration = new Configuration();
+    val conf = new JobConf(new Configuration())
 
-    var job: Job = new Job(conf, jobName);
+    conf setQuietMode true
+    numMapTasks match {
+      case Some(num) => conf setNumMapTasks num
+      case _ => {}
+    }
+
+    val job: Job = new Job(conf, jobName)
 
     //Set Mapper and Reducer Classes
-    job.setMapperClass(mapperClass);
+    job.setMapperClass(mapperClass)
 
-    job.setOutputKeyClass(outputKeyClass);
-    job.setOutputValueClass(outputValueClass);
+    job.setOutputKeyClass(outputKeyClass)
+    job.setOutputValueClass(outputValueClass)
 
     //Set the input and output.
-    job.setInputFormatClass(inputFormatClass);
-    job.setOutputFormatClass(outputFormatClass);
+    job.setInputFormatClass(inputFormatClass)
+    job.setOutputFormatClass(outputFormatClass)
 
     //Set the input and output path
-    FileInputFormat.addInputPath(job, inputPath);
-    FileOutputFormat.setOutputPath(job, outputPath);
+    FileInputFormat.addInputPath(job, inputPath)
+    FileOutputFormat.setOutputPath(job, outputPath)
 
-    if (deleteFolder) this.deleteFolder(outputPath,conf);
+    if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    job.waitForCompletion(true);
+    job.waitForCompletion(true)
   }
 
 
-  def deleteFolder(outputPath:String, conf:Configuration) = {
+  def deleteFolder(outputPath: String, conf: Configuration) = {
     //Delete the output path before run, to avoid exception
-    val fs1:FileSystem = FileSystem.get(conf);
-    fs1.delete(outputPath, true);
+    val fs1: FileSystem = FileSystem.get(conf)
+    fs1.delete(outputPath, true)
   }
 
-  def run2MappersJob(jobName:String,mapper1Class:Class[_<:Mapper[_,_,_,_]],  mapper2Class:Class[_<:Mapper[_,_,_,_]],
-                     reducerClass:Class[_<:Reducer[_,_,_,_]],
-                     mapOutputKeyClass:Class[_], mapOutputValueClass:Class[_],
-                     outputKeyClass:Class[_],  outputValueClass:Class[_],
-             inputFormat1Class:Class[_<:FileInputFormat[_,_]], inputFormat2Class:Class[_<:FileInputFormat[_,_]],
-        outputFormatClass:Class[_<:FileOutputFormat[_,_]],   inputPath1:String, inputPath2:String, outputPath:String,deleteFolder:Boolean) = {
+  def run2MappersJob(jobName: String,
+                     mapper1Class: Class[_ <: Mapper[_, _, _, _]],
+                     mapper2Class: Class[_ <: Mapper[_, _, _, _]],
+                     reducerClass: Class[_ <: Reducer[_, _, _, _]],
+                     mapOutputKeyClass: Class[_],
+                     mapOutputValueClass: Class[_],
+                     outputKeyClass: Class[_],
+                     outputValueClass: Class[_],
+                     inputFormat1Class: Class[_ <: FileInputFormat[_, _]],
+                     inputFormat2Class: Class[_ <: FileInputFormat[_, _]],
+                     outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
+                     inputPath1: String,
+                     inputPath2: String,
+                     outputPath: String,
+                     deleteFolder: Boolean,
+                     numMapTasks: Option[Int] = None) = {
 
+    val conf = new JobConf(new Configuration())
+    conf setQuietMode true
 
-    var conf : Configuration = new Configuration()
+    numMapTasks match {
+      case Some(num) => conf setNumMapTasks num
+      case _ => {}
+    }
 
-    var job: Job = new Job(conf,jobName)
+    val job: Job = new Job(conf, jobName)
 
-    job.setReducerClass(reducerClass);
+    job.setReducerClass(reducerClass)
 
     job.setOutputKeyClass(outputKeyClass)
     job.setOutputValueClass(outputValueClass)
@@ -73,63 +98,74 @@ object MapReduceUtils {
     job.setOutputFormatClass(outputFormatClass)
 
     //Set the input and output path
-    MultipleInputs.addInputPath(job,inputPath1,inputFormat1Class,mapper1Class);
-    MultipleInputs.addInputPath(job,inputPath2,inputFormat2Class,mapper2Class);
+    MultipleInputs.addInputPath(job, inputPath1, inputFormat1Class, mapper1Class)
+    MultipleInputs.addInputPath(job, inputPath2, inputFormat2Class, mapper2Class)
 
-    FileOutputFormat.setOutputPath(job, outputPath);
+    FileOutputFormat.setOutputPath(job, outputPath)
 
-    if (deleteFolder) this.deleteFolder(outputPath,conf);
+    if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    job.waitForCompletion(true);
+    job.waitForCompletion(true)
   }
 
 
-    def runJob(
-              jobName:String,
-             mapperClass:Class[_<:Mapper[_,_,_,_]],
-             reducerClass:Class[_<:Reducer[_,_,_,_]],
-             mapOutputKeyClass:Class[_],
-             mapOutputValueClass:Class[_],
-             outputKeyClass:Class[_],
-             outputValueClass:Class[_],
-             inputFormatClass:Class[_<:FileInputFormat[_,_]],
-             outputFormatClass:Class[_<:FileOutputFormat[_,_]],
-             inputPath:String,
-             outputPath:String,
-             deleteFolder:Boolean) = {
+  def runJob(jobName: String,
+             mapperClass: Class[_ <: Mapper[_, _, _, _]],
+             reducerClass: Class[_ <: Reducer[_, _, _, _]],
+             mapOutputKeyClass: Class[_],
+             mapOutputValueClass: Class[_],
+             outputKeyClass: Class[_],
+             outputValueClass: Class[_],
+             inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+             outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
+             inputPath: String,
+             outputPath: String,
+             deleteFolder: Boolean,
+             numMapTasks: Option[Int] = None) = {
+    val job: Job = prepareJob(jobName, mapperClass, reducerClass, mapOutputKeyClass, mapOutputValueClass,
+      outputKeyClass, outputValueClass, inputFormatClass, outputFormatClass, inputPath, outputPath, numMapTasks)
+    val conf = job getConfiguration()
+    if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-      var  job: Job = prepareJob(jobName, mapperClass, reducerClass, mapOutputKeyClass, mapOutputValueClass, outputKeyClass, outputValueClass, inputFormatClass, outputFormatClass, inputPath, outputPath)
-    var conf = job getConfiguration()
-    if (deleteFolder) this.deleteFolder(outputPath,conf);
-
-    job.waitForCompletion(true);
+    job.waitForCompletion(true)
   }
 
-  def prepareJob(jobName: String, mapperClass: Class[_ <: Mapper[_, _, _, _]], reducerClass: Class[_ <: Reducer[_, _, _, _]], mapOutputKeyClass: Class[_], mapOutputValueClass: Class[_], outputKeyClass: Class[_], outputValueClass: Class[_], inputFormatClass: Class[_ <: FileInputFormat[_, _]], outputFormatClass: Class[_ <: FileOutputFormat[_, _]], inputPath: String, outputPath: String): Job = {
-    var conf: Configuration = new Configuration();
+  def prepareJob(jobName: String,
+                 mapperClass: Class[_ <: Mapper[_, _, _, _]],
+                 reducerClass: Class[_ <: Reducer[_, _, _, _]],
+                 mapOutputKeyClass: Class[_], mapOutputValueClass: Class[_],
+                 outputKeyClass: Class[_], outputValueClass: Class[_],
+                 inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+                 outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
+                 inputPath: String, outputPath: String,
+                 numMapTasks: Option[Int] = None): Job = {
+    val conf = new JobConf(new Configuration())
+    conf setQuietMode true
+    numMapTasks match {
+      case Some(num) => conf.setNumMapTasks(num)
+      case _ => {}
+    }
 
-    var job: Job = new Job(conf, jobName);
+    val job: Job = new Job(conf, jobName)
 
     //Set Mapper and Reducer Classes
-    job.setMapperClass(mapperClass);
-    job.setReducerClass(reducerClass);
+    job.setMapperClass(mapperClass)
+    job.setReducerClass(reducerClass)
 
     //Set Map Output values.
-    job.setMapOutputKeyClass(mapOutputKeyClass);
-    job.setMapOutputValueClass(mapOutputValueClass);
+    job.setMapOutputKeyClass(mapOutputKeyClass)
+    job.setMapOutputValueClass(mapOutputValueClass)
 
-    job.setOutputKeyClass(outputKeyClass);
-    job.setOutputValueClass(outputValueClass);
+    job.setOutputKeyClass(outputKeyClass)
+    job.setOutputValueClass(outputValueClass)
 
     //Set the input and output.
-    job.setInputFormatClass(inputFormatClass);
-    job.setOutputFormatClass(outputFormatClass);
-
-
+    job.setInputFormatClass(inputFormatClass)
+    job.setOutputFormatClass(outputFormatClass)
 
     //Set the input and output path
-    FileInputFormat.addInputPath(job, inputPath);
-    FileOutputFormat.setOutputPath(job, outputPath);
+    FileInputFormat.addInputPath(job, inputPath)
+    FileOutputFormat.setOutputPath(job, outputPath)
     job
   }
 }

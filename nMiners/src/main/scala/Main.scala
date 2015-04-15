@@ -83,7 +83,6 @@ object Main {
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,"")
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
-    println(job.getConfiguration().getInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS,1))
     MapReduceUtils.deleteFolder(outPutPath,conf)
     job.waitForCompletion(true)
   }
