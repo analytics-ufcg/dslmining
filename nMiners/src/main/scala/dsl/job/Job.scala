@@ -22,7 +22,7 @@ trait Job {
 
   var name: String
 
-  var nodes: Option[Int] = None
+  var numProccess: Option[Int] = None
 
   var pathToOutput = "data/test"
 
@@ -70,7 +70,7 @@ trait Job {
 
   // Setup the number of nodes
   def in(nodes: Int) = {
-    this.nodes = Some(nodes)
+    this.numProccess = Some(nodes)
     this
   }
 }
@@ -133,7 +133,7 @@ object parse_data extends Applier {
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[VectorWritable],
       inputFormatClass = classOf[TextInputFormat],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],
-      inputPath = path, outputPath = pathToOutput, deleteFolder = false, numMapTasks = nodes)
+      inputPath = path, outputPath = pathToOutput, deleteFolder = false, numMapTasks = numProccess)
   }
 }
 
@@ -153,7 +153,7 @@ object coocurrence_matrix extends Producer {
       outputValueClass = classOf[VectorWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], pathToInput,
-      pathToOutput, deleteFolder = true, numMapTasks = nodes)
+      pathToOutput, deleteFolder = true, numMapTasks = numProccess)
   }
 }
 
@@ -172,7 +172,7 @@ object user_vector extends Producer {
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      deleteFolder = true, numMapTasks = nodes)
+      deleteFolder = true, numMapTasks = numProccess)
   }
 }
 
@@ -195,7 +195,7 @@ class Multiplier(val a: Produced, val b: Produced) extends Consumer {
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
       outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      pathToInput, pathToOutput, numMapTasks = nodes)
+      pathToInput, pathToOutput, numMapTasks = numProccess)
 
     var conf: Configuration = job getConfiguration()
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")

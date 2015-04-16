@@ -27,7 +27,7 @@ object MapReduceUtils {
 
     conf setQuietMode true
     numMapTasks match {
-      case Some(num) => conf setNumMapTasks num
+      case Some(num) => conf setNumReduceTasks num
       case _ => {}
     }
 
@@ -80,7 +80,7 @@ object MapReduceUtils {
     conf setQuietMode true
 
     numMapTasks match {
-      case Some(num) => conf setNumMapTasks num
+      case Some(num) => conf setNumReduceTasks num
       case _ => {}
     }
 
@@ -142,10 +142,10 @@ object MapReduceUtils {
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
     numMapTasks match {
-      case Some(num) => conf.setNumMapTasks(num)
+      case Some(num) => conf setNumReduceTasks num
       case _ => {}
     }
-
+    
     val job: Job = new Job(conf, jobName)
 
     //Set Mapper and Reducer Classes

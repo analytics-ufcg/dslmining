@@ -39,7 +39,7 @@ object Implicits {
   }
 
   class Node(int: Int){
-    def nodes = int
+    def proccess = int
   }
 }
 
