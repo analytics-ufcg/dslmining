@@ -11,6 +11,20 @@ import utils.Implicits._
 
 object MapReduceUtils {
 
+  /**
+   * This methods only sets and runs the Job's Map Class
+   * @param jobName
+   * @param mapperClass
+   * @param outputKeyClass
+   * @param outputValueClass
+   * @param inputFormatClass
+   * @param outputFormatClass
+   * @param inputPath
+   * @param outputPath
+   * @param deleteFolder
+   * @param numMapTasks
+   * @return
+   */
   def runMap(jobName: String,
              mapperClass: Class[WikipediaToItemPrefsMapper],
              outputKeyClass: Class[_],
@@ -59,6 +73,26 @@ object MapReduceUtils {
     fs1.delete(outputPath, true)
   }
 
+  /**
+   * This methods sets and runs two Mappers
+   * @param jobName
+   * @param mapper1Class
+   * @param mapper2Class
+   * @param reducerClass
+   * @param mapOutputKeyClass
+   * @param mapOutputValueClass
+   * @param outputKeyClass
+   * @param outputValueClass
+   * @param inputFormat1Class
+   * @param inputFormat2Class
+   * @param outputFormatClass
+   * @param inputPath1
+   * @param inputPath2
+   * @param outputPath
+   * @param deleteFolder
+   * @param numMapTasks
+   * @return
+   */
   def run2MappersJob(jobName: String,
                      mapper1Class: Class[_ <: Mapper[_, _, _, _]],
                      mapper2Class: Class[_ <: Mapper[_, _, _, _]],
@@ -108,7 +142,23 @@ object MapReduceUtils {
     job.waitForCompletion(true)
   }
 
-
+  /**
+   * This method prepares and runs the Job
+   * @param jobName
+   * @param mapperClass
+   * @param reducerClass
+   * @param mapOutputKeyClass
+   * @param mapOutputValueClass
+   * @param outputKeyClass
+   * @param outputValueClass
+   * @param inputFormatClass
+   * @param outputFormatClass
+   * @param inputPath
+   * @param outputPath
+   * @param deleteFolder
+   * @param numMapTasks
+   * @return
+   */
   def runJob(jobName: String,
              mapperClass: Class[_ <: Mapper[_, _, _, _]],
              reducerClass: Class[_ <: Reducer[_, _, _, _]],
@@ -130,6 +180,24 @@ object MapReduceUtils {
     job.waitForCompletion(true)
   }
 
+
+  /**
+   * This method sets all the job's needed configuration
+   * @param jobName
+   * @param mapperClass
+   * @param reducerClass
+   * @param mapOutputKeyClass
+   * @param mapOutputValueClass
+   * @param outputKeyClass
+   * @param outputValueClass
+   * @param inputFormatClass
+   * @param outputFormatClass
+   * @param inputPath
+   * @param outputPath
+   * @param numMapTasks
+   * @return
+   *         Configured Job
+   */
   def prepareJob(jobName: String,
                  mapperClass: Class[_ <: Mapper[_, _, _, _]],
                  reducerClass: Class[_ <: Reducer[_, _, _, _]],
