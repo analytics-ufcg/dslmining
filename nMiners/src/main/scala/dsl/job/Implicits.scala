@@ -8,21 +8,24 @@ object Implicits {
 
   implicit def job2PimpedJob(job: Job): PimpedJob = new PimpedJob(job)
 
-  implicit def string2pimpedString(str: String) = new PimpedString(str)
+  implicit def string2pimpedString(str: String): PimpedString = new PimpedString(str)
 
-  // Find produced
+  /**
+   * Convert implicitly a tuple of string to a tuple of Produced 
+   * @param tuple tuple of string
+   * @return
+   */
   implicit def stringTuple2ProducedTuple(tuple: (String, String)): (Produced, Produced) = tuple match {
-    case (name1, name2) => {
+    case (name1, name2) =>
       val produced1 : Produced = Context.produceds.find(_.name equals name1).
         getOrElse(throw new IllegalArgumentException(s"there is no produced named $name1"))
       val produced2 : Produced = Context.produceds.find(_.name equals name2).
         getOrElse(throw new IllegalArgumentException(s"there is no produced named $name2"))
       (produced1, produced2)
-    }
   }
-
+  
   // Convert a int to Node
-  implicit def int2node(int: Int) = new Node(int)
+  implicit def int2node(int: Int): Node = new Node(int)
 
 
   class PimpedProducer(val prod: Producer) {
@@ -39,7 +42,7 @@ object Implicits {
   }
 
   class Node(int: Int){
-    def proccess = int
+    def process = int
   }
 }
 
