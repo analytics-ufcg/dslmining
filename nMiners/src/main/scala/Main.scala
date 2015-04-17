@@ -23,22 +23,21 @@ object Main {
 //  }
 
   def main(args: Array[String]): Unit = {
-    //generateUserVectors()
+    generateUserVectors(args(0),args(1))
 
     //coocurrence()
     //prepare()
-    multiply()
-    var itemsToRecommendFor: FastIDSet = null
+    //multiply()
   //  itemsToRecommendFor.
   }
 
-  def generateUserVectors() = {
-    val inputPath = "src/test/data/data_2/input_test_level1.txt"
-    val outPutPath = "src/output"
+  def generateUserVectors(inputPath:String,outputPath:String) = {
+   // val inputPath = "src/test/data/data_2/input_test_level1.txt"
+    //val outPutPath = "src/output"
 
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
       classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VectorWritable],
-      classOf[TextInputFormat],classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
+      classOf[TextInputFormat],classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],inputPath,outputPath,true)
 
 
   }
