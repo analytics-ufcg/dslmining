@@ -1,5 +1,5 @@
-import API._
-import Utils.MapReduceUtils
+import api._
+import utils.MapReduceUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
@@ -14,7 +14,7 @@ import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 object Main {
 
 //  def generateMap() = {
-//    val inputPath = "src/test/data/input_test_level1.txt"
+//    val inputPath = "src/test/data/input.dat"
 //    val outPutPath = "src/outputMap"
 //
 //    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
@@ -34,7 +34,6 @@ object Main {
   def generateUserVectors(inputPath:String,outputPath:String) = {
    // val inputPath = "src/test/data/data_2/input_test_level1.txt"
     //val outPutPath = "src/output"
-
     MapReduceUtils.runJob("First Phase",classOf[WikipediaToItemPrefsMapper],classOf[WikipediaToUserVectorReducer],
       classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VectorWritable],
       classOf[TextInputFormat],classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],inputPath,outputPath,true)
@@ -82,7 +81,6 @@ object Main {
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,"")
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
-    println(job.getConfiguration().getInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS,1))
     MapReduceUtils.deleteFolder(outPutPath,conf)
     job.waitForCompletion(true)
   }

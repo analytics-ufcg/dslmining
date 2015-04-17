@@ -1,9 +1,9 @@
-package API
+package api
 
 import java.util
 import java.util.{Collections, PriorityQueue}
 
-import Utils.Implicits._
+import utils.Implicits._
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable

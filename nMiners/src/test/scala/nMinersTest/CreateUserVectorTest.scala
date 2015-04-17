@@ -1,6 +1,6 @@
 package nMinersTest
 
-import API.UserVectorGenerator
+import api.UserVectorGenerator
 
 //import Utils._
 

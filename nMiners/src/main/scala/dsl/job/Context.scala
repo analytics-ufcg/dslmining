@@ -1,4 +1,4 @@
-package DSL.job
+package dsl.job
 
 import scala.collection.mutable.Queue
 

@@ -1,21 +1,17 @@
-package API
+package api
 import java.util.regex.Pattern
 
-import Utils.Implicits._
-<<<<<<< HEAD
-import org.apache.hadoop.mapreduce.{Mapper, Reducer}
-=======
-import Utils.MapReduceUtils
+import utils.Implicits._
+import utils.MapReduceUtils
 import org.apache.hadoop.io._
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Reducer, Mapper}
->>>>>>> c0fbd48b8d8119dd732230c65cf53afd272ed1b3
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
 
 /**
- * Created by arthur on 07/04/15.
+ * This step computes the co-occurrence of each pair of items accessed by a user, for all users.
  */
 class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWritable, VarIntWritable, VarIntWritable]{
 
@@ -34,7 +30,8 @@ class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWrit
 }
 
 /**
- * Created by arthur on 06/04/15.
+ * This step builds, for all items, a vector with its items co-occurrences and a number that counts how many times this
+ * co-occurrence was occurr.
  */
 class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritable,VarIntWritable,VectorWritable]{
 
@@ -52,6 +49,7 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
 
     context write(itemIndex1,new VectorWritable(cooccureenceRow))
   }
+
 }
 
 
