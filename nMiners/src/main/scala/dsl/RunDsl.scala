@@ -11,9 +11,9 @@ object RunDsl extends App {
   val dataset = config.getString("nMiners.in")
   val output = config.getString("nMiners.out")
 
-  parse_data on dataset then
-    in_parallel(produce(similarity_matrix using PEARSON_CORRELATION as "similarity") and
+  parse_data on dataset in (5 process)
+    in_parallel(produce(similarity_matrix using COOCURRENCE as "coocurrence") and
       produce(user_vector)) then
-    multiply("similarity" by "user_vector") then
+    multiply("coocurrence" by "user_vector") then
     produce(recommendation) write_on output then execute
 }
