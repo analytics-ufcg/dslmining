@@ -126,7 +126,6 @@ class Parallel(val jobs: List[Job]) extends Job {
  * Is a object that can produce a data parse that should be used immediately
  */
 object parse_data extends Applier {
-
   var path = ""
 
   // Get a data file
@@ -174,6 +173,7 @@ object coocurrence_matrix extends Producer {
   }
 }
 
+
 object similarity_matrix extends Producer {
   override var name: String = this.getClass.getSimpleName
   var similarity:SimilarityType = null;
@@ -186,8 +186,7 @@ object similarity_matrix extends Producer {
   }
 
   override def run() = {
-    print(this.name)
-    print(this.similarity)
+    print("Similarity")
   }
 
 }

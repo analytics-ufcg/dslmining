@@ -1,7 +1,8 @@
 package dsl.job
 
 /**
- * Created by viana on 17/04/15.
+ * Abstract class that is responsible to create all Similarity Type
+ * @param _type Similarity Type
  */
 abstract class SimilarityType (_type:String)
 

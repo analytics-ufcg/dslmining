@@ -12,7 +12,7 @@ object JobUtils {
     producer
   }
 
-  def produce(producer: Producer): Job = produce(producer, producer.getClass.getSimpleName)
+  def produce(producer: Producer): Job = produce(producer, producer.name.replaceAll("\\$",""))
 
   def multiply(tuple: (Produced, Produced)): Job = multiply(tuple._1, tuple._2)
 
