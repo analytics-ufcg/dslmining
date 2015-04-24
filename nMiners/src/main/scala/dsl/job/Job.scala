@@ -98,9 +98,7 @@ class Parallel(val jobs: List[Job]) extends Job {
 
   // Run each job
   override def run() = {
-    Console.err.println("\n\nRunning in parallel\n{")
     jobs.foreach(_.run())
-    Console.err.println("}")
   }
 
   // Setup the number of nodes
@@ -128,8 +126,13 @@ class Parallel(val jobs: List[Job]) extends Job {
 object parse_data extends Applier {
   var path = ""
 
+  def clear() = {
+    Context.clearQueues()
+  }
+
   // Get a data file
   def on(path: String): Job = {
+    clear()
     this.path = path
     name = this.getClass.getSimpleName + s" on $path"
     this
@@ -213,6 +216,7 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
 
   pathToOutput = "data/test4"
+
 
   // Run the job
   override def run() = {

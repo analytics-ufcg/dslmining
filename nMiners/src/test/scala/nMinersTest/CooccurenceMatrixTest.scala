@@ -6,17 +6,11 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.apache.mahout.math.{VarLongWritable, VectorWritable}
 import org.scalatest.{FlatSpec, Matchers}
 
-/**
- * Created by leonardo on 08/04/15.
- */
 class CooccurenceMatrixTest extends FlatSpec with Matchers{
-
-//  def cleanDataTrash() = {
-//    return "Not implemented yet";
-//  }
 
 
   val BASE_PHATH = "src/test/data/"
+
   "Level one" should "execute first mapreduce" in {
     val inputPath = BASE_PHATH+"data_1/input_test_level2"
     val dirOutputName = BASE_PHATH+"output_test_level2"; // Path da pasta e nao do arquivo
