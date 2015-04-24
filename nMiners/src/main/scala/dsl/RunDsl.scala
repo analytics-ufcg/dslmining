@@ -4,8 +4,12 @@ import com.typesafe.config.ConfigFactory
 import dsl.job.Implicits._
 import dsl.job.JobUtils._
 import dsl.job._
+import dsl.notification.NotificationEndServer
 
 object RunDsl extends App {
+
+  NotificationEndServer.start
+
   //ConfigFactory load the values of main/resources/application.conf file
   val config = ConfigFactory.load()
   val dataset = config.getString("nMiners.in")
@@ -16,4 +20,6 @@ object RunDsl extends App {
       produce(user_vector)) then
     multiply("coocurrence" by "user_vector") then
     produce(recommendation) write_on output then execute
+
+  NotificationEndServer.stop
 }

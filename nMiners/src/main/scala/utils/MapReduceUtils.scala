@@ -171,13 +171,18 @@ object MapReduceUtils {
              inputPath: String,
              outputPath: String,
              deleteFolder: Boolean,
-             numMapTasks: Option[Int] = None) = {
+             numMapTasks: Option[Int] = None,
+             aSync: Boolean = false) = {
     val job: Job = prepareJob(jobName, mapperClass, reducerClass, mapOutputKeyClass, mapOutputValueClass,
       outputKeyClass, outputValueClass, inputFormatClass, outputFormatClass, inputPath, outputPath, numMapTasks)
     val conf = job getConfiguration()
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    job.waitForCompletion(true)
+    if(aSync){
+      job.submit()
+    }else{
+      job.waitForCompletion(true)
+    }
   }
 
 

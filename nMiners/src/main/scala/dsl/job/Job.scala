@@ -4,6 +4,7 @@ import java.nio.file.{Files, Paths}
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 import api._
+import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
@@ -98,6 +99,7 @@ class Parallel(val jobs: List[Job]) extends Job {
 
   // Run each job
   override def run() = {
+    NotificationEndServer.start
     jobs.foreach(_.run())
   }
 
