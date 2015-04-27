@@ -55,15 +55,15 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
 
 object MatrixGenerator{
 
-  def runJOb(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
-             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
+  def runJob(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean,numReduceTasks:Option[Int]): Unit ={
     MapReduceUtils.runJob(
       "Second Phase",
       classOf[UserVectorToCooccurrenceMapper],
       classOf[UserVectorToCooccurenceReduce],
       classOf[VarIntWritable],
       classOf[VarIntWritable],
-      classOf[VarLongWritable],
+      classOf[VarIntWritable],
       classOf[VectorWritable],
       inputFormatClass,
       outputFormatClass,

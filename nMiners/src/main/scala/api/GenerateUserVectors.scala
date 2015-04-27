@@ -79,19 +79,19 @@ object UserVectorGenerator{
    * @param deleteFolder
    */
   def runJob(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
-             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean,numReduceTasks:Option[Int]): Unit ={
     MapReduceUtils.runJob("First Phase",
       classOf[WikipediaToItemPrefsMapper],
       classOf[WikipediaToUserVectorReducer],
       classOf[VarLongWritable],
       classOf[VarLongWritable],
       classOf[VarLongWritable],
-      classOf[VarLongWritable],
+      classOf[VectorWritable],
      inputFormatClass,
      outputFormatClass,
       inputPath,
       dirOutputName,
-      deleteFolder)
+      deleteFolder,numReduceTasks)
   }
 
 //  def runMap(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],

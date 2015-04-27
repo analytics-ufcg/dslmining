@@ -137,6 +137,7 @@ object parse_data extends Applier {
     clear()
     this.path = path
     name = this.getClass.getSimpleName + s" on $path"
+    Context.addInputPath(path)
     this
   }
 
@@ -145,13 +146,6 @@ object parse_data extends Applier {
   // Run the job
   override def run() = {
     super.run()
-    runJob(name, mapperClass = classOf[WikipediaToItemPrefsMapper],
-      reducerClass = classOf[WikipediaToUserVectorReducer],
-      mapOutputKeyClass = classOf[VarLongWritable], mapOutputValueClass = classOf[VarLongWritable],
-      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[VectorWritable],
-      inputFormatClass = classOf[TextInputFormat],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],
-      inputPath = path, outputPath = pathToOutput, deleteFolder = false, numMapTasks = numProcess)
   }
 }
 
@@ -171,14 +165,8 @@ object similarity_matrix extends Producer {
 
   override def run() = {
   super.run()
-
-    runJob(name, mapperClass = classOf[UserVectorToCooccurrenceMapper],
-      reducerClass = classOf[UserVectorToCooccurenceReduce], mapOutputKeyClass = classOf[VarIntWritable],
-      mapOutputValueClass = classOf[VarIntWritable], outputKeyClass = classOf[VarIntWritable],
-      outputValueClass = classOf[VectorWritable],
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], pathToInput,
-      pathToOutput, deleteFolder = true, numMapTasks = numProcess)
+    MatrixGenerator.runJob(pathToInput,pathToOutput, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+    outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
   }
 
 }
@@ -189,21 +177,19 @@ object similarity_matrix extends Producer {
 object user_vector extends Producer {
   override var name: String = this.getClass.getSimpleName
 
-  pathToOutput = "data/test3"
+  pathToOutput = "data/test"
 
   // Run the job
   override def run() = {
     super.run()
 
-    val path1 = "data/test2/part-r-00000"
-    val path2 = "data/test/part-r-00000"
+    pathToInput = Context.getInputPath()
 
-    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput,
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      deleteFolder = true, numMapTasks = numProcess)
+    UserVectorGenerator.runJob(pathToInput,pathToOutput, inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
   }
 }
+
 
 object recommendation extends Producer {
   override var name: String = this.getClass.getSimpleName
@@ -218,12 +204,21 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
 
   pathToOutput = "data/test4"
+  val pathToOutput1 = "data/test3"
 
+  val path1 = "data/test2/part-r-00000"
+  val path2 = "data/test/part-r-00000"
 
   // Run the job
   override def run() = {
     super.run()
 
+    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
+          inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+          outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+          deleteFolder = true, numMapTasks = numProcess)
+
+    pathToInput =  pathToOutput1 + "/part-r-00000"
     val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
       mapOutputValueClass = classOf[VectorWritable],

@@ -19,7 +19,7 @@ class CreateUserVectorTest extends FlatSpec with Matchers{
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo
 
     UserVectorGenerator.runJob(inputPath,namePath, classOf[TextInputFormat],
-      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true)
+      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true,None)
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+"data_1/output_test_level1.txt").getLines.toList
     val fileLinesOutput = io.Source.fromFile(namePath + "/part-r-00000").getLines.toList
