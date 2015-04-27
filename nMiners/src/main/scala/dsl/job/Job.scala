@@ -156,7 +156,7 @@ object similarity_matrix extends Producer {
   override var name: String = this.getClass.getSimpleName
   var similarity:SimilarityType = null;
 
-  pathToOutput = "data/test2"
+  pathToOutput = Context.basePath + "/data/test2"
 
   def using(similarity:SimilarityType): Producer =  {
     this.similarity = similarity
@@ -165,6 +165,7 @@ object similarity_matrix extends Producer {
 
   override def run() = {
   super.run()
+
     MatrixGenerator.runJob(pathToInput,pathToOutput, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
     outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
   }
@@ -177,7 +178,7 @@ object similarity_matrix extends Producer {
 object user_vector extends Producer {
   override var name: String = this.getClass.getSimpleName
 
-  pathToOutput = "data/test"
+  pathToOutput = Context.basePath + "/data/test"
 
   // Run the job
   override def run() = {
@@ -203,11 +204,11 @@ object recommendation extends Producer {
 class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
 
-  pathToOutput = "data/test4"
-  val pathToOutput1 = "data/test3"
+  pathToOutput = Context.basePath + "/data/test4"
+  val pathToOutput1 = Context.basePath + "/data/test3"
 
-  val path1 = "data/test2/part-r-00000"
-  val path2 = "data/test/part-r-00000"
+  val path1 = Context.basePath + "/data/test2/part-r-00000"
+  val path2 = Context.basePath + "/data/test/part-r-00000"
 
   // Run the job
   override def run() = {
