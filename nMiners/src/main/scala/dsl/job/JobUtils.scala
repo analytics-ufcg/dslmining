@@ -8,7 +8,9 @@ object JobUtils {
   def produce(tuple: (Producer, String)): Job = produce(tuple._1, tuple._2)
 
   def produce(producer: Producer, name: String): Job = {
-    Context.produceds += new Produced(name)
+    val produced = new Produced(name)
+    Context.produceds += produced
+    producer.produced = produced
     producer
   }
 

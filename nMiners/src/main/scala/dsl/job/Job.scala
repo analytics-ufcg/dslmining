@@ -54,6 +54,21 @@ trait Job {
 
   // Execute the Job
   def run() = {
+    Context.paths(this.name) = pathToOutput + "/part-r-00000"
+    this match {
+      case prod:Producer => {
+
+        val some = Option(prod.produced)
+        some match {
+          case Some(produced) => Context.paths(produced.name) = pathToOutput + "/part-r-00000"
+          case None =>
+        }
+
+      }
+
+      case _ =>
+
+    }
     Console.err.println(s"\n\nRunning: $name")
   }
 
@@ -80,7 +95,9 @@ object execute
 /**
  * Producer is a class that can produce results that can be used anytime
  */
-abstract class Producer extends Job
+abstract class Producer extends Job{
+  var produced: Produced
+}
 
 /**
  * Applier is a class that can produce results that should be used immediately
@@ -153,6 +170,7 @@ object parse_data extends Applier {
  * Is a object that can produce similarity matrix that can be used anytime
  */
 object similarity_matrix extends Producer {
+  override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
   var similarity:SimilarityType = null;
 
@@ -176,8 +194,8 @@ object similarity_matrix extends Producer {
  * Is a object that can produce user vectors that can be used anytime
  */
 object user_vector extends Producer {
+  override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
-
   pathToOutput = Context.basePath + "/data/test"
 
   // Run the job
@@ -194,6 +212,7 @@ object user_vector extends Producer {
 
 object recommendation extends Producer {
   override var name: String = this.getClass.getSimpleName
+  override var produced: Produced = _
 }
 
 /** Multiplier is class which produce a consumer job.
@@ -207,11 +226,16 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   pathToOutput = Context.basePath + "/data/test4"
   val pathToOutput1 = Context.basePath + "/data/test3"
 
-  val path1 = Context.basePath + "/data/test2/part-r-00000"
-  val path2 = Context.basePath + "/data/test/part-r-00000"
+//  val path1 = Context.basePath + "/data/test2/part-r-00000"
+//  val path2 = Context.basePath + "/data/test/part-r-00000"
+//
+//
+
 
   // Run the job
   override def run() = {
+    val path1 = Context.paths(producedOne.name)
+    val path2 = Context.paths(producedTwo.name)
     super.run()
 
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
