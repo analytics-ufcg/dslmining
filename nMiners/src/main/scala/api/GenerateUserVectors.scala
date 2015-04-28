@@ -1,13 +1,13 @@
 package api
 import java.util.regex.Pattern
 
-import utils.{MapReduceUtils, Implicits}
 import org.apache.hadoop.io._
-import Implicits._
-import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, FileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, FileOutputFormat}
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.math._
+import utils.Implicits._
+import utils.MapReduceUtils
 
 /**
 Convert file at the format:

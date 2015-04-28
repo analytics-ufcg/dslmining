@@ -12,6 +12,11 @@ object Context {
 
   var basePath: String = ""
 
+  val jobs = new Queue[Job]()
+
+  val produceds = new Queue[Produced]()
+  val paths = new mutable.HashMap[String,String]()
+
   def getInputPath(): String = {
     paths(INPUT_PATH_KEY)
   }
@@ -24,13 +29,6 @@ object Context {
     val file = new File(inputPath)
     basePath = file.getParent
   }
-
-
-  val jobs = new Queue[Job]()
-
-  val produceds = new Queue[Produced]()
-  val paths = new mutable.HashMap[String,String]()
-
 
   def clearQueues() = {
     jobs.clear()

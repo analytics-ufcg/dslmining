@@ -12,6 +12,10 @@ object NotificationEndServer {
 
   val main = initServer
 
+  val jobsToNotify = ArrayBuffer[String]()
+
+  val notifiersFunctions = ArrayBuffer[(String, String) => Unit]()
+
   def initServer = {
     val m = new Main
     m.enableHangupSupport
@@ -19,9 +23,12 @@ object NotificationEndServer {
     m
   }
 
-  val jobsToNotify = ArrayBuffer[String]()
+  def addNotificationFunction(func: (String, String) => Unit) = notifiersFunctions += func
+
 
   def addJobToNotification(jobId: String) = jobsToNotify += jobId
+
+  def addJobsToNotification(jobsId: List[String]) = jobsToNotify ++= jobsId
 
   def start = {
     if (!started) {
@@ -38,6 +45,7 @@ object NotificationEndServer {
   }
 
   def notifyJob(jobId: String, status: String) = {
+    notifiersFunctions foreach {_ apply (jobId, status)}
     println("\n\n\n\n\n\n\n\n\n\n\n\n")
     println(s"$jobId is finished with status $status")
     println("\n\n\n\n\n\n\n\n\n\n\n\n")

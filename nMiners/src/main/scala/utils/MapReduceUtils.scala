@@ -1,6 +1,7 @@
 package utils
 
 import api.WikipediaToItemPrefsMapper
+import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapred.JobConf
@@ -34,7 +35,8 @@ object MapReduceUtils {
              inputPath: String,
              outputPath: String,
              deleteFolder: Boolean,
-             numMapTasks: Option[Int] = None) = {
+             numMapTasks: Option[Int] = None)
+            (implicit aSync: Boolean = false) = {
 
 
     val conf = new JobConf(new Configuration())
@@ -63,7 +65,12 @@ object MapReduceUtils {
 
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    job.waitForCompletion(true)
+    if (aSync) {
+      job.submit
+      NotificationEndServer addJobToNotification job.getJobID.toString
+    } else {
+      job waitForCompletion true
+    }
   }
 
 
@@ -108,7 +115,8 @@ object MapReduceUtils {
                      inputPath2: String,
                      outputPath: String,
                      deleteFolder: Boolean,
-                     numMapTasks: Option[Int] = None) = {
+                     numMapTasks: Option[Int] = None)
+                    (implicit aSync: Boolean = false) = {
 
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
@@ -139,7 +147,12 @@ object MapReduceUtils {
 
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    job.waitForCompletion(true)
+    if (aSync) {
+      job.submit
+      NotificationEndServer addJobToNotification job.getJobID.toString
+    } else {
+      job waitForCompletion true
+    }
   }
 
   /**
@@ -171,17 +184,18 @@ object MapReduceUtils {
              inputPath: String,
              outputPath: String,
              deleteFolder: Boolean,
-             numMapTasks: Option[Int] = None,
-             aSync: Boolean = false) = {
+             numMapTasks: Option[Int] = None)
+            (implicit aSync: Boolean = false) = {
     val job: Job = prepareJob(jobName, mapperClass, reducerClass, mapOutputKeyClass, mapOutputValueClass,
       outputKeyClass, outputValueClass, inputFormatClass, outputFormatClass, inputPath, outputPath, numMapTasks)
     val conf = job getConfiguration()
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
-    if(aSync){
-      job.submit()
-    }else{
-      job.waitForCompletion(true)
+    if (aSync) {
+      job.submit
+      NotificationEndServer addJobToNotification job.getJobID.toString
+    } else {
+      job waitForCompletion true
     }
   }
 
@@ -201,7 +215,7 @@ object MapReduceUtils {
    * @param outputPath
    * @param numMapTasks
    * @return
-   *         Configured Job
+   * Configured Job
    */
   def prepareJob(jobName: String,
                  mapperClass: Class[_ <: Mapper[_, _, _, _]],
@@ -218,7 +232,7 @@ object MapReduceUtils {
       case Some(num) => conf setNumReduceTasks num
       case _ => {}
     }
-    
+
     val job: Job = new Job(conf, jobName)
 
     //Set Mapper and Reducer Classes

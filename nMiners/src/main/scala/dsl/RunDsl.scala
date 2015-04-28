@@ -1,26 +1,25 @@
 package dsl
 
+import api.AggregateAndRecommendReducer
 import com.typesafe.config.ConfigFactory
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
-import dsl.job._
-import dsl.notification.NotificationEndServer
+import dsl.job.{execute, Job}
+import org.apache.hadoop.io._
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
+import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
+import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
+import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import utils.MapReduceUtils
+
+import scala.collection.JavaConversions.asScalaIterator
 
 object RunDsl extends App {
-
-  //NotificationEndServer.stop
-  //NotificationEndServer.start
 
   //ConfigFactory load the values of main/resources/application.conf file
   val config = ConfigFactory.load()
   val dataset = config.getString("nMiners.inputTests")
   val output = config.getString("nMiners.out")
 
-  parse_data on dataset in (5 process) then
-    produce(user_vector)  then
-      produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-    multiply("coocurrence" by "user_vector") then
-    produce(recommendation) write_on output then execute
-
-  //NotificationEndServer.stop
+  WordCount("", "") then WordCount("", "") then execute
 }

@@ -1,20 +1,21 @@
 package dsl.job
 
 import java.io.File
-import java.nio.file.{Path, Files, Paths}
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.nio.file.{Files, Paths}
+import java.util.concurrent.CountDownLatch
 
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
+import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 import utils.MapReduceUtils
-import utils.MapReduceUtils.runJob
 
 /**
  * Job is a trait that produce results
@@ -33,6 +34,8 @@ trait Job {
 
   var pathToOut = defaultOutPath
 
+  implicit var aSync = false
+
   def then(job: Job): Job = {
     job.pathToInput = pathToOutput.getOrElse("") + "/part-r-00000"
     Context.jobs += this
@@ -43,10 +46,10 @@ trait Job {
 
   private def after() = {
 
-    if (this.getClass().isInstance(recommendation)){
+    if (this.getClass().isInstance(recommendation)) {
       val outputFile = new File(pathToOutput.get)
       outputFile getParentFile() mkdirs()
-      Files.copy(Paths.get(pathToInput  + "/part-r-00000"), Paths.get(pathToOutput.get), REPLACE_EXISTING)
+      Files.copy(Paths.get(pathToInput + "/part-r-00000"), Paths.get(pathToOutput.get), REPLACE_EXISTING)
 
     }
 
@@ -64,11 +67,11 @@ trait Job {
   def run() = {
     //Context.paths(this.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
     this match {
-      case prod:Producer => {
+      case prod: Producer => {
         prod.generateOutputPath()
         val some = Option(prod.produced)
         some match {
-          case Some(produced) => Context.paths(produced.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
+          case Some(produced) => Context.paths(produced.name) = pathToOutput.getOrElse("") + "/part-r-00000"
           case None =>
         }
 
@@ -94,8 +97,8 @@ trait Job {
         job.pathToInput = lastOutput
       job.exec()
       lastOutput = job.pathToOutput.getOrElse("")
-    }
-    )
+    })
+    NotificationEndServer.stop
   }
 
   // Setup the number of nodes
@@ -110,10 +113,10 @@ object execute
 /**
  * Producer is a class that can produce results that can be used anytime
  */
-abstract class Producer extends Job{
+abstract class Producer extends Job {
   var produced: Produced
 
-  def generateOutputPath(): Unit ={
+  def generateOutputPath(): Unit = {
     this.pathToOutput match {
       case None => this.pathToOutput = Some(Context.basePath + "/data_" + produced.name)
       case _ =>
@@ -137,10 +140,24 @@ abstract class Consumer extends Job
  */
 class Parallel(val jobs: List[Job]) extends Job {
 
+  def notificationIn(latch: CountDownLatch) = (jobId: String, status: String) => {
+    println("\n\n\n\n\n\n\n\n\n\n\n\n")
+    println(status)
+    println("\n\n\n\n\n\n\n\n\n\n\n\n")
+    latch.countDown()
+  }
+
   // Run each job
   override def run() = {
     NotificationEndServer.start
-    jobs.foreach(_.run())
+    val jobsRunnedCountDown = new CountDownLatch(jobs.size)
+    NotificationEndServer addNotificationFunction notificationIn(jobsRunnedCountDown)
+    jobs.foreach(job => {
+      job.aSync = true
+      job.run()
+    })
+
+    jobsRunnedCountDown.await
   }
 
   // Setup the number of nodes
@@ -195,20 +212,20 @@ object parse_data extends Applier {
 object similarity_matrix extends Producer {
   override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
-  var similarity:SimilarityType = null;
+  var similarity: SimilarityType = null;
 
- // pathToOutput = Context.basePath + "/data/test2"
+  // pathToOutput = Context.basePath + "/data/test2"
 
-  def using(similarity:SimilarityType): Producer =  {
+  def using(similarity: SimilarityType): Producer = {
     this.similarity = similarity
     this
   }
 
   override def run() = {
-  super.run()
+    super.run()
 
-    MatrixGenerator.runJob(pathToInput,pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-    outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
+    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
   }
 
 }
@@ -219,7 +236,7 @@ object similarity_matrix extends Producer {
 object user_vector extends Producer {
   override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
- // pathToOutput = Context.basePath + "/data_" + this.produced.name
+  // pathToOutput = Context.basePath + "/data_" + this.produced.name
 
   // Run the job
   override def run() = {
@@ -227,8 +244,8 @@ object user_vector extends Producer {
 
     pathToInput = Context.getInputPath()
 
-    UserVectorGenerator.runJob(pathToInput,pathToOutput.get, inputFormatClass = classOf[TextInputFormat],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
+    UserVectorGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
   }
 }
 
@@ -249,10 +266,10 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   //pathToOutput = Context.basePath + "/data/test4"
   //val pathToOutput1 = Context.basePath + "/data/test3"
 
-//  val path1 = Context.basePath + "/data/test2/part-r-00000"
-//  val path2 = Context.basePath + "/data/test/part-r-00000"
-//
-//
+  //  val path1 = Context.basePath + "/data/test2/part-r-00000"
+  //  val path2 = Context.basePath + "/data/test/part-r-00000"
+  //
+  //
 
 
   // Run the job
@@ -262,15 +279,15 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     super.run()
     val BASE = pathToOutput match {
       case None => Context.basePath
-      case Some(path) =>  path
+      case Some(path) => path
     }
     val pathToOutput1 = BASE + "/data_prepare"
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
-          inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-          outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-          deleteFolder = true, numMapTasks = numProcess)
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      deleteFolder = true, numMapTasks = numProcess)
 
-    pathToInput =  pathToOutput1 + "/part-r-00000"
+    pathToInput = pathToOutput1 + "/part-r-00000"
     val pathToOutput2 = BASE + "/data_multiplied"
 
     val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
@@ -288,5 +305,31 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     MapReduceUtils.deleteFolder(pathToOutput2, conf)
     pathToOutput = Some(pathToOutput2)
     job.waitForCompletion(true)
+  }
+}
+
+case class WordCount(val input: String, val output: String) extends Job {
+  override var name: String = "WordCount"
+
+  override def run = {
+    super.run
+    MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[WordMap],
+      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      mapOutputValueClass = classOf[VectorWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
+      input, output, numMapTasks = numProcess)
+
+  }
+
+  class WordMap extends Mapper[LongWritable, Text, Text, IntWritable] {
+    override def map(key: LongWritable, text: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context) =
+      text.toString split (" ") foreach ((word: String) => context.write(new Text(word), new IntWritable(1)))
+  }
+
+  class WordReduce extends Reducer[Text, IntWritable, Text, IntWritable] {
+    override def reduce(word: Text, iterator: java.lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context) =
+      context.write(word, iterator.iterator().sum)
   }
 }
