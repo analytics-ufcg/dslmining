@@ -1,11 +1,13 @@
 package dsl.job
 
-import java.nio.file.{Files, Paths}
+import java.io.File
+import java.nio.file.{Path, Files, Paths}
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
@@ -41,18 +43,20 @@ trait Job {
 
   private def after() = {
 
-    if (this.getClass().isInstance(recommendation)/){
-      Files.copy(Paths.get(pathToOutput.getOrElse("")  + "/part-r-00000"), Paths.get(pathToOut), REPLACE_EXISTING)
+    if (this.getClass().isInstance(recommendation)){
+      val outputFile = new File(pathToOutput.get)
+      outputFile getParentFile() mkdirs()
+      Files.copy(Paths.get(pathToInput  + "/part-r-00000"), Paths.get(pathToOutput.get), REPLACE_EXISTING)
 
     }
-//    if (!(pathToOut equals defaultOutPath)) {
-//    }
+
     this.afterJob()
   }
 
   // Write on path
   def write_on(path: String) = {
     pathToOutput = Some(path)
+    Context.addFinalOutput(path)
     this
   }
 
@@ -84,7 +88,14 @@ trait Job {
   // Run all jobs
   def then(exec: execute.type) = {
     Context.jobs += this
-    Context.jobs.foreach(_.exec())
+    var lastOutput = ""
+    Context.jobs.foreach(job => {
+      if (lastOutput != "")
+        job.pathToInput = lastOutput
+      job.exec()
+      lastOutput = job.pathToOutput.getOrElse("")
+    }
+    )
   }
 
   // Setup the number of nodes
@@ -249,15 +260,18 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     val path1 = Context.paths(producedOne.name)
     val path2 = Context.paths(producedTwo.name)
     super.run()
-
-    val pathToOutput1 = Context.basePath + "/data_prepare"
+    val BASE = pathToOutput match {
+      case None => Context.basePath
+      case Some(path) =>  path
+    }
+    val pathToOutput1 = BASE + "/data_prepare"
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
           inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
           outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
           deleteFolder = true, numMapTasks = numProcess)
 
     pathToInput =  pathToOutput1 + "/part-r-00000"
-    val pathToOutput2 = Context.basePath + "/data_multiplied"
+    val pathToOutput2 = BASE + "/data_multiplied"
 
     val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
@@ -272,6 +286,7 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
     MapReduceUtils.deleteFolder(pathToOutput2, conf)
+    pathToOutput = Some(pathToOutput2)
     job.waitForCompletion(true)
   }
 }
