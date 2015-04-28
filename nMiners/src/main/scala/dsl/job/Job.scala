@@ -25,14 +25,14 @@ trait Job {
 
   var numProcess: Option[Int] = None
 
-  var pathToOutput = "data/test"
+  var pathToOutput: Option[String] = None
 
   var pathToInput = ""
 
   var pathToOut = defaultOutPath
 
   def then(job: Job): Job = {
-    job.pathToInput = pathToOutput + "/part-r-00000"
+    job.pathToInput = pathToOutput.getOrElse("") + "/part-r-00000"
     Context.jobs += this
     job
   }
@@ -40,27 +40,31 @@ trait Job {
   def afterJob() = {}
 
   private def after() = {
-    if (!(pathToOut equals defaultOutPath)) {
-      Files.copy(Paths.get(pathToOutput + "/part-r-00000"), Paths.get(pathToOut), REPLACE_EXISTING)
+
+    if (this.getClass().isInstance(recommendation)/){
+      Files.copy(Paths.get(pathToOutput.getOrElse("")  + "/part-r-00000"), Paths.get(pathToOut), REPLACE_EXISTING)
+
     }
+//    if (!(pathToOut equals defaultOutPath)) {
+//    }
     this.afterJob()
   }
 
   // Write on path
   def write_on(path: String) = {
-    pathToOutput = path
+    pathToOutput = Some(path)
     this
   }
 
   // Execute the Job
   def run() = {
-    Context.paths(this.name) = pathToOutput + "/part-r-00000"
+    //Context.paths(this.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
     this match {
       case prod:Producer => {
-
+        prod.generateOutputPath()
         val some = Option(prod.produced)
         some match {
-          case Some(produced) => Context.paths(produced.name) = pathToOutput + "/part-r-00000"
+          case Some(produced) => Context.paths(produced.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
           case None =>
         }
 
@@ -97,6 +101,14 @@ object execute
  */
 abstract class Producer extends Job{
   var produced: Produced
+
+  def generateOutputPath(): Unit ={
+    this.pathToOutput match {
+      case None => this.pathToOutput = Some(Context.basePath + "/data_" + produced.name)
+      case _ =>
+    }
+  }
+
 }
 
 /**
@@ -174,7 +186,7 @@ object similarity_matrix extends Producer {
   override var name: String = this.getClass.getSimpleName
   var similarity:SimilarityType = null;
 
-  pathToOutput = Context.basePath + "/data/test2"
+ // pathToOutput = Context.basePath + "/data/test2"
 
   def using(similarity:SimilarityType): Producer =  {
     this.similarity = similarity
@@ -184,7 +196,7 @@ object similarity_matrix extends Producer {
   override def run() = {
   super.run()
 
-    MatrixGenerator.runJob(pathToInput,pathToOutput, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+    MatrixGenerator.runJob(pathToInput,pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
     outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
   }
 
@@ -196,7 +208,7 @@ object similarity_matrix extends Producer {
 object user_vector extends Producer {
   override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
-  pathToOutput = Context.basePath + "/data/test"
+ // pathToOutput = Context.basePath + "/data_" + this.produced.name
 
   // Run the job
   override def run() = {
@@ -204,7 +216,7 @@ object user_vector extends Producer {
 
     pathToInput = Context.getInputPath()
 
-    UserVectorGenerator.runJob(pathToInput,pathToOutput, inputFormatClass = classOf[TextInputFormat],
+    UserVectorGenerator.runJob(pathToInput,pathToOutput.get, inputFormatClass = classOf[TextInputFormat],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],deleteFolder = true, numReduceTasks = numProcess)
   }
 }
@@ -223,8 +235,8 @@ object recommendation extends Producer {
 class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
 
-  pathToOutput = Context.basePath + "/data/test4"
-  val pathToOutput1 = Context.basePath + "/data/test3"
+  //pathToOutput = Context.basePath + "/data/test4"
+  //val pathToOutput1 = Context.basePath + "/data/test3"
 
 //  val path1 = Context.basePath + "/data/test2/part-r-00000"
 //  val path2 = Context.basePath + "/data/test/part-r-00000"
@@ -238,25 +250,28 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     val path2 = Context.paths(producedTwo.name)
     super.run()
 
+    val pathToOutput1 = Context.basePath + "/data_prepare"
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
           inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
           outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
           deleteFolder = true, numMapTasks = numProcess)
 
     pathToInput =  pathToOutput1 + "/part-r-00000"
+    val pathToOutput2 = Context.basePath + "/data_multiplied"
+
     val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
       mapOutputValueClass = classOf[VectorWritable],
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
       outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      pathToInput, pathToOutput, numMapTasks = numProcess)
+      pathToInput, pathToOutput2, numMapTasks = numProcess)
 
     var conf: Configuration = job getConfiguration()
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
-    MapReduceUtils.deleteFolder(pathToOutput, conf)
+    MapReduceUtils.deleteFolder(pathToOutput2, conf)
     job.waitForCompletion(true)
   }
 }
