@@ -8,8 +8,7 @@ import java.util.concurrent.CountDownLatch
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+import org.apache.hadoop.io.{IntWritable, Text}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
@@ -90,15 +89,18 @@ trait Job {
 
   // Run all jobs
   def then(exec: execute.type) = {
-    Context.jobs += this
-    var lastOutput = ""
-    Context.jobs.foreach(job => {
-      if (lastOutput != "")
-        job.pathToInput = lastOutput
-      job.exec()
-      lastOutput = job.pathToOutput.getOrElse("")
-    })
-    NotificationEndServer.stop
+    try {
+      Context.jobs += this
+      var lastOutput = ""
+      Context.jobs.foreach(job => {
+        if (lastOutput != "")
+          job.pathToInput = lastOutput
+        job.exec()
+        lastOutput = job.pathToOutput.getOrElse("")
+      })
+    } finally {
+      NotificationEndServer.stop
+    }
   }
 
   // Setup the number of nodes
@@ -141,10 +143,13 @@ abstract class Consumer extends Job
 class Parallel(val jobs: List[Job]) extends Job {
 
   def notificationIn(latch: CountDownLatch) = (jobId: String, status: String) => {
-    println("\n\n\n\n\n\n\n\n\n\n\n\n")
-    println(status)
-    println("\n\n\n\n\n\n\n\n\n\n\n\n")
-    latch.countDown()
+    if ("SUCCEEDED" equals status) {
+      latch.countDown()
+    } else {
+      NotificationEndServer.stop
+      Console.err.println(s"$jobId is finished with status $status")
+      System.exit(-1)
+    }
   }
 
   // Run each job
@@ -313,23 +318,12 @@ case class WordCount(val input: String, val output: String) extends Job {
 
   override def run = {
     super.run
-    MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[WordMap],
-      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
-      mapOutputValueClass = classOf[VectorWritable],
-      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      input, output, numMapTasks = numProcess)
-
-  }
-
-  class WordMap extends Mapper[LongWritable, Text, Text, IntWritable] {
-    override def map(key: LongWritable, text: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context) =
-      text.toString split (" ") foreach ((word: String) => context.write(new Text(word), new IntWritable(1)))
-  }
-
-  class WordReduce extends Reducer[Text, IntWritable, Text, IntWritable] {
-    override def reduce(word: Text, iterator: java.lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context) =
-      context.write(word, iterator.iterator().sum)
+    MapReduceUtils.runJob(jobName = "Prepare", mapperClass = classOf[WordMap],
+      reducerClass = classOf[WordReduce], mapOutputKeyClass = classOf[Text],
+      mapOutputValueClass = classOf[IntWritable],
+      outputKeyClass = classOf[Text], outputValueClass = classOf[IntWritable],
+      inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[TextOutputFormat[Text, IntWritable]],
+      inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
   }
 }

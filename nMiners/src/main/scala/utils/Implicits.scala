@@ -21,7 +21,9 @@ object Implicits {
 
   implicit def int2Varwritable(value: Int) = new VarIntWritable(value)
 
-  implicit def int2Longwritable(value: Int) = new VarLongWritable(value)
+  implicit def int2LongWritable(value: Int) = new VarLongWritable(value)
+
+  implicit def int2IntWritable(value: Int) = new IntWritable(value)
 
   implicit def writable2long(value: LongWritable) = value.get
 

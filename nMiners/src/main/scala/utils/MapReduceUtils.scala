@@ -66,6 +66,7 @@ object MapReduceUtils {
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
     if (aSync) {
+      NotificationEndServer configureServer conf
       job.submit
       NotificationEndServer addJobToNotification job.getJobID.toString
     } else {
@@ -148,6 +149,7 @@ object MapReduceUtils {
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
     if (aSync) {
+      NotificationEndServer configureServer conf
       job.submit
       NotificationEndServer addJobToNotification job.getJobID.toString
     } else {
@@ -192,6 +194,7 @@ object MapReduceUtils {
     if (deleteFolder) this.deleteFolder(outputPath, conf)
 
     if (aSync) {
+      NotificationEndServer configureServer conf
       job.submit
       NotificationEndServer addJobToNotification job.getJobID.toString
     } else {
