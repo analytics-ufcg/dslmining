@@ -7,19 +7,14 @@ import dsl.job._
 
 object RunDsl extends App {
 
-  //NotificationEndServer.stop
-  //NotificationEndServer.start
-
   //ConfigFactory load the values of main/resources/application.conf file
   val config = ConfigFactory.load()
-  val dataset = config.getString("nMiners.inputTests")
+  val dataset = config.getString("nMiners.in")
   val output = config.getString("nMiners.out")
 
-  parse_data on dataset in (5 process) then
+  parse_data on dataset then
     produce(user_vector)  then
     produce(similarity_matrix using COOCURRENCE as "coocurrence") then
     multiply("coocurrence" by "user_vector") then
     produce(recommendation) write_on output then execute
-
-  //NotificationEndServer.stop
 }

@@ -14,12 +14,15 @@ import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOut
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import org.slf4j.{LoggerFactory, Logger}
 import utils.MapReduceUtils
 
 /**
  * Job is a trait that produce results
  */
 trait Job {
+
+  val logger : Logger
 
   val defaultOutPath = ""
 
@@ -64,6 +67,7 @@ trait Job {
 
   // Execute the Job
   def run() = {
+
     //Context.paths(this.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
     this match {
       case prod: Producer => {
@@ -79,10 +83,10 @@ trait Job {
       case _ =>
 
     }
-    Console.err.println(s"\n\nRunning: $name")
   }
 
   private def exec() = {
+    logger.info(s"Running $name job")
     run()
     after()
   }
@@ -147,7 +151,6 @@ class Parallel(val jobs: List[Job]) extends Job {
       latch.countDown()
     } else {
       NotificationEndServer.stop
-      Console.err.println(s"$jobId is finished with status $status")
       System.exit(-1)
     }
   }
@@ -175,6 +178,7 @@ class Parallel(val jobs: List[Job]) extends Job {
   override def then(job: Job) = {
     val newJob = super.then(job)
     job.pathToInput = "data/test3"
+    logger.info("running jobs in paralel")
     jobs foreach {
       _.pathToInput = pathToOutput + "/part-r-00000"
     }
@@ -182,6 +186,7 @@ class Parallel(val jobs: List[Job]) extends Job {
   }
 
   override var name: String = "Parallel"
+  override val logger = LoggerFactory.getLogger(classOf[Parallel])
 }
 
 /**
@@ -203,6 +208,7 @@ object parse_data extends Applier {
     this
   }
 
+  override val logger = LoggerFactory.getLogger(this.getClass())
   override var name: String = ""
 
   // Run the job
@@ -216,6 +222,7 @@ object parse_data extends Applier {
  */
 object similarity_matrix extends Producer {
   override var produced: Produced = _
+  override val logger = LoggerFactory.getLogger(this.getClass())
   override var name: String = this.getClass.getSimpleName
   var similarity: SimilarityType = null;
 
@@ -241,6 +248,7 @@ object similarity_matrix extends Producer {
 object user_vector extends Producer {
   override var produced: Produced = _
   override var name: String = this.getClass.getSimpleName
+  override val logger = LoggerFactory.getLogger(this.getClass())
   // pathToOutput = Context.basePath + "/data_" + this.produced.name
 
   // Run the job
@@ -258,15 +266,16 @@ object user_vector extends Producer {
 object recommendation extends Producer {
   override var name: String = this.getClass.getSimpleName
   override var produced: Produced = _
+  override val logger = LoggerFactory.getLogger(this.getClass())
 }
 
 /** Multiplier is class which produce a consumer job.
   * @param producedOne Produce one
   * @param producedTwo Produce two
   */
-
 class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
+  override val logger = LoggerFactory.getLogger(classOf[Multiplier])
 
   //pathToOutput = Context.basePath + "/data/test4"
   //val pathToOutput1 = Context.basePath + "/data/test3"
@@ -315,6 +324,7 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
 
 case class WordCount(val input: String, val output: String) extends Job {
   override var name: String = "WordCount"
+  override val logger = LoggerFactory.getLogger(classOf[WordCount])
 
   override def run = {
     super.run

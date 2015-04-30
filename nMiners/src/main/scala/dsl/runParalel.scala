@@ -1,11 +1,13 @@
 package dsl
 
 import com.typesafe.config.ConfigFactory
-import dsl.job.{execute, WordCount}
-import dsl.job.JobUtils.in_parallel
 import dsl.job.Implicits._
+import dsl.job.JobUtils.in_parallel
+import dsl.job.{WordCount, execute}
 
 object Paralel extends App {
+
+
   val config = ConfigFactory.load()
   val dataset = config.getString("nMiners.inputTests")
   val output = "src/main/resources/wordCount"
