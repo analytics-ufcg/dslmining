@@ -326,5 +326,5 @@ class RowSimilarityJob {
       ctx.write(row, new VectorWritable(topKSimilarities))
     }
   }
-  
+
 }
