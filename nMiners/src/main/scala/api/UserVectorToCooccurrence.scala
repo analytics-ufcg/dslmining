@@ -1,31 +1,31 @@
 package api
-import java.util.regex.Pattern
 
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
+import org.apache.mahout.math._
 import utils.Implicits._
 import utils.MapReduceUtils
-import org.apache.hadoop.io._
-import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
-import org.apache.mahout.math.Vector.Element
-import org.apache.mahout.math._
+
 
 /**
- * This step computes the co-occurrence of each pair of items accessed by a user, for all users.
+  * This step computes the co-occurrence of each pair of items accessed by a user, for all users.
  */
 class UserVectorToCooccurrenceMapper extends Mapper [VarLongWritable, VectorWritable, VarIntWritable, VarIntWritable]{
 
-  val NUMBERS = Pattern compile "(\\d+)"
-
   override def map( userID : VarLongWritable, userVector:VectorWritable , context: Mapper[VarLongWritable,VectorWritable,VarIntWritable,VarIntWritable]#Context) = {
-    val it  = userVector get() nonZeroes() iterator()
-    it.foreach((item: Element) => {
-      val it2  = userVector get() nonZeroes() iterator()
-      val index1 = item.index()
-      it2.foreach((item2:Element)=> {
-        context write (index1,item2.index())
-      })
-    })
+    val it = (userVector get() nonZeroes() iterator()) map{_.index} toList
+    val pairs = for(u1 <- it; u2 <- it if u1 != u2) yield (u1, u2)
+    pairs foreach {t => context write (t._1, t._2)}
+
+//    val it  = userVector get() nonZeroes() iterator()
+//    it.foreach((item) => {
+//      val it2  = userVector get() nonZeroes() iterator()
+//      val index1 = item.index()
+//      it2.foreach((item2)=> {
+//        context write (index1,item2.index())
+//      })
+//    })
   }
 }
 
@@ -37,15 +37,17 @@ class UserVectorToCooccurenceReduce extends Reducer [VarIntWritable,VarIntWritab
 
   override def reduce(itemIndex1: VarIntWritable, itemIndex2s: java.lang.Iterable[VarIntWritable], context:  Reducer[VarIntWritable,VarIntWritable,VarIntWritable,VectorWritable]#Context) = {
 
+
     var cooccureenceRow = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
+    itemIndex2s.map(_.get()).toList.groupBy(identity).mapValues(_.size).filter(_._2 > 1).foreach{t => cooccureenceRow set (t._1, t._2)}
 
-    itemIndex2s.foreach((item: VarIntWritable) => {
-      val itemIndex2 = item.get()
-
-      val oldValue = cooccureenceRow get itemIndex2
-      cooccureenceRow set(itemIndex2, oldValue + 1)
-
-    })
+//    itemIndex2s.foreach((item: VarIntWritable) => {
+//      val itemIndex2 = item.get()
+//
+//      val oldValue = cooccureenceRow get itemIndex2
+//      cooccureenceRow set(itemIndex2, oldValue + 1)
+//
+//    })
 
     context write(itemIndex1,new VectorWritable(cooccureenceRow))
   }

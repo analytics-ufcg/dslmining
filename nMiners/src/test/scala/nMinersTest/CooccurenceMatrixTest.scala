@@ -9,7 +9,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class CooccurenceMatrixTest extends FlatSpec with Matchers{
 
 
-  val BASE_PHATH = "src/test/data/"
+  val BASE_PHATH = "src/test/resources/"
 
   "Level one" should "execute first mapreduce" in {
     val inputPath = BASE_PHATH+"data_1/input_test_level2"
@@ -22,6 +22,11 @@ class CooccurenceMatrixTest extends FlatSpec with Matchers{
     val fileLinesOutput = io.Source.fromFile(dirOutputName + "/part-r-00000").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
+
+    println("\n\n\n\n\n\n\n\n\n\n\n\n")
+    println(outputTest)
+    println(output)
+    println("\n\n\n\n\n\n\n\n\n\n\n\n")
 
     outputTest should equal (output)
   }

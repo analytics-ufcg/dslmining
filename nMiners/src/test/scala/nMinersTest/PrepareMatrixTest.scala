@@ -12,7 +12,7 @@ import org.scalatest.{Matchers, FlatSpec}
  */
 class PrepareMatrixTest  extends FlatSpec with Matchers{
 
-  val BASE_PHATH = "src/test/data/"
+  val BASE_PHATH = "src/test/resources/"
   "Level Three" should "execute three mapreduce" in {
 
     val inputPath = BASE_PHATH+"data_1/input_test_level3_2.dat"
