@@ -3,16 +3,15 @@ package api
 import java.io.IOException
 import java.util.Random
 
+import dsl.job.Context
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.IntWritable
-import org.apache.mahout.common.{RandomUtils, ClassUtils}
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.Vectors
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
+import org.apache.mahout.common.{ClassUtils, RandomUtils}
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.{RowSimilarityJob, Vectors}
 import org.apache.mahout.math.map.OpenIntIntHashMap
 import org.apache.mahout.math.{RandomAccessSparseVector, Vector, VectorWritable}
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasure
-
-import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 
 class RowSimilarityJob {
   val NO_THRESHOLD: Double = Double.MinValue
@@ -93,8 +92,8 @@ class RowSimilarityJob {
           neglectedObservations += 1
         }
       }
-      ctx.getCounter(Counters.USED_OBSERVATIONS).increment(usedObservations)
-      ctx.getCounter(Counters.NEGLECTED_OBSERVATIONS).increment(neglectedObservations)
+   /*   ctx.getCounter(Counters.USED_OBSERVATIONS).increment(usedObservations)
+      ctx.getCounter(Counters.NEGLECTED_OBSERVATIONS).increment(neglectedObservations)*/
       return downsampledRow
     }
 
@@ -120,7 +119,7 @@ class RowSimilarityJob {
         maxValues.setQuick(row.get, maxValue)
       }
       norms.setQuick(row.get, similarity.norm(rowVector))
-      ctx.getCounter(Counters.ROWS).increment(1)
+//      ctx.getCounter(Counters.ROWS).increment(1)
     }
 
     @throws(classOf[IOException])
@@ -132,4 +131,35 @@ class RowSimilarityJob {
     }
   }
 
+ class MergeVectorsReducer extends Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable] {
+    var normsPath :Path
+    var numNonZeroEntriesPath :Path
+    var maxValuesPath :Path
+
+    def MergeVectorsReducer() {
+    }
+
+   @throws(classOf[IOException])
+   @throws(classOf[InterruptedException])
+   override def setup(ctx: Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable]#Context) {
+     val conf: Configuration = ctx.getConfiguration
+     normsPath = new Path(conf.get(NORMS_PATH))
+     numNonZeroEntriesPath = new Path(conf.get(NUM_NON_ZERO_ENTRIES_PATH))
+     maxValuesPath = new Path(conf.get(MAXVALUES_PATH))
+    }
+
+    protected reduce(IntWritable row, Iterable<VectorWritable> partialVectors, Context ctx) throws IOException, InterruptedException {
+      Vector partialVector = Vectors.merge(partialVectors);
+      if(row.get() == -2147483648) {
+        Vectors.write(partialVector, this.normsPath, ctx.getConfiguration());
+      } else if(row.get() == -2147483647) {
+        Vectors.write(partialVector, this.maxValuesPath, ctx.getConfiguration());
+      } else if(row.get() == -2147483646) {
+        Vectors.write(partialVector, this.numNonZeroEntriesPath, ctx.getConfiguration(), true);
+      } else {
+        ctx.write(row, new VectorWritable(partialVector));
+      }
+
+    }
+  }
 }
