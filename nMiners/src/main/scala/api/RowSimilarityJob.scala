@@ -47,7 +47,7 @@ class RowSimilarityJob extends AbstractJob{
 
 
   @throws(classOf[Exception])
-  def run(args: java.util.List[String]): Int = {
+  def run(args: Array[String]): Int={
     addInputOption
     addOutputOption
     addOption("numberOfColumns", "r", "Number of columns in the input matrix", false)
@@ -60,9 +60,7 @@ class RowSimilarityJob extends AbstractJob{
     addOption("randomSeed", null, "use this seed for sampling", false)
     addOption(DefaultOptionCreator.overwriteOption.create)
 
-    var v3 : java.lang.String[]  = (java.util.Arrays[String]) args.toArray();
-
-    val parsedArgs: Map[String, List[String]] = parseArguments(args.toArray(java.lang.String[args]))
+   val parsedArgs: java.util.Map[java.lang.String, java.util.List[java.lang.String]] =  parseArguments(args)
 
     if (parsedArgs == null) {
       return -1
@@ -109,7 +107,7 @@ class RowSimilarityJob extends AbstractJob{
     countObservations.waitForCompletion(true)
     if (shouldRunNextPhase(parsedArgs, currentPhase)) {
       val normsAndTranspose: Job = prepareJob(getInputPath, weightsPath, classOf[RowSimilarityJob.VectorNormMapper], classOf[IntWritable], classOf[VectorWritable], classOf[RowSimilarityJob.MergeVectorsReducer], classOf[IntWritable], classOf[VectorWritable])
-      normsAndTranspose.setCombinerClass(classOf[RowSimilarityJob.MergeVectorsCombiner])
+      normsAndTranspose.setCombinerClass(classOf[MergeVectorsCombiner])
       val normsAndTransposeConf: Configuration = normsAndTranspose.getConfiguration
       normsAndTransposeConf.set(THRESHOLD, String.valueOf(threshold))
       normsAndTransposeConf.set(NORMS_PATH, normsPath.toString)
@@ -153,10 +151,44 @@ class RowSimilarityJob extends AbstractJob{
     return 0
   }
 
+//  protected void reduce(KEYIN key, Iterable<VALUEIN> values, Reducer.Context context) throws IOException, InterruptedException {
+//    Iterator i$ = values.iterator();
+//
+//    while(i$.hasNext()) {
+//      Object value = i$.next();
+//      context.write(key, value);
+//    }
+//
+//  }
+  class MergeVectorsCombiner extends Reducer[IntWritable,VectorWritable,IntWritable,VectorWritable] {
+    @throws(classOf[IOException])
+    @throws(classOf[InterruptedException])                                                                  /*[KEYIN, VALUEIN, KEYOUT, VALUEOUT]*/
+   protected override def reduce(row: IntWritable, partialVectors: java.lang.Iterable[VectorWritable], ctx: Reducer[IntWritable,VectorWritable,IntWritable,VectorWritable]#Context) = {
+      ctx.write(row, new VectorWritable(Vectors.merge(partialVectors)))
+    }
+  }
+
   private[cooccurrence] object Counters extends Enumeration {
     type Counters = Value
     val ROWS, USED_OBSERVATIONS, NEGLECTED_OBSERVATIONS, COOCCURRENCES, PRUNED_COOCCURRENCES = Value
   }
+
+  protected def shouldRunNextPhase(args: java.util.Map[java.lang.String, java.util.List[java.lang.String]], currentPhase: AtomicInteger): Boolean = {
+    var phase = currentPhase.getAndIncrement();
+    val temp = args
+    val startPhase = getOption((Map) args, "--startPhase");
+    var endPhase = getOption((Map) args, "--endPhase");
+    var phaseSkipped = startPhase != null && phase < Integer.parseInt(startPhase) || endPhase != null && phase > Integer.parseInt(endPhase);
+    if (phaseSkipped) {
+      /*TODO
+      log.info("Skipping phase {}", Integer.valueOf(phase));
+      */
+    }
+
+    return !phaseSkipped;
+  }
+
+
 
   class VectorNormMapper extends Mapper[IntWritable, VectorWritable, IntWritable, VectorWritable] {
     var similarity: VectorSimilarityMeasure = null
