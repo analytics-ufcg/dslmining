@@ -8,8 +8,6 @@ import java.util.concurrent.CountDownLatch
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
@@ -307,29 +305,29 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     job.waitForCompletion(true)
   }
 }
-
-case class WordCount(val input: String, val output: String) extends Job {
-  override var name: String = "WordCount"
-
-  override def run = {
-    super.run
-    MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[WordMap],
-      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
-      mapOutputValueClass = classOf[VectorWritable],
-      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      input, output, numMapTasks = numProcess)
-
-  }
-
-  class WordMap extends Mapper[LongWritable, Text, Text, IntWritable] {
-    override def map(key: LongWritable, text: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context) =
-      text.toString split (" ") foreach ((word: String) => context.write(new Text(word), new IntWritable(1)))
-  }
-
-  class WordReduce extends Reducer[Text, IntWritable, Text, IntWritable] {
-    override def reduce(word: Text, iterator: java.lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context) =
-      context.write(word, iterator.iterator().sum)
-  }
-}
+//
+//case class WordCount(val input: String, val output: String) extends Job {
+//  override var name: String = "WordCount"
+//
+//  override def run = {
+//    super.run
+//    MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[WordMap],
+//      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+//      mapOutputValueClass = classOf[VectorWritable],
+//      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+//      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+//      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
+//      input, output, numMapTasks = numProcess)
+//
+//  }
+//
+//  class WordMap extends Mapper[LongWritable, Text, Text, IntWritable] {
+//    override def map(key: LongWritable, text: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context) =
+//      text.toString split (" ") foreach ((word: String) => context.write(new Text(word), new IntWritable(1)))
+//  }
+//
+//  class WordReduce extends Reducer[Text, IntWritable, Text, IntWritable] {
+//    override def reduce(word: Text, iterator: java.lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context) =
+//      context.write(word, iterator.iterator().sum)
+//  }
+//}

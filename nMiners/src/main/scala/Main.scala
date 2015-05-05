@@ -1,15 +1,14 @@
 import api._
-import org.apache.hadoop.fs.{FileStatus, FileSystem, Path}
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
-//import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob
-import utils.MapReduceUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import utils.MapReduceUtils
 
 /**
  * Created by arthur on 06/04/15.
@@ -27,12 +26,12 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 //    generateUserVectors(args(0),args(1))
-  CalculateSimilarityMatrix
-    RowSimilarityJob
     //coocurrence()
     //prepare()
-    //multiply()
+//    multiply()
   //  itemsToRecommendFor.
+    val rowSim : RowSimilarityJobAnalytics = new RowSimilarityJobAnalytics
+    rowSim.CalculateSimilarityMatrix.runJob()
   }
 
   def generateUserVectors(inputPath:String,outputPath:String) = {
