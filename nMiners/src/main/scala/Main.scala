@@ -2,6 +2,7 @@ import api._
 import org.apache.hadoop.fs.{FileStatus, FileSystem, Path}
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
+//import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob
 import utils.MapReduceUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat, TextInputFormat}
@@ -25,8 +26,9 @@ object Main {
 //  }
 
   def main(args: Array[String]): Unit = {
-    generateUserVectors(args(0),args(1))
-
+//    generateUserVectors(args(0),args(1))
+  CalculateSimilarityMatrix
+    RowSimilarityJob
     //coocurrence()
     //prepare()
     //multiply()
