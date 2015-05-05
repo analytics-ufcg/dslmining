@@ -31,7 +31,7 @@ public class PearsonCorrelationSimilarity extends org.apache.mahout.math.hadoop.
     }
     // center non-zero elements
     double average = vector.norm(1) / vector.getNumNondefaultElements();
-    Iterator<Vector.Element> nonZeroElements = vector.iterateNonZero();
+    Iterator<Vector.Element> nonZeroElements = vector.nonZeroes().iterator();
     while (nonZeroElements.hasNext()) {
       Vector.Element nonZeroElement = nonZeroElements.next();
       vector.setQuick(nonZeroElement.index(), nonZeroElement.get() - average);

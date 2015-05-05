@@ -1,5 +1,6 @@
 import api._
 import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
 import org.apache.hadoop.conf.Configuration
@@ -15,24 +16,21 @@ import utils.MapReduceUtils
  */
 object Main {
 
-//  def generateMap() = {
-//    val inputPath = "src/test/data/input.dat"
-//    val outPutPath = "src/outputMap"
-//
-//    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
-//      classOf[VarLongWritable],classOf[VarLongWritable],
-//      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
-//  }
+
 
   def main(args: Array[String]): Unit = {
-//    generateUserVectors(args(0),args(1))
-    //coocurrence()
-    //prepare()
-//    multiply()
-  //  itemsToRecommendFor.
-    val rowSim : RowSimilarityJobAnalytics = new RowSimilarityJobAnalytics
-    rowSim.CalculateSimilarityMatrix.runJob()
+
+
+    RowSimilarityJobAnalytics.runJob(
+      "/home/arthur/dslmining/nMiners/src/test/resources/data_1/output_userVector_bin",
+      "/home/arthur/dslmining/nMiners/src/test/resources/output_test_level2/",
+        classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
+    classOf[TextOutputFormat[IntWritable,VectorWritable]],
+    true,
+      similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
   }
+
+
 
   def generateUserVectors(inputPath:String,outputPath:String) = {
    // val inputPath = "src/test/data/data_2/input_test_level1.txt"

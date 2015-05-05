@@ -32,8 +32,8 @@ public class EuclideanDistanceSimilarity implements VectorSimilarityMeasure {
   @Override
   public double norm(Vector vector) {
     double norm = 0;
-    Iterator<Vector.Element> nonZeroElements = vector.iterateNonZero();
-    while (nonZeroElements.hasNext()) {
+    Iterator<Vector.Element> nonZeroElements = vector.nonZeroes().iterator();
+      while (nonZeroElements.hasNext()) {
       double value = nonZeroElements.next().get();
       norm += value * value;
     }
