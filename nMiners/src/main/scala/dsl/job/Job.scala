@@ -8,8 +8,6 @@ import java.util.concurrent.CountDownLatch
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
