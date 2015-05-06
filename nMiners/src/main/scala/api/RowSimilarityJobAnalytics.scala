@@ -259,12 +259,12 @@ object RowSimilarityJobAnalytics {
       val maxValuesPath: Path = new Path("maxValues.bin")
             val pairwiseSimilarityPath: Path = new Path("pairwiseSimilarity")
       val observationsPerColumnPath: Path = new Path("observationsPerColumn.bin")
-      //      val currentPhase: AtomicInteger = new AtomicInteger
-      //      val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[RowSimilarityJob.CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[RowSimilarityJob.SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
-      //      countObservations.setCombinerClass(classOf[VectorSumCombiner])
-      //      countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
-      //      countObservations.setNumReduceTasks(1)
-      //      countObservations.waitForCompletion(true)
+            val currentPhase: AtomicInteger = new AtomicInteger
+            val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[RowSimilarityJob.CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[RowSimilarityJob.SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
+            countObservations.setCombinerClass(classOf[VectorSumCombiner])
+            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
+            countObservations.setNumReduceTasks(1)
+            countObservations.waitForCompletion(true)
 
 
 
