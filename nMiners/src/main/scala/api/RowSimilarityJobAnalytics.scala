@@ -8,16 +8,17 @@ import java.util.{Arrays, Comparator, Random}
 import com.google.common.primitives.Ints
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.{NullWritable, IntWritable}
+import org.apache.hadoop.io.{IntWritable, NullWritable}
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, FileOutputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Job, Mapper, Reducer}
 import org.apache.mahout.common.{AbstractJob, ClassUtils, RandomUtils}
 import org.apache.mahout.math.Vector.Element
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.{VectorSimilarityMeasure, VectorSimilarityMeasures}
+import org.apache.mahout.math._
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.{MutableElement, TopElementsQueue, Vectors}
 import org.apache.mahout.math.map.OpenIntIntHashMap
-import org.apache.mahout.math._
+
 import utils.Implicits._
 import utils.MapReduceUtils
 
@@ -66,7 +67,7 @@ class VectorNormMapper extends Mapper[VarLongWritable, VectorWritable, VarIntWri
 
   override def setup(ctx: Mapper[VarLongWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
     val conf: Configuration = ctx.getConfiguration
-    similarity = ClassUtils.instantiateAs(conf.get(RowSimilarityJobAnalytics.SIMILARITY_CLASSNAME), classOf[VectorSimilarityMeasure])
+    //similarity = ClassUtils.instantiateAs(conf.get(RowSimilarityJobAnalytics.SIMILARITY_CLASSNAME), classOf[VectorSimilarityMeasure])
     norms = new RandomAccessSparseVector(Integer.MAX_VALUE)
     nonZeroEntries = new RandomAccessSparseVector(Integer.MAX_VALUE)
     maxValues = new RandomAccessSparseVector(Integer.MAX_VALUE)
@@ -261,11 +262,11 @@ object RowSimilarityJobAnalytics {
             val pairwiseSimilarityPath: Path = new Path("pairwiseSimilarity")
       val observationsPerColumnPath: Path = new Path("observationsPerColumn.bin")
             val currentPhase: AtomicInteger = new AtomicInteger
-            val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[RowSimilarityJob.CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[RowSimilarityJob.SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
-            countObservations.setCombinerClass(classOf[VectorSumCombiner])
-            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
-            countObservations.setNumReduceTasks(1)
-            countObservations.waitForCompletion(true)
+//  val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
+//            countObservations.setCombinerClass(classOf[VectorSumCombiner])
+//            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
+//            countObservations.setNumReduceTasks(1)
+//            countObservations.waitForCompletion(true)
 
 
 
