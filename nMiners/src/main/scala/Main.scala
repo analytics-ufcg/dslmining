@@ -21,13 +21,20 @@ object Main {
   def main(args: Array[String]): Unit = {
 
 
-    RowSimilarityJobAnalytics.runJob(
+    RowSimilarityJobAnalytics.runCountObservationsJob(
       "src/test/resources/data_1/output_userVector_bin",
-      "src/test/resources/output_test_level2/",
-        classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
-    classOf[TextOutputFormat[IntWritable,VectorWritable]],
-    true,
-      similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
+      "src/test/resources/output/phase1/",
+        classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+    classOf[TextOutputFormat[IntWritable,VectorWritable]],true)
+
+        RowSimilarityJobAnalytics.runJob(
+          "src/test/resources/data_1/output_userVector_bin",
+          "src/test/resources/output/phase2/",
+            classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+        classOf[TextOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
+
+
+
   }
 
 

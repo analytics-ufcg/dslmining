@@ -8,38 +8,45 @@ import java.util.{Arrays, Comparator, Random}
 import com.google.common.primitives.Ints
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.{IntWritable, NullWritable}
+import org.apache.hadoop.io.{ NullWritable}
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Job, Mapper, Reducer}
+import org.apache.mahout.common.mapreduce.VectorSumCombiner
 import org.apache.mahout.common.{AbstractJob, ClassUtils, RandomUtils}
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.{VectorSimilarityMeasures, VectorSimilarityMeasure}
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.{MutableElement, TopElementsQueue, Vectors}
 import org.apache.mahout.math.map.OpenIntIntHashMap
 
 import utils.Implicits._
 import utils.MapReduceUtils
 
-/*class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable] {
-  private var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE)
+
+class CountObservationsMapper extends Mapper[VarLongWritable,VectorWritable, NullWritable, VectorWritable] {
+  var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE);
 
   @throws(classOf[IOException])
   @throws(classOf[InterruptedException])
-  protected override def map(rowIndex: IntWritable, rowVectorWritable: VectorWritable, ctx: Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable]#Context) {
-    val row: Vector = rowVectorWritable.get
-    for (elem <- row.nonZeroes) {
-      columnCounts.setQuick(elem.index, columnCounts.getQuick(elem.index) + 1)
+  override def map(rowIndex: VarLongWritable, rowVectorWritable: VectorWritable, ctx: Mapper[VarLongWritable,VectorWritable,
+    NullWritable, VectorWritable]#Context) = {
+    val row:Vector= rowVectorWritable.get()
+    val i$:util.Iterator[Element]  = row.nonZeroes().iterator()
+
+    while(i$.hasNext()) {
+      val elem :Element = i$.next()
+      this.columnCounts.setQuick(elem.index(), this.columnCounts.getQuick(elem.index()) + 1.0D)
     }
   }
 
   @throws(classOf[IOException])
   @throws(classOf[InterruptedException])
-  protected override def cleanup(ctx: Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable]#Context) {
+  protected override def cleanup(ctx: Mapper[VarLongWritable,VectorWritable, NullWritable, VectorWritable]#Context) = {
     ctx.write(NullWritable.get, new VectorWritable(columnCounts))
   }
-}*/
+
+}
 
 class SumObservationsReducer extends Reducer[NullWritable, VectorWritable, NullWritable, VectorWritable] {
   @throws(classOf[IOException])
@@ -67,7 +74,7 @@ class VectorNormMapper extends Mapper[VarLongWritable, VectorWritable, VarIntWri
 
   override def setup(ctx: Mapper[VarLongWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
     val conf: Configuration = ctx.getConfiguration
-    //similarity = ClassUtils.instantiateAs(conf.get(RowSimilarityJobAnalytics.SIMILARITY_CLASSNAME), classOf[VectorSimilarityMeasure])
+    similarity = ClassUtils.instantiateAs(conf.get(RowSimilarityJobAnalytics.SIMILARITY_CLASSNAME), classOf[VectorSimilarityMeasure])
     norms = new RandomAccessSparseVector(Integer.MAX_VALUE)
     nonZeroEntries = new RandomAccessSparseVector(Integer.MAX_VALUE)
     maxValues = new RandomAccessSparseVector(Integer.MAX_VALUE)
@@ -91,7 +98,7 @@ class VectorNormMapper extends Mapper[VarLongWritable, VectorWritable, VarIntWri
     var usedObservations: Long = 0
     var neglectedObservations: Long = 0
     //      import scala.collection.JavaConversions._
-    for (elem <- rowVector.nonZeroes) {
+    for (elem <- rowVector.nonZeroes.iterator()) {
       val columnCount: Int = observationsPerColumn.get(elem.index)
       val columnSampleRate: Double = Math.min(maxObservationsPerColumn, columnCount).toDouble / columnCount.toDouble
       if (random.nextDouble <= Math.min(rowSampleRate, columnSampleRate)) {
@@ -114,7 +121,7 @@ class VectorNormMapper extends Mapper[VarLongWritable, VectorWritable, VarIntWri
     var numNonZeroEntries: Int = 0
     var maxValue: Double = Double.MinValue
     //      import scala.collection.JavaConversions._
-    for (element <- rowVector.nonZeroes) {
+    for (element <- rowVector.nonZeroes.iterator()) {
       val partialColumnVector: RandomAccessSparseVector = new RandomAccessSparseVector(Integer.MAX_VALUE)
       partialColumnVector.setQuick(row.get toInt, element.get)
       ctx.write(new VarIntWritable(element.index), new VectorWritable(partialColumnVector))
@@ -195,122 +202,145 @@ object RowSimilarityJobAnalytics {
   val NUM_NON_ZERO_ENTRIES_VECTOR_MARKER: Int = Integer.MIN_VALUE + 2
 
 
-//  object CalculateSimilarityMatrix {
-    def runJob(inputPath:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
-               outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,
-               numMapTasks : Option[Int] = None, similarityClassnameArg:String): Unit ={
+  def runCountObservationsJob(inputPath: String, outPutPath: String, inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+                              outputFormatClass: Class[_ <: FileOutputFormat[_, _]], deleteFolder: Boolean): Unit = {
 
-      //      addInputOption
-      //      addOutputOption
-      //      addOption("numberOfColumns", "r", "Number of columns in the input matrix", false)
-      //      addOption("similarityClassname", "s", "Name of distributed similarity class to instantiate, alternatively use " + "one of the predefined similarities (" + VectorSimilarityMeasures.list + ')')
-      //      addOption("maxSimilaritiesPerRow", "m", "Number of maximum similarities per row (default: " + DEFAULT_MAX_SIMILARITIES_PER_ROW + ')', String.valueOf(DEFAULT_MAX_SIMILARITIES_PER_ROW))
-      //      addOption("excludeSelfSimilarity", "ess", "compute similarity of rows to themselves?", String.valueOf(false))
-      //      addOption("threshold", "tr", "discard row pairs with a similarity value below this", false)
-//            addOption("maxObservationsPerRow", null, "sample rows down to this number of entries", String.valueOf(DEFAULT_MAX_OBSERVATIONS_PER_ROW))
-//            addOption("maxObservationsPerColumn", null, "sample columns down to this number of entries", String.valueOf(DEFAULT_MAX_OBSERVATIONS_PER_COLUMN))
-//            addOption("randomSeed", null, "use this seed for sampling", false)
-      //      addOption(DefaultOptionCreator.overwriteOption.create)
+    val countJob: Job = MapReduceUtils.prepareJob("countObs",
+      classOf[CountObservationsMapper],
+      classOf[SumObservationsReducer],
+      classOf[NullWritable],
+      classOf[VectorWritable],
+      classOf[NullWritable],
+      classOf[VectorWritable],
+      classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      classOf[TextOutputFormat[VarIntWritable, VectorWritable]],
+      inputPath,
+      outPutPath)
+    val observationsPerColumnPath: Path = new Path("observationsPerColumn.bin")
 
-      //      val parsedArgs: java.util.Map[java.lang.String, java.util.List[java.lang.String]] =  parseArguments(args)
 
-      //      if (parsedArgs == null) {
-      //        return -1
-      //      }
-//      var numberOfColumns: Int = 0
-//      if (hasOption("numberOfColumns")) {
-//        numberOfColumns = getOption("numberOfColumns").toInt
-//      }
-     // else {
-//        numberOfColumns = getDimensions(getInputPath)
-      //}
-      //      val similarityClassnameArg: String = getOption("similarityClassname")
-      var similarityClassname: String = null
-      try {
-        similarityClassname = VectorSimilarityMeasures.valueOf(similarityClassnameArg).getClassname
+    countJob.setCombinerClass(classOf[VectorSumCombiner])
+    countJob.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
+    countJob.setNumReduceTasks(1)
+    countJob.waitForCompletion(true)
+  }
+
+
+  //  object CalculateSimilarityMatrix {
+  def runJob(inputPath: String, outPutPath: String, inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+             outputFormatClass: Class[_ <: FileOutputFormat[_, _]], deleteFolder: Boolean,
+             numMapTasks: Option[Int] = None, similarityClassnameArg: String): Unit = {
+
+    //      addInputOption
+    //      addOutputOption
+    //      addOption("numberOfColumns", "r", "Number of columns in the input matrix", false)
+    //      addOption("similarityClassname", "s", "Name of distributed similarity class to instantiate, alternatively use " + "one of the predefined similarities (" + VectorSimilarityMeasures.list + ')')
+    //      addOption("maxSimilaritiesPerRow", "m", "Number of maximum similarities per row (default: " + DEFAULT_MAX_SIMILARITIES_PER_ROW + ')', String.valueOf(DEFAULT_MAX_SIMILARITIES_PER_ROW))
+    //      addOption("excludeSelfSimilarity", "ess", "compute similarity of rows to themselves?", String.valueOf(false))
+    //      addOption("threshold", "tr", "discard row pairs with a similarity value below this", false)
+    //            addOption("maxObservationsPerRow", null, "sample rows down to this number of entries", String.valueOf(DEFAULT_MAX_OBSERVATIONS_PER_ROW))
+    //            addOption("maxObservationsPerColumn", null, "sample columns down to this number of entries", String.valueOf(DEFAULT_MAX_OBSERVATIONS_PER_COLUMN))
+    //            addOption("randomSeed", null, "use this seed for sampling", false)
+    //      addOption(DefaultOptionCreator.overwriteOption.create)
+
+    //      val parsedArgs: java.util.Map[java.lang.String, java.util.List[java.lang.String]] =  parseArguments(args)
+
+    //      if (parsedArgs == null) {
+    //        return -1
+    //      }
+    //      var numberOfColumns: Int = 0
+    //      if (hasOption("numberOfColumns")) {
+    //        numberOfColumns = getOption("numberOfColumns").toInt
+    //      }
+    // else {
+    //        numberOfColumns = getDimensions(getInputPath)
+    //}
+    //      val similarityClassnameArg: String = getOption("similarityClassname")
+    var similarityClassname: String = null
+    try {
+      similarityClassname = VectorSimilarityMeasures.valueOf(similarityClassnameArg).getClassname
+    }
+    catch {
+      case iae: IllegalArgumentException => {
+        similarityClassname = similarityClassnameArg
       }
-      catch {
-        case iae: IllegalArgumentException => {
-          similarityClassname = similarityClassnameArg
-        }
-      }
+    }
 
-      //      if (hasOption(DefaultOptionCreator.OVERWRITE_OPTION)) {
-      //        HadoopUtil.delete(getConf, getTempPath)
-      //        HadoopUtil.delete(getConf, getOutputPath)
-      //      }
+    //      if (hasOption(DefaultOptionCreator.OVERWRITE_OPTION)) {
+    //        HadoopUtil.delete(getConf, getTempPath)
+    //        HadoopUtil.delete(getConf, getOutputPath)
+    //      }
 
-      //      val maxSimilaritiesPerRow: Int = getOption("maxSimilaritiesPerRow").toInt
-      //      val excludeSelfSimilarity: Boolean = getOption("excludeSelfSimilarity").toBoolean
-     // val threshold: Double = if (hasOption("threshold")) getOption("threshold").toDouble else NO_THRESHOLD
-       val threshold: Double =NO_THRESHOLD
+    //      val maxSimilaritiesPerRow: Int = getOption("maxSimilaritiesPerRow").toInt
+    //      val excludeSelfSimilarity: Boolean = getOption("excludeSelfSimilarity").toBoolean
+    // val threshold: Double = if (hasOption("threshold")) getOption("threshold").toDouble else NO_THRESHOLD
+    val threshold: Double = NO_THRESHOLD
 
-     // val randomSeed: Long = if (hasOption("randomSeed")) getOption("randomSeed").toLong else NO_FIXED_RANDOM_SEED
-     val randomSeed: Long = NO_FIXED_RANDOM_SEED
+    // val randomSeed: Long = if (hasOption("randomSeed")) getOption("randomSeed").toLong else NO_FIXED_RANDOM_SEED
+    val randomSeed: Long = NO_FIXED_RANDOM_SEED
 
-//      val maxObservationsPerRow: Int = getOption("maxObservationsPerRow").toInt
-//      val maxObservationsPerColumn: Int = getOption("maxObservationsPerColumn").toInt
+    //      val maxObservationsPerRow: Int = getOption("maxObservationsPerRow").toInt
+    //      val maxObservationsPerColumn: Int = getOption("maxObservationsPerColumn").toInt
 
 
-      val maxObservationsPerRow: Int = DEFAULT_MAX_OBSERVATIONS_PER_ROW
-      val maxObservationsPerColumn: Int = DEFAULT_MAX_OBSERVATIONS_PER_COLUMN
+    val maxObservationsPerRow: Int = DEFAULT_MAX_OBSERVATIONS_PER_ROW
+    val maxObservationsPerColumn: Int = DEFAULT_MAX_OBSERVATIONS_PER_COLUMN
 
-      val weightsPath: Path = new Path("weight");
-      val normsPath: Path = new Path("norms.bin")
-      val numNonZeroEntriesPath: Path = new Path("numNonZeroEntries.bin")
-      val maxValuesPath: Path = new Path("maxValues.bin")
-            val pairwiseSimilarityPath: Path = new Path("pairwiseSimilarity")
-      val observationsPerColumnPath: Path = new Path("observationsPerColumn.bin")
-            val currentPhase: AtomicInteger = new AtomicInteger
-//  val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
-//            countObservations.setCombinerClass(classOf[VectorSumCombiner])
-//            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
-//            countObservations.setNumReduceTasks(1)
-//            countObservations.waitForCompletion(true)
+    val weightsPath: Path = new Path("weight");
+    val normsPath: Path = new Path("norms.bin")
+    val numNonZeroEntriesPath: Path = new Path("numNonZeroEntries.bin")
+    val maxValuesPath: Path = new Path("maxValues.bin")
+    val pairwiseSimilarityPath: Path = new Path("pairwiseSimilarity")
+    val observationsPerColumnPath: Path = new Path("observationsPerColumn.bin")
+    val currentPhase: AtomicInteger = new AtomicInteger
+    //  val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
+    //            countObservations.setCombinerClass(classOf[VectorSumCombiner])
+    //            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
+    //            countObservations.setNumReduceTasks(1)
+    //            countObservations.waitForCompletion(true)
 
 
-
-      //TODO falta COMBINER
-      val normsAndTranspose: Job = MapReduceUtils.prepareJob("Similarity",
-        classOf[VectorNormMapper],
-        classOf[MergeVectorsReducer],
-        classOf[VarIntWritable],
-        classOf[VectorWritable],
-        classOf[VarIntWritable],
-        classOf[VectorWritable],
-        classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
-        classOf[TextOutputFormat[VarIntWritable,VectorWritable]],
+    //TODO falta COMBINER
+    val normsAndTranspose: Job = MapReduceUtils.prepareJob("Similarity",
+      classOf[VectorNormMapper],
+      classOf[MergeVectorsReducer],
+      classOf[VarIntWritable],
+      classOf[VectorWritable],
+      classOf[VarIntWritable],
+      classOf[VectorWritable],
+      classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      classOf[TextOutputFormat[VarIntWritable, VectorWritable]],
       inputPath,
       outPutPath)
 
 
-      normsAndTranspose.setCombinerClass(classOf[MergeVectorsCombiner])
-      val normsAndTransposeConf: Configuration = normsAndTranspose.getConfiguration
-      normsAndTransposeConf.set(THRESHOLD, String.valueOf(threshold))
-      normsAndTransposeConf.set(NORMS_PATH, normsPath.toString)
-      normsAndTransposeConf.set(NUM_NON_ZERO_ENTRIES_PATH, numNonZeroEntriesPath.toString)
-      normsAndTransposeConf.set(MAXVALUES_PATH, maxValuesPath.toString)
-      normsAndTransposeConf.set(SIMILARITY_CLASSNAME, similarityClassname)
-      normsAndTransposeConf.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
-      normsAndTransposeConf.set(MAX_OBSERVATIONS_PER_ROW, String.valueOf(maxObservationsPerRow))
-      normsAndTransposeConf.set(MAX_OBSERVATIONS_PER_COLUMN, String.valueOf(maxObservationsPerColumn))
-      normsAndTransposeConf.set(RANDOM_SEED, String.valueOf(randomSeed))
-      val succeeded: Boolean = normsAndTranspose.waitForCompletion(true)
+    normsAndTranspose.setCombinerClass(classOf[MergeVectorsCombiner])
+    val normsAndTransposeConf: Configuration = normsAndTranspose.getConfiguration
+    normsAndTransposeConf.set(THRESHOLD, String.valueOf(threshold))
+    normsAndTransposeConf.set(NORMS_PATH, normsPath.toString)
+    normsAndTransposeConf.set(NUM_NON_ZERO_ENTRIES_PATH, numNonZeroEntriesPath.toString)
+    normsAndTransposeConf.set(MAXVALUES_PATH, maxValuesPath.toString)
+    normsAndTransposeConf.set(SIMILARITY_CLASSNAME, similarityClassname)
+    normsAndTransposeConf.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
+    normsAndTransposeConf.set(MAX_OBSERVATIONS_PER_ROW, String.valueOf(maxObservationsPerRow))
+    normsAndTransposeConf.set(MAX_OBSERVATIONS_PER_COLUMN, String.valueOf(maxObservationsPerColumn))
+    normsAndTransposeConf.set(RANDOM_SEED, String.valueOf(randomSeed))
+    val succeeded: Boolean = normsAndTranspose.waitForCompletion(true)
 
-    }
-//  }
+  }
 
+  //  }
 
 
   @throws(classOf[Exception])
-  def run(args: Array[String]): Int= {
+  def run(args: Array[String]): Int = {
     return 0;
   }
 
-  class MergeVectorsCombiner extends Reducer[VarIntWritable,VectorWritable,VarIntWritable,VectorWritable] {
+  class MergeVectorsCombiner extends Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable] {
     @throws(classOf[IOException])
-    @throws(classOf[InterruptedException])                                                                  /*[KEYIN, VALUEIN, KEYOUT, VALUEOUT]*/
-   protected override def reduce(row: VarIntWritable, partialVectors: java.lang.Iterable[VectorWritable], ctx: Reducer[VarIntWritable,VectorWritable,VarIntWritable,VectorWritable]#Context) = {
+    @throws(classOf[InterruptedException]) /*[KEYIN, VALUEIN, KEYOUT, VALUEOUT]*/
+    protected override def reduce(row: VarIntWritable, partialVectors: java.lang.Iterable[VectorWritable], ctx: Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) = {
       ctx.write(row, new VectorWritable(Vectors.merge(partialVectors)))
     }
   }
@@ -377,12 +407,12 @@ object RowSimilarityJobAnalytics {
           val occurrenceA: Vector.Element = occurrences(n);
           val dots: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE);
           for (m: Int <- n to occurrences.length) {
-            val occurrenceB:Vector.Element = occurrences(m);
+            val occurrenceB: Vector.Element = occurrences(m);
             if (threshold == NO_THRESHOLD || consider(occurrenceA, occurrenceB)) {
               dots.setQuick(occurrenceB.index(), similarity.aggregate(occurrenceA.get(), occurrenceB.get()));
-              cooccurrences = cooccurrences+1;
+              cooccurrences = cooccurrences + 1;
             } else {
-              prunedCooccurrences = prunedCooccurrences+1;
+              prunedCooccurrences = prunedCooccurrences + 1;
             }
           }
           ctx.write(new VarIntWritable(occurrenceA.index()), new VectorWritable(dots));
@@ -482,51 +512,16 @@ object RowSimilarityJobAnalytics {
     @throws(classOf[InterruptedException])
     protected override def setup(ctx: Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
       maxSimilaritiesPerRow = ctx.getConfiguration.getInt(MAX_SIMILARITIES_PER_ROW, 0)
-     // Preconditions.checkArgument(maxSimilaritiesPerRow > 0, "Maximum number of similarities per row must be greater then 0!")
+      // Preconditions.checkArgument(maxSimilaritiesPerRow > 0, "Maximum number of similarities per row must be greater then 0!")
     }
 
     @throws(classOf[IOException])
     @throws(classOf[InterruptedException])
-    protected override def reduce(row: VarIntWritable, partials:  java.lang.Iterable[VectorWritable], ctx: Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
+    protected override def reduce(row: VarIntWritable, partials: java.lang.Iterable[VectorWritable], ctx: Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
       val allSimilarities: Vector = Vectors.merge(partials)
       val topKSimilarities: Vector = Vectors.topKElements(maxSimilaritiesPerRow, allSimilarities)
       ctx.write(row, new VectorWritable(topKSimilarities))
     }
   }
-  //------------------------------------------------------------------------------------------//
-  class SumObservationsReducer extends Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable] {
-
-    @throws(classOf[IOException])
-    @throws(classOf[InterruptedException])
-    protected override def reduce(nullWritable: IntWritable, partialVectors: java.lang.Iterable[VectorWritable],
-                                  ctx: Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable]#Context) = {
-
-      val counts :Vector = Vectors.sum(partialVectors.iterator())
-      Vectors.write(counts, new Path(ctx.getConfiguration().get(OBSERVATIONS_PER_COLUMN_PATH)), ctx.getConfiguration())
-      }
-    }
-  }
-
-  class CountObservationsMapper extends Mapper[IntWritable,VectorWritable,  IntWritable,VectorWritable] {
-    var columnCounts: Vector = null
-
-    @throws(classOf[IOException])
-    @throws(classOf[InterruptedException])
-    override def map(rowIndex: IntWritable, rowVectorWritable: VectorWritable, ctx: Mapper[IntWritable,VectorWritable,
-      IntWritable,VectorWritable]#Context) = {
-      val row:Vector= rowVectorWritable.get()
-      val i$:util.Iterator[Element]  = row.nonZeroes().iterator()
-
-      while(i$.hasNext()) {
-        val elem :Element = i$.next()
-        this.columnCounts.setQuick(elem.index(), this.columnCounts.getQuick(elem.index()) + 1.0D)
-      }
-    }
-
-    @throws(classOf[IOException])
-    @throws(classOf[InterruptedException])
-    protected override def cleanup(ctx: Mapper[IntWritable,VectorWritable,  IntWritable,VectorWritable]#Context) = {
-      ctx.write(new IntWritable(), new VectorWritable(this.columnCounts))
-    }
 
 }
