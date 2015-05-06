@@ -15,6 +15,6 @@ object RunDsl extends App {
   parse_data on dataset then
     produce(user_vector)  then
     produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-    multiply("coocurrence" by "user_vector") then
+    multiply("coocurrence" by "user_vector")  then
     produce(recommendation) write_on output then execute
 }
