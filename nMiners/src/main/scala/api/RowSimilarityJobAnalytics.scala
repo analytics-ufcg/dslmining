@@ -1,6 +1,7 @@
 package api
 
 import java.io.IOException
+import java.util
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.{Arrays, Comparator, Random}
 
@@ -20,7 +21,7 @@ import org.apache.mahout.math._
 import utils.Implicits._
 import utils.MapReduceUtils
 
-class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable] {
+/*class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable] {
   private var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE)
 
   @throws(classOf[IOException])
@@ -37,7 +38,7 @@ class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWr
   protected override def cleanup(ctx: Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable]#Context) {
     ctx.write(NullWritable.get, new VectorWritable(columnCounts))
   }
-}
+}*/
 
 class SumObservationsReducer extends Reducer[NullWritable, VectorWritable, NullWritable, VectorWritable] {
   @throws(classOf[IOException])
@@ -333,12 +334,6 @@ object RowSimilarityJobAnalytics {
   }
 
 
-
-
-
-
-
-
   object CooccurrencesMapper {
     val BY_INDEX: Comparator[Vector.Element] = new Comparator[Element] {
       override def compare(one: Element, two: Element): Int = {
@@ -497,5 +492,40 @@ object RowSimilarityJobAnalytics {
       ctx.write(row, new VectorWritable(topKSimilarities))
     }
   }
+  //------------------------------------------------------------------------------------------//
+  class SumObservationsReducer extends Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable] {
+
+    @throws(classOf[IOException])
+    @throws(classOf[InterruptedException])
+    protected override def reduce(nullWritable: IntWritable, partialVectors: java.lang.Iterable[VectorWritable],
+                                  ctx: Reducer[IntWritable, VectorWritable, IntWritable, VectorWritable]#Context) = {
+
+      val counts :Vector = Vectors.sum(partialVectors.iterator())
+      Vectors.write(counts, new Path(ctx.getConfiguration().get(OBSERVATIONS_PER_COLUMN_PATH)), ctx.getConfiguration())
+      }
+    }
+  }
+
+  class CountObservationsMapper extends Mapper[IntWritable,VectorWritable,  IntWritable,VectorWritable] {
+    var columnCounts: Vector = null
+
+    @throws(classOf[IOException])
+    @throws(classOf[InterruptedException])
+    override def map(rowIndex: IntWritable, rowVectorWritable: VectorWritable, ctx: Mapper[IntWritable,VectorWritable,
+      IntWritable,VectorWritable]#Context) = {
+      val row:Vector= rowVectorWritable.get()
+      val i$:util.Iterator[Element]  = row.nonZeroes().iterator()
+
+      while(i$.hasNext()) {
+        val elem :Element = i$.next()
+        this.columnCounts.setQuick(elem.index(), this.columnCounts.getQuick(elem.index()) + 1.0D)
+      }
+    }
+
+    @throws(classOf[IOException])
+    @throws(classOf[InterruptedException])
+    protected override def cleanup(ctx: Mapper[IntWritable,VectorWritable,  IntWritable,VectorWritable]#Context) = {
+      ctx.write(new IntWritable(), new VectorWritable(this.columnCounts))
+    }
 
 }

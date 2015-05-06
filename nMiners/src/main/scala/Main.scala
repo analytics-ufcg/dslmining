@@ -22,8 +22,8 @@ object Main {
 
 
     RowSimilarityJobAnalytics.runJob(
-      "/home/arthur/dslmining/nMiners/src/test/resources/data_1/output_userVector_bin",
-      "/home/arthur/dslmining/nMiners/src/test/resources/output_test_level2/",
+      "src/test/resources/data_1/output_userVector_bin",
+      "src/test/resources/output_test_level2/",
         classOf[SequenceFileInputFormat[VarIntWritable,VectorWritable]],
     classOf[TextOutputFormat[IntWritable,VectorWritable]],
     true,
