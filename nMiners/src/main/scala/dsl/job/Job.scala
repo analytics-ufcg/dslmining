@@ -305,7 +305,7 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     job.waitForCompletion(true)
   }
 }
-//
+
 //case class WordCount(val input: String, val output: String) extends Job {
 //  override var name: String = "WordCount"
 //
