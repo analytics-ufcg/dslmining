@@ -4,44 +4,54 @@ package dsl.itembasedPhases
  * Created by tales on 30/04/15.
  */
 
-import collection.mutable.Stack
+import com.typesafe.config.ConfigFactory
+import dsl.job.JobUtils._
+import dsl.job.WordCount
 import org.scalatest._
+import scala.io.Source.fromFile
+import dsl.job.Implicits._
 
 class InParallelJobTest extends FlatSpec with Matchers {
 
-  "The Job output results" should "be the same if executed in parallel or sequential" in {
+  "Equals jobs in parallel" should "have the same output" in {
 
-    val outputParallelPath1 = "src/main/resources/wordCount1/part-r-00000"
-    val outputParallelPath2 = "src/main/resources/wordCount2/part-r-00000"
-    val outputSequentialPath = "src/main/resources/wordCount3/part-r-00000"
 
-    var outputs: List[String] = List()
+    val config = ConfigFactory.load()
+    val dataset = config.getString("nMiners.inputTests")
+    val output = "src/main/resources/wordCount"
 
-    val text1 = loadTextFromFile(outputParallelPath1)
-    val text2 = loadTextFromFile(outputParallelPath2)
-    val text3 = loadTextFromFile(outputSequentialPath)
+    in_parallel(WordCount(dataset, output + "1") and WordCount(dataset, output + "2")) then dsl.job.execute
 
-    outputs = text1 :: outputs
-    outputs = text2 :: outputs
-    outputs = text3 :: outputs
-
-    //It must be at least 2 elements to check its equality
-    var index = 0
-    for ( index <- 0 to outputs.size - 2 ){
-      outputs.apply(index) should be (outputs.apply(index + 1))
+    val outputs = 1 to 2 map {
+      "src/main/resources/wordCount" + _ + "/part-r-00000"
+    } map {
+      fromFile
+    } map {
+      _.mkString
     }
 
-
-
-
+    outputs(0) should be equals outputs(1)
   }
 
+  it should "have the same output than sequencially" in {
 
-  def loadTextFromFile (filePath : String)  = {
-    val source = scala.io.Source.fromFile(filePath)
-    val lines = try source.mkString finally source.close()
-    lines
+
+    val config = ConfigFactory.load()
+    val dataset = config.getString("nMiners.inputTests")
+    val output = "src/main/resources/wordCount"
+
+    in_parallel(WordCount(dataset, output + "1") and WordCount(dataset, output + "2")) then
+      WordCount(dataset, output + "3") then
+      dsl.job.execute
+
+    val outputs = 1 to 3 map {
+      "src/main/resources/wordCount" + _ + "/part-r-00000"
+    } map {
+      fromFile
+    } map {
+      _.mkString
+    }
+
+    outputs(1) should be equals outputs(2)
   }
-
-
 }

@@ -1,8 +1,10 @@
 package dsl.itembasedPhases
 
-import dsl.job.JobUtils._
-import dsl.job.{recommendation, similarity_matrix, user_vector, parse_data}
+import dsl.job._
 import org.scalatest.{Matchers, FlatSpec}
+import dsl.job.Implicits._
+import dsl.job.JobUtils._
+
 
 /**
  * Created by arthur on 06/05/15.
@@ -16,10 +18,10 @@ class MultiplyTest  extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      produce(user_vector)  then
-      produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+      dsl.job.JobUtils.produce(user_vector) then
+      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
       multiply("coocurrence" by "user_vector")  then
-      produce(recommendation) write_on output then execute
+      dsl.job.JobUtils.produce(recommendation) write_on outputPath then dsl.job.execute
 
   }
 
