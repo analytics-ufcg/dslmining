@@ -19,20 +19,25 @@ object Main {
 
 
   def main(args: Array[String]): Unit = {
-
-
-    RowSimilarityJobAnalytics.runCountObservationsJob(
-      "src/test/resources/data_1/output_userVector_bin",
-      "src/test/resources/output/phase1/",
-        classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-    classOf[TextOutputFormat[IntWritable,VectorWritable]],true)
-
-        RowSimilarityJobAnalytics.runJob(
-          "src/test/resources/data_1/output_userVector_bin",
-          "src/test/resources/output/phase2/",
-            classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-        classOf[TextOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
-
+//    val BASE_PHATH = "src/test/data/"
+//
+//    val inputPath =
+//    UserVectorGenerator.runJob(inputPath,namePath, classOf[TextInputFormat],
+//      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true,None)
+//
+//
+//    //    RowSimilarityJobAnalytics.runCountObservationsJob(
+////      "src/test/resources/data_1/output_userVector_bin",
+////      "src/test/resources/output/phase1/",
+////        classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+////    classOf[TextOutputFormat[IntWritable,VectorWritable]],true)
+//
+//        RowSimilarityJobAnalytics.runJob(
+//          "src/test/resources/data_1/output_userVector_bin",
+//          "src/test/resources/output/phase2/",
+//            classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+//        classOf[TextOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
+//
 
 
   }
