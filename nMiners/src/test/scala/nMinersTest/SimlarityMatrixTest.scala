@@ -12,7 +12,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import utils.MapReduceUtils
 
 class SimlarityMatrixTest extends FlatSpec with Matchers{
-
+//TODO DOCUMENTATION AND REMOVE ALL COMMENTS
 
   val BASE_PHATH = "src/test/resources/"
   val BASE_PHATH_OUTPUT = BASE_PHATH + "output_similarity1/"
@@ -29,6 +29,8 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
     UserVectorGenerator.runJob(inputPath,uservector, classOf[TextInputFormat],
       classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],true,None)
 
+
+  // TODO MERGE THE METHODS runToItemJob, runCountObservationsJob, runJob
     RowSimilarityJobAnalytics.runToItemJob(
       uservectorFile,
       ratingMatrix,
@@ -48,11 +50,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
       classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
       classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE",basePath = BASE_PHATH_OUTPUT)
 
-
-
-
-
-
+    // TODO CREATE A NEW OBJECT TO RUN A MULTIPLY MATRIX
 
     val pathToOutput1 = BASE_PHATH_OUTPUT + "/data_prepare"
     PrepareMatrixGenerator.runJob(inputPath1 = similarityFile, inputPath2 = uservectorFile, outPutPath = pathToOutput1,
@@ -86,4 +84,5 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
 //
 //    outputTest should equal (output)
   }
+//TODO TESTS TO COMPARE MAHOUT OUTPUT AND nMINERS OUTPUT
 }
