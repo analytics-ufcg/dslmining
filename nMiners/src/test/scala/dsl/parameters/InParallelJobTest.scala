@@ -22,9 +22,6 @@ class InParallelJobTest extends FlatSpec with Matchers {
 
   "Equals jobs in parallel" should "have the same output" in {
 
-
-
-
     in_parallel(WordCount(dataset, output + "1") and WordCount(dataset, output + "2")) then dsl.job.execute
 
     val outputs = 1 to 2 map {
