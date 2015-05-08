@@ -11,6 +11,7 @@ import dsl.job.WordCount
 import org.scalatest._
 
 import scala.io.Source.fromFile
+import scala.reflect.io.Path
 
 class InParallelJobTest extends FlatSpec with Matchers {
 
