@@ -229,8 +229,19 @@ object similarity_matrix extends Producer {
   override def run() = {
     super.run()
 
-    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
+//    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+//      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
+
+    val BASE_PATH = pathToOutput.get
+    pathToOutput = Some (pathToOutput.get + "/matrix")
+    Context.paths(produced.name) = pathToOutput.getOrElse("") + "/part-r-00000"
+
+
+
+    RowSimilarityJobAnalytics.runJob(pathToInput + "/part-r-00000",
+      pathToOutput.get,
+      classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH)
   }
 
 }
@@ -327,3 +338,4 @@ case class WordCount(val input: String, val output: String) extends Job {
       inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
   }
 }
+

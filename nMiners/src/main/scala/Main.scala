@@ -1,37 +1,48 @@
 import api._
-import org.apache.hadoop.fs.{FileStatus, FileSystem, Path}
+import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
-import utils.MapReduceUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import utils.MapReduceUtils
 
 /**
  * Created by arthur on 06/04/15.
  */
 object Main {
 
-//  def generateMap() = {
-//    val inputPath = "src/test/data/input.dat"
-//    val outPutPath = "src/outputMap"
-//
-//    MapReduceUtils.runMap("First Phase",classOf[WikipediaToItemPrefsMapper],
-//      classOf[VarLongWritable],classOf[VarLongWritable],
-//      classOf[TextInputFormat],classOf[TextOutputFormat[VarLongWritable, VectorWritable]],inputPath,outPutPath,true)
-//  }
+
 
   def main(args: Array[String]): Unit = {
-    generateUserVectors(args(0),args(1))
+//    val BASE_PHATH = "src/test/data/"
+//
+//    val inputPath =
+//    UserVectorGenerator.runJob(inputPath,namePath, classOf[TextInputFormat],
+//      classOf[TextOutputFormat[VarLongWritable, VectorWritable]],true,None)
+//
+//
+//    //    RowSimilarityJobAnalytics.runCountObservationsJob(
+////      "src/test/resources/data_1/output_userVector_bin",
+////      "src/test/resources/output/phase1/",
+////        classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+////    classOf[TextOutputFormat[IntWritable,VectorWritable]],true)
+//
+//        RowSimilarityJobAnalytics.runJob(
+//          "src/test/resources/data_1/output_userVector_bin",
+//          "src/test/resources/output/phase2/",
+//            classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+//        classOf[TextOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE")
+//
 
-    //coocurrence()
-    //prepare()
-    //multiply()
-  //  itemsToRecommendFor.
+
   }
+
+
 
   def generateUserVectors(inputPath:String,outputPath:String) = {
    // val inputPath = "src/test/data/data_2/input_test_level1.txt"
