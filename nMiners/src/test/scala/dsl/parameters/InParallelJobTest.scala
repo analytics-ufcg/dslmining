@@ -1,24 +1,28 @@
-package dsl.itembasedPhases
+package dsl.parameters
 
 /**
  * Created by tales on 30/04/15.
  */
 
 import com.typesafe.config.ConfigFactory
+import dsl.job.Implicits._
 import dsl.job.JobUtils._
 import dsl.job.WordCount
 import org.scalatest._
+
 import scala.io.Source.fromFile
-import dsl.job.Implicits._
 
 class InParallelJobTest extends FlatSpec with Matchers {
+
+  val config = ConfigFactory.load()
+  val dataset = config.getString("nMiners.inputTests")
+  val output = "src/main/resources/wordCount"
+
 
   "Equals jobs in parallel" should "have the same output" in {
 
 
-    val config = ConfigFactory.load()
-    val dataset = config.getString("nMiners.inputTests")
-    val output = "src/main/resources/wordCount"
+
 
     in_parallel(WordCount(dataset, output + "1") and WordCount(dataset, output + "2")) then dsl.job.execute
 
@@ -35,10 +39,6 @@ class InParallelJobTest extends FlatSpec with Matchers {
 
   it should "have the same output than sequencially" in {
 
-
-    val config = ConfigFactory.load()
-    val dataset = config.getString("nMiners.inputTests")
-    val output = "src/main/resources/wordCount"
 
     in_parallel(WordCount(dataset, output + "1") and WordCount(dataset, output + "2")) then
       WordCount(dataset, output + "3") then

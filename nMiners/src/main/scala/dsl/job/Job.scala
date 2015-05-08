@@ -248,7 +248,7 @@ object similarity_matrix extends Producer {
     RowSimilarityJobAnalytics.runJob(pathToInput + "/part-r-00000",
       pathToOutput.get,
       classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH)
+      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH, numReduceTasks = numProcess)
   }
 
 }
@@ -310,26 +310,17 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      deleteFolder = true, numMapTasks = numProcess)
+      deleteFolder = true, numReduceTasks = numProcess)
 
     pathToInput = pathToOutput1 + "/part-r-00000"
     val pathToOutput2 = BASE + "/data_multiplied"
-
-    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
-      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
-      mapOutputValueClass = classOf[VectorWritable],
-      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      pathToInput, pathToOutput2, numMapTasks = numProcess)
-
-    var conf: Configuration = job getConfiguration()
-    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
-    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
-
-    MapReduceUtils.deleteFolder(pathToOutput2, conf)
     pathToOutput = Some(pathToOutput2)
-    job.waitForCompletion(true)
+
+    MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      deleteFolder = true, numReduceTasks = numProcess)
+
   }
 }
 

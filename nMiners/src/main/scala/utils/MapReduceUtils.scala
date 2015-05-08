@@ -145,6 +145,8 @@ object MapReduceUtils {
     //Set the input and output.
     job.setOutputFormatClass(outputFormatClass)
 
+    job.setJarByClass(this.getClass)
+
     //Set the input and output path
     MultipleInputs.addInputPath(job, inputPath1, inputFormat1Class, mapper1Class)
     MultipleInputs.addInputPath(job, inputPath2, inputFormat2Class, mapper2Class)
@@ -221,7 +223,7 @@ object MapReduceUtils {
    * @param outputFormatClass
    * @param inputPath
    * @param outputPath
-   * @param numMapTasks
+   * @param numReduceTasks
    * @return
    * Configured Job
    */
@@ -233,12 +235,12 @@ object MapReduceUtils {
                  inputFormatClass: Class[_ <: FileInputFormat[_, _]],
                  outputFormatClass: Class[_ <: FileOutputFormat[_, _]],
                  inputPath: String, outputPath: String,
-                 numMapTasks: Option[Int] = None): Job = {
+                 numReduceTasks: Option[Int] = None): Job = {
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
     conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
 
-    numMapTasks match {
+    numReduceTasks match {
       case Some(num) => conf setNumReduceTasks num
       case _ => {}
     }
@@ -263,6 +265,7 @@ object MapReduceUtils {
     //Set the input and output path
     FileInputFormat.addInputPath(job, inputPath)
     FileOutputFormat.setOutputPath(job, outputPath)
+    job.setJarByClass(this.getClass)
     job
   }
 }

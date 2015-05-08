@@ -2,13 +2,13 @@ name := """nMiners"""
 
 version := "1.0"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
   "org.apache.hadoop" % "hadoop-core" % "1.2.1",
   "org.apache.mahout" % "mahout-core" % "0.9",
 
-  "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
+  "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test",
   "com.typesafe" % "config" % "1.2.1",
 
   "org.apache.camel" % "camel-jetty" % "2.15.1",

@@ -3,16 +3,20 @@ package api
 import java.util
 import java.util.{Collections, PriorityQueue}
 
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, FileOutputFormat}
 import utils.Implicits._
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
-import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
+import org.apache.mahout.cf.taste.hadoop.item.{VectorOrPrefWritable, VectorAndPrefsWritable}
 import org.apache.mahout.cf.taste.impl.recommender.{ByValueRecommendedItemComparator, GenericRecommendedItem}
 import org.apache.mahout.cf.taste.recommender.RecommendedItem
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.function.Functions
 import org.apache.mahout.math.map.OpenIntLongHashMap
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, Vector, VectorWritable}
+import utils.MapReduceUtils
 
 /**
 Convert file at the format:
@@ -113,7 +117,8 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
    * @param values
    * @param context
    */
-  override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] , context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context ) = {
+  override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] ,
+                      context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context ) = {
 
     var predictions: Vector = null
     //var valores = values.toBuffer
@@ -159,4 +164,27 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
 
   }
 
+}
+
+
+object MatrixMultiplication {
+  def runJob(pathToInput:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
+             outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,
+             numReduceTasks : Option[Int] = None): Unit ={
+
+    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      mapOutputValueClass = classOf[VectorWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
+      pathToInput, outPutPath, numReduceTasks = numReduceTasks)
+
+    var conf: Configuration = job getConfiguration()
+    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
+    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+
+    MapReduceUtils.deleteFolder(outPutPath, conf)
+    job.waitForCompletion(true)
+  }
 }

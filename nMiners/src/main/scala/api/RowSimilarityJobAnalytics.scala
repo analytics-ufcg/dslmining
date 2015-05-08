@@ -206,7 +206,7 @@ object RowSimilarityJobAnalytics {
   //  object CalculateSimilarityMatrix {
   def runJob(inputPath: String, outPutPath: String, inputFormatClass: Class[_ <: FileInputFormat[_, _]],
              outputFormatClass: Class[_ <: FileOutputFormat[_, _]], deleteFolder: Boolean,
-             numMapTasks: Option[Int] = None, similarityClassnameArg: String, basePath: String): Unit = {
+             numMapTasks: Option[Int] = None, similarityClassnameArg: String, basePath: String,numReduceTasks:Option[Int]): Unit = {
 
 
     //      addInputOption
@@ -272,7 +272,7 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       inputPath,
-      ratingMatrix)
+      ratingMatrix,numReduceTasks = numReduceTasks)
 
     MapReduceUtils.deleteFolder(basePath,toItemVectors.getConfiguration)
 
@@ -290,7 +290,7 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[IntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       ratingMatrix+ "/part-r-00000",
-      countObsPath)
+      countObsPath,numReduceTasks = numReduceTasks)
 
     countJob.setCombinerClass(classOf[VectorSumCombiner])
     countJob.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
@@ -309,7 +309,7 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       ratingMatrix + "/part-r-00000",
-      weightsPath)
+      weightsPath,numReduceTasks = numReduceTasks)
 
 
     normsAndTranspose.setCombinerClass(classOf[MergeVectorsCombiner])
@@ -337,7 +337,7 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       weightsPath+ "/part-r-00000",
-      pairwiseSimilarityPath)
+      pairwiseSimilarityPath,numReduceTasks = numReduceTasks)
 
     // val pairwiseSimilarity: Job = prepareJob(weightsPath, pairwiseSimilarityPath, classOf[RowSimilarityJob.CooccurrencesMapper], classOf[IntWritable], classOf[VectorWritable], classOf[RowSimilarityJob.SimilarityReducer], classOf[IntWritable], classOf[VectorWritable])
     pairwiseSimilarity.setCombinerClass(classOf[VectorSumReducer])
@@ -364,7 +364,7 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       pairwiseSimilarityPath+ "/part-r-00000",
-      outPutPath)
+      outPutPath,numReduceTasks = numReduceTasks)
 
     asMatrix.setCombinerClass(classOf[MergeToTopKSimilaritiesReducer])
     asMatrix.getConfiguration.setInt(MAX_SIMILARITIES_PER_ROW, maxSimilaritiesPerRow)

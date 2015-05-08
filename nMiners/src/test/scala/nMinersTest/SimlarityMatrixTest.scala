@@ -29,14 +29,14 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
       uservectorFile,
       ratingMatrix,
       classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE",basePath = BASE_PHATH_OUTPUT)
+      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE",basePath = BASE_PHATH_OUTPUT, numReduceTasks = None)
 
     PrepareMatrixGenerator.runJob(inputPath1 = similarityFile, inputPath2 = uservectorFile, outPutPath = pathOutputMatrix,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
       deleteFolder = true)
 
-    MultiplyMatrix.run(inputPath = pathOutputMatrix, outputPath = BASE_PHATH_OUTPUT)
+   // MultiplyMatrix.run(inputPath = pathOutputMatrix, outputPath = BASE_PHATH_OUTPUT)
   }
 
   //TODO TESTS TO COMPARE MAHOUT OUTPUT AND nMINERS OUTPUT

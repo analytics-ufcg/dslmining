@@ -110,28 +110,3 @@ object UserVectorGenerator{
 //      deleteFolder)
 //  }
 }
-
-
-object MultiplyMatrix{
-
-  def run(inputPath: String, outputPath: String): Unit ={
-
-    val pathToInput = inputPath + "/part-r-00000"
-    val pathToOutput = outputPath + "/data_multiplied"
-
-    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
-      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
-      mapOutputValueClass = classOf[VectorWritable],
-      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
-      pathToInput, pathToOutput)
-
-    val conf: Configuration = job getConfiguration()
-    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
-    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
-
-    MapReduceUtils.deleteFolder(pathToOutput, conf)
-    job.waitForCompletion(true)
-  }
-}
