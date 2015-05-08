@@ -7,14 +7,12 @@ import java.util.concurrent.CountDownLatch
 
 import api._
 import dsl.notification.NotificationEndServer
-import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{IntWritable, Text}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
-import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
-import org.slf4j.{LoggerFactory, Logger}
+import org.slf4j.{Logger, LoggerFactory}
 import utils.MapReduceUtils
 
 /**
@@ -151,6 +149,7 @@ class Parallel(val jobs: List[Job]) extends Job {
       latch.countDown()
     } else {
       NotificationEndServer.stop
+      logger.error(s"Job with id $jobId is finished with status $status. Please check your jobs.")
       System.exit(-1)
     }
   }
