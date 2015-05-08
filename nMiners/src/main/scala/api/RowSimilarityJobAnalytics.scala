@@ -221,20 +221,11 @@ object RowSimilarityJobAnalytics {
     //            addOption("randomSeed", null, "use this seed for sampling", false)
     //      addOption(DefaultOptionCreator.overwriteOption.create)
 
-    //      val parsedArgs: java.util.Map[java.lang.String, java.util.List[java.lang.String]] =  parseArguments(args)
 
-    //      if (parsedArgs == null) {
-    //        return -1
-    //      }
     var numberOfColumns: Int = 0
-    //      if (hasOption("numberOfColumns")) {
-    //        numberOfColumns = getOption("numberOfColumns").toInt
-    //      }
-    // else {
     val abstractJob = new RowSimilarityJob()
     numberOfColumns = abstractJob.getDimensions(inputPath)
-    //}
-    //      val similarityClassnameArg: String = getOption("similarityClassname")
+
     var similarityClassname: String = null
     try {
       similarityClassname = VectorSimilarityMeasures.valueOf(similarityClassnameArg).getClassname
@@ -245,19 +236,13 @@ object RowSimilarityJobAnalytics {
       }
     }
 
-    //      if (hasOption(DefaultOptionCreator.OVERWRITE_OPTION)) {
-    //        HadoopUtil.delete(getConf, getTempPath)
-    //        HadoopUtil.delete(getConf, getOutputPath)
-    //      }
 
     val maxSimilaritiesPerRow: Int = DEFAULT_MAX_SIMILARITIES_PER_ROW
     //      val excludeSelfSimilarity: Boolean = getOption("excludeSelfSimilarity").toBoolean
     // val threshold: Double = if (hasOption("threshold")) getOption("threshold").toDouble else NO_THRESHOLD
     val threshold: Double = NO_THRESHOLD
-
     // val randomSeed: Long = if (hasOption("randomSeed")) getOption("randomSeed").toLong else NO_FIXED_RANDOM_SEED
     val randomSeed: Long = NO_FIXED_RANDOM_SEED
-
     //      val maxObservationsPerRow: Int = getOption("maxObservationsPerRow").toInt
     //      val maxObservationsPerColumn: Int = getOption("maxObservationsPerColumn").toInt
 
@@ -272,12 +257,7 @@ object RowSimilarityJobAnalytics {
     val pairwiseSimilarityPath: Path = new Path(basePath, "pairwiseSimilarity")
     val observationsPerColumnPath: Path = new Path(basePath, "observationsPerColumn.bin")
     val currentPhase: AtomicInteger = new AtomicInteger
-    //  val countObservations: Job = prepareJob(getInputPath, getTempPath("notUsed"), classOf[CountObservationsMapper], classOf[NullWritable], classOf[VectorWritable], classOf[SumObservationsReducer], classOf[NullWritable], classOf[VectorWritable])
-    //            countObservations.setCombinerClass(classOf[VectorSumCombiner])
-    //            countObservations.getConfiguration.set(OBSERVATIONS_PER_COLUMN_PATH, observationsPerColumnPath.toString)
-    //            countObservations.setNumReduceTasks(1)
-    //            countObservations.waitForCompletion(true)
-
+    val ratingMatrix = new Path(basePath, "rating_matrix")
 
     val itemVectorsPath: Path = new Path(basePath, "itemVectors");
     val countObsPath: Path = new Path(basePath, "countObs");
@@ -292,7 +272,9 @@ object RowSimilarityJobAnalytics {
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       inputPath,
-      itemVectorsPath)
+      ratingMatrix)
+
+    MapReduceUtils.deleteFolder(basePath,toItemVectors.getConfiguration)
 
     toItemVectors.setCombinerClass(classOf[ToItemVectorsReducer])
     toItemVectors.waitForCompletion(true)
@@ -307,7 +289,7 @@ object RowSimilarityJobAnalytics {
       classOf[VectorWritable],
       classOf[SequenceFileInputFormat[IntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
-      itemVectorsPath,
+      ratingMatrix+ "/part-r-00000",
       countObsPath)
 
     countJob.setCombinerClass(classOf[VectorSumCombiner])
@@ -317,7 +299,7 @@ object RowSimilarityJobAnalytics {
 
 
     //TODO falta COMBINER
-    val normsAndTranspose: Job = MapReduceUtils.prepareJob("Similarity",
+    val normsAndTranspose: Job = MapReduceUtils.prepareJob("Weights",
       classOf[VectorNormMapper],
       classOf[MergeVectorsReducer],
       classOf[VarIntWritable],
@@ -326,7 +308,7 @@ object RowSimilarityJobAnalytics {
       classOf[VectorWritable],
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
-      countObsPath,
+      ratingMatrix + "/part-r-00000",
       weightsPath)
 
 
@@ -354,7 +336,7 @@ object RowSimilarityJobAnalytics {
       classOf[VectorWritable],
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
-      weightsPath,
+      weightsPath+ "/part-r-00000",
       pairwiseSimilarityPath)
 
     // val pairwiseSimilarity: Job = prepareJob(weightsPath, pairwiseSimilarityPath, classOf[RowSimilarityJob.CooccurrencesMapper], classOf[IntWritable], classOf[VectorWritable], classOf[RowSimilarityJob.SimilarityReducer], classOf[IntWritable], classOf[VectorWritable])
@@ -381,7 +363,7 @@ object RowSimilarityJobAnalytics {
       classOf[VectorWritable],
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
-      pairwiseSimilarityPath,
+      pairwiseSimilarityPath+ "/part-r-00000",
       outPutPath)
 
     asMatrix.setCombinerClass(classOf[MergeToTopKSimilaritiesReducer])
@@ -390,12 +372,6 @@ object RowSimilarityJobAnalytics {
 
   }
 
-
-
-  @throws(classOf[Exception])
-  def run(args: Array[String]): Int = {
-    return 0;
-  }
 
   class MergeVectorsCombiner extends Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable] {
     @throws(classOf[IOException])

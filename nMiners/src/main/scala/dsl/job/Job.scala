@@ -8,6 +8,7 @@ import java.util.concurrent.CountDownLatch
 import api._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
@@ -222,8 +223,19 @@ object similarity_matrix extends Producer {
   override def run() = {
     super.run()
 
-    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
+//    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
+//      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
+
+    val BASE_PATH = pathToOutput.get
+    pathToOutput = Some (pathToOutput.get + "/matrix")
+    Context.paths(produced.name) = pathToOutput.getOrElse("") + "/part-r-00000"
+
+
+
+    RowSimilarityJobAnalytics.runJob(pathToInput + "/part-r-00000",
+      pathToOutput.get,
+      classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
+      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH)
   }
 
 }
