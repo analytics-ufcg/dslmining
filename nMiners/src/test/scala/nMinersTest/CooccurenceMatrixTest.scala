@@ -9,7 +9,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class CooccurenceMatrixTest extends FlatSpec with Matchers{
 
 
-  val BASE_PHATH = "src/test/data/"
+  val BASE_PHATH = "src/test/resources/"
 
   "Level one" should "execute first mapreduce" in {
     val inputPath = BASE_PHATH+"data_1/input_test_level2"

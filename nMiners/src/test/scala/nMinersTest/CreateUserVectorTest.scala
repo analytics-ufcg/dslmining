@@ -13,7 +13,7 @@ import org.scalatest.{FlatSpec, Matchers}
  * Created by leonardo on 08/04/15.
  */
 class CreateUserVectorTest extends FlatSpec with Matchers{
-  val BASE_PHATH = "src/test/data/"
+  val BASE_PHATH = "src/test/resources/"
   "Level one" should "execute first mapreduce" in {
     val inputPath = BASE_PHATH+"data_1/input_test_level1.txt"
     val namePath = BASE_PHATH+"output_test_level1"; // Path da pasta e nao do arquivo

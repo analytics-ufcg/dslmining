@@ -42,6 +42,9 @@ object MapReduceUtils {
     val conf = new JobConf(new Configuration())
 
     conf setQuietMode true
+
+    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
+
     numMapTasks match {
       case Some(num) => conf setNumReduceTasks num
       case _ => {}
@@ -121,6 +124,8 @@ object MapReduceUtils {
 
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
+
+    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
 
     numMapTasks match {
       case Some(num) => conf setNumReduceTasks num
@@ -231,6 +236,8 @@ object MapReduceUtils {
                  numMapTasks: Option[Int] = None): Job = {
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
+    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
+
     numMapTasks match {
       case Some(num) => conf setNumReduceTasks num
       case _ => {}

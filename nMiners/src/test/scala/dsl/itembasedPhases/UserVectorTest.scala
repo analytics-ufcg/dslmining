@@ -10,7 +10,7 @@ class UserVectorTest extends FlatSpec with Matchers{
   val config = ConfigFactory.load()
 
   "user_vector" should "save a user vector" in {
-    val dataSet = "src/test/resources/input.dat"
+    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then

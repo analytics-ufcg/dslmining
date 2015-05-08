@@ -46,9 +46,6 @@ object NotificationEndServer {
 
   def notifyJob(jobId: String, status: String) = {
     notifiersFunctions foreach {_ apply (jobId, status)}
-    println("\n\n\n\n\n\n\n\n\n\n\n\n")
-    println(s"$jobId is finished with status $status")
-    println("\n\n\n\n\n\n\n\n\n\n\n\n")
   }
 
   def configureServer(conf: Configuration) = {

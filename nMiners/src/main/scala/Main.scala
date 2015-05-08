@@ -51,7 +51,6 @@ object Main {
 //      classOf[VarLongWritable],classOf[VarLongWritable],classOf[VarLongWritable],classOf[VectorWritable],
 //      classOf[TextInputFormat],classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],inputPath,outputPath,true)
       val HADOOP_HOME = System.getenv("HADOOP_HOME");
-      println("====================================================" + HADOOP_HOME)
      val conf = new JobConf(new Configuration())
       conf setQuietMode true
 
