@@ -1,1 +1,0 @@
-if you wanna see the logs open the file nMiners-test.log
