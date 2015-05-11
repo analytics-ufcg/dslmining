@@ -4,18 +4,17 @@ import java.util
 import java.util.{Collections, PriorityQueue}
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, FileOutputFormat}
-import utils.Implicits._
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
-import org.apache.mahout.cf.taste.hadoop.item.{VectorOrPrefWritable, VectorAndPrefsWritable}
+import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
 import org.apache.mahout.cf.taste.impl.recommender.{ByValueRecommendedItemComparator, GenericRecommendedItem}
 import org.apache.mahout.cf.taste.recommender.RecommendedItem
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math.function.Functions
-import org.apache.mahout.math.map.OpenIntLongHashMap
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, Vector, VectorWritable}
+import utils.Implicits._
 import utils.MapReduceUtils
 
 /**
@@ -45,22 +44,22 @@ class PartialMultiplyMapper extends Mapper[VarIntWritable,VectorAndPrefsWritable
 
   /**
    * Realize the partial matrix multiplication, the result should be a set of tuple with (userId, partialProduct)
-   * @param key
-   * @param value
-   * @param context
+   * @param key item
+   * @param value Vector of cooccurrence
+   * @param context output manager
    */
   override def  map(key: VarIntWritable, value: VectorAndPrefsWritable , context:Mapper[VarIntWritable,VectorAndPrefsWritable,  VarLongWritable,VectorWritable]#Context) = {
     val cooccurrenceColumn = value getVector
     val  userIDs = value getUserIDs
     val  prefValues = value getValues
 
-    val partialProducts = prefValues.map( pref => cooccurrenceColumn.times(pref.toDouble ))
+   /* val partialProducts = prefValues.map( pref => cooccurrenceColumn.times(pref.toDouble ))*/
 
     for (i <- 0 until userIDs.size()){
       val userID = userIDs.get(i)
       val prefValue = prefValues.get(i)
       val partialProduct = cooccurrenceColumn.times(prefValue toDouble)
-      context.write(new VarLongWritable(userID), new VectorWritable(partialProduct));
+      context.write(new VarLongWritable(userID), new VectorWritable(partialProduct))
     }
 
   }
@@ -72,18 +71,21 @@ class AggregateCombiner extends Reducer[VarLongWritable,VectorWritable,  VarLong
    *
    * @param key
    * @param values
-   * @param context
+   * @param context output manager
    */
   override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] , context:Reducer[VarLongWritable,VectorWritable,  VarLongWritable,VectorWritable]#Context ) = {
     var partial:Vector = null
     values.foreach((vector: VectorWritable) => {
-      partial = if (partial == null)  vector.get() else partial.plus(vector.get());
+      partial = if (partial == null)  vector.get() else partial.plus(vector.get())
     })
     context.write(key, new VectorWritable(partial))
   }
 
 }
 
+/**
+ * Auxiliar object
+ */
 object AggregateAndRecommendReducer{
   val ITEMID_INDEX_PATH: String = "itemIDIndexPath"
   val DEFAULT_NUM_RECOMMENDATIONS: Int = 10
@@ -92,21 +94,6 @@ object AggregateAndRecommendReducer{
 }
 
 class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable] {
-  private var indexItemIDMap: OpenIntLongHashMap = null
-
-  /**
-   * Setup context configuration
-   * @param context
-   */
-  override def setup (context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context)  {
-    val conf = context.getConfiguration
-    var recommendationsPerUser = conf.getInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS)
-   // indexItemIDMap = TasteHadoopUtils.readIDIndexMap(conf.get(AggregateAndRecommendReducer.ITEMID_INDEX_PATH), conf)
-
-
-  }
-
-  val recommendationsPerUser:Int = 10;
 
   /**
    * The reduce should be produce the output
@@ -115,59 +102,59 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
    *
    * @param key
    * @param values
-   * @param context
+   * @param context output manager
    */
   override def reduce(key: VarLongWritable, values: java.lang.Iterable[VectorWritable] ,
                       context: Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable]#Context ) = {
 
     var predictions: Vector = null
-    //var valores = values.toBuffer
     values.foreach((item) =>{
       if (predictions == null) predictions = item.get()
-      else predictions.assign(item.get(), Functions.PLUS);
+      else predictions.assign(item.get(), Functions.PLUS)
 
     })
 
-    var recommendationVector = predictions
+    val recommendationVector = predictions
 
-    //WRITE!!!!!!!!
-
-    val topItems: PriorityQueue[RecommendedItem] = new PriorityQueue[RecommendedItem]( recommendationsPerUser + 1,
-      Collections.reverseOrder(ByValueRecommendedItemComparator.getInstance()));
-
-
+    val topItems: PriorityQueue[RecommendedItem] = new PriorityQueue[RecommendedItem]( AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS + 1,
+      Collections.reverseOrder(ByValueRecommendedItemComparator.getInstance()))
+    
     val recommendationVectorIterator = recommendationVector.nonZeroes() iterator
 
     recommendationVectorIterator.foreach((element: Element) => {
 
-      val index = element.index();
-      val value =  element.get() toFloat;
+      val index = element.index()
+      val value =  element.get() toFloat
+
       if (!(value equals Float.NaN) ){
-        if (topItems.size() < recommendationsPerUser) {
-          topItems.add(new GenericRecommendedItem(index, value));
-        } else if (value > topItems.peek().getValue()) {
-          topItems.add(new GenericRecommendedItem(index, value));
-          topItems.poll();
+        if (topItems.size() < AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS) {
+          topItems.add(new GenericRecommendedItem(index, value))
+        } else if (value > topItems.peek().getValue) {
+          topItems.add(new GenericRecommendedItem(index, value))
+          topItems.poll()
         }
       }
 
     })
 
-
-    var recommendations =    new util.ArrayList[RecommendedItem](topItems.size());
-    recommendations.addAll(topItems);
-    Collections.sort(recommendations, ByValueRecommendedItemComparator.getInstance());
-
-
-    context.write(key,  new RecommendedItemsWritable(recommendations));
-
-
+    val recommendations = new util.ArrayList[RecommendedItem](topItems.size())
+    recommendations.addAll(topItems)
+    Collections.sort(recommendations, ByValueRecommendedItemComparator.getInstance())
+    context.write(key,  new RecommendedItemsWritable(recommendations))
   }
-
 }
 
 
 object MatrixMultiplication {
+  /**
+   *
+   * Run the Hadoop Job using PartialMultiplyMapper and AggregateAndRecommendReducer
+   * @param pathToInput the input file
+   * @param outPutPath the path where the output will be put
+   * @param inputFormatClass the format of the input (sequential or text)
+   * @param outputFormatClass the format of the output (sequential or text)
+   * @param deleteFolder if the temp folder must be deleted or not
+   */
   def runJob(pathToInput:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
              outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,
              numReduceTasks : Option[Int] = None): Unit ={
@@ -180,7 +167,7 @@ object MatrixMultiplication {
       outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
       pathToInput, outPutPath, numReduceTasks = numReduceTasks)
 
-    var conf: Configuration = job getConfiguration()
+    val conf: Configuration = job getConfiguration()
     conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
     conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
