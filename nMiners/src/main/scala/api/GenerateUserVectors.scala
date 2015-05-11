@@ -60,12 +60,12 @@ class WikipediaToUserVectorReducer extends Reducer[VarLongWritable, VarLongWrita
   /**
    *
    * Count the number of items per user
-   * @param userID
-   * @param itemPrefs
-   * @param context
+   * @param userID the key used into Reducer
+   * @param itemPrefs the Values used into Reducer
+   * @param context the output manager
    */
   override def reduce(userID: VarLongWritable, itemPrefs: java.lang.Iterable[VarLongWritable], context:  Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable]#Context) = {
-    val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100);
+    val userVector = new RandomAccessSparseVector(Integer MAX_VALUE, 100)
     itemPrefs.foreach((item: VarLongWritable) => userVector set(item.get toInt, 1.0f))
     context write(userID, new VectorWritable(userVector))
   }
