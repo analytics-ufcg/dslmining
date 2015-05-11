@@ -3,8 +3,8 @@ import java.util.regex.Pattern
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io._
-import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, SequenceFileOutputFormat, FileOutputFormat}
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
@@ -14,11 +14,11 @@ import utils.MapReduceUtils
 
 /**
 Convert file at the format:
- key = Number of the line
- Value = user_id: item1 item2 ... itemN
+   key = Number of the line
+   Value = user_id: item1 item2 ... itemN
 To the format:
- Key: user
- Value: {item1:number_of_occurrence, item2:number_of_occurrence, ..., itemN:number_of_occurrence}
+   Key: user
+   Value: {item1:number_of_occurrence, item2:number_of_occurrence, ..., itemN:number_of_occurrence}
 Example:
  Input:
    10: 1 2 3
@@ -38,9 +38,9 @@ class WikipediaToItemPrefsMapper extends Mapper[LongWritable, Text, VarLongWrita
 
   /**
    * Put the output to the format UserId, Item
-   * @param key
-   * @param value
-   * @param context
+   * @param key number of the line
+   * @param value user_id: list of items
+   * @param context output manager
    */
   override def map(key: LongWritable, value: Text, context: Mapper[LongWritable,Text,VarLongWritable,VarLongWritable]#Context) = {
 
@@ -49,12 +49,12 @@ class WikipediaToItemPrefsMapper extends Mapper[LongWritable, Text, VarLongWrita
     val userID = new VarLongWritable(m.group toLong)
     val itemID = new VarLongWritable()
     while (m find){
-      itemID.set(m group() toLong);
-      context write (userID, itemID);
-
+      itemID.set(m group() toLong)
+      context write (userID, itemID)
     }
   }
 }
+
 
 class WikipediaToUserVectorReducer extends Reducer[VarLongWritable, VarLongWritable, VarLongWritable, VectorWritable] {
   /**
@@ -75,11 +75,11 @@ object UserVectorGenerator{
   /**
    *
    * Run the Hadoop Job using WikipediaToItemPrefsMapper and WikipediaToUserVectorReducer
-   * @param inputPath
-   * @param dirOutputName
-   * @param inputFormatClass
-   * @param outputFormatClass
-   * @param deleteFolder
+   * @param inputPath the input file
+   * @param dirOutputName the path where the output will be put
+   * @param inputFormatClass the format of the input (sequential or text)
+   * @param outputFormatClass the format of the output (sequential or text)
+   * @param deleteFolder if the temp folder must be deleted or not
    */
   def runJob(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
              outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean,numReduceTasks:Option[Int]): Unit ={
@@ -96,17 +96,29 @@ object UserVectorGenerator{
       dirOutputName,
       deleteFolder,numReduceTasks)
   }
+}
 
-//  def runMap(inputPath: String, dirOutputName:String,inputFormatClass:Class[_<:FileInputFormat[_,_]],
-//             outputFormatClass:Class[_<:FileOutputFormat[_,_]],deleteFolder:Boolean): Unit ={
-//    MapReduceUtils.runMap("First Phase",
-//      classOf[WikipediaToItemPrefsMapper],
-//      classOf[VarLongWritable],
-//      classOf[VarLongWritable],
-//      inputFormatClass,
-//      outputFormatClass,
-//      inputPath,
-//      dirOutputName,
-//      deleteFolder)
-//  }
+
+object MultiplyMatrix{
+
+  def run(inputPath: String, outputPath: String): Unit ={
+
+    val pathToInput = inputPath + "/part-r-00000"
+    val pathToOutput = outputPath + "/data_multiplied"
+
+    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      mapOutputValueClass = classOf[VectorWritable],
+      outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
+      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
+      outputFormatClass = classOf[TextOutputFormat[VarLongWritable, RecommendedItemsWritable]],
+      pathToInput, pathToOutput)
+
+    val conf: Configuration = job getConfiguration()
+    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
+    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+
+    MapReduceUtils.deleteFolder(pathToOutput, conf)
+    job.waitForCompletion(true)
+  }
 }
