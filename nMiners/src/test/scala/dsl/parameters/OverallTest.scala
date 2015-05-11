@@ -33,8 +33,6 @@ class OverallTest extends FlatSpec with Matchers with BeforeAndAfterAll{
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) then
       multiply("similarity_matrix" by "user_vectors") then
       dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
-
-
   }
 
   "rundsl with as" should "run" in {
@@ -51,13 +49,11 @@ class OverallTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   "rundsl with write" should "run" in {
     val dataset = INPUT_1
     val output = OUTPUTS("OUTPUT_3") + "output.dat"
-
     parse_data on dataset then
       dsl.job.JobUtils.produce(user_vectors) write_on (OUTPUTS("OUTPUT_3") + "/userv")  then
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_3") + "/cooc")then
       multiply("coocurrence" by "user_vectors") write_on (OUTPUTS("OUTPUT_3") + "/matrix") then
       dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
-
 
   }
 

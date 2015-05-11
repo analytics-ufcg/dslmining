@@ -1,5 +1,6 @@
 package api
 
+import java.io.IOException
 import java.util
 import java.util.{Collections, PriorityQueue}
 
@@ -155,11 +156,14 @@ object MatrixMultiplication {
    * @param outputFormatClass the format of the output (sequential or text)
    * @param deleteFolder if the temp folder must be deleted or not
    */
+  @throws(classOf[IOException])
+  @throws(classOf[InterruptedException])
+  @throws(classOf[ClassNotFoundException])
   def runJob(pathToInput:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
              outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,
              numReduceTasks : Option[Int] = None): Unit ={
 
-    val job = MapReduceUtils.prepareJob(jobName = "Prepare", mapperClass = classOf[PartialMultiplyMapper],
+    val job = MapReduceUtils.prepareJob(jobName = "MatrixMultiplication", mapperClass = classOf[PartialMultiplyMapper],
       reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
       mapOutputValueClass = classOf[VectorWritable],
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],

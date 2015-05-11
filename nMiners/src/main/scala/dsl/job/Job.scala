@@ -188,6 +188,10 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
   override val logger = LoggerFactory.getLogger(classOf[Multiplier])
 
+  val FOLDER_MATRIX_PREPARED: String = "/data_prepare"
+
+  val FOLDER_MULTIPLICATION_PRODUCT: String = "/data_multiplied"
+
   // Run the job
   //First Prepare the matrix, then multiply them.
   override def run() = {
@@ -200,26 +204,33 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
       case Some(path) => path
     }
 
+    if (! (producedOne.producer.getClass().isInstance(similarity_matrix) && producedTwo.producer.getClass().isInstance(user_vectors))){
+        throw new IllegalArgumentException("First member should be a user_vector and second member should be a similarity_matrix")
+    }
     //==============================================Prepare the matrices to be multilpied
-    val pathToOutput1 = BASE + "/data_prepare"
-    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
+    val path_matrixPrepared = BASE + FOLDER_MATRIX_PREPARED
+    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = path_matrixPrepared,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
       deleteFolder = true, numReduceTasks = numProcess)
 
     //==============================================Multiply the matrices
-    pathToInput = pathToOutput1 + "/part-r-00000"
-    val pathToOutput2 = BASE + "/data_multiplied"
-    pathToOutput = Some(pathToOutput2)
+    pathToInput = path_matrixPrepared + "/part-r-00000"
+    val path_multplicationProduct = BASE + FOLDER_MULTIPLICATION_PRODUCT
+    pathToOutput = Some(path_multplicationProduct)
 
-    try{
-      MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
+//    try{
+      MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get ,
         inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
         outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
         deleteFolder = true, numReduceTasks = numProcess)
-    }catch{ case e:Exception => throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
-
-    }
+//    }catch{ case e:Exception =>
+//
+//      val a = 2
+//      print(a)
+//      throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
+//
+//    }
 
   }
 }
