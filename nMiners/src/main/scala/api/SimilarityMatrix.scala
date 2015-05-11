@@ -96,7 +96,7 @@ object SimilarityMatrix {
       classOf[VectorWritable],
       classOf[IntWritable],
       classOf[VectorWritable],
-      classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+      inputFormatClass,
       classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
       inputPath,
       ratingMatrix, numReduceTasks = numReduceTasks)
@@ -201,9 +201,13 @@ object SimilarityMatrix {
       classOf[VarIntWritable],
       classOf[VectorWritable],
       classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-      classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]],
+      outputFormatClass,
       pairwiseSimilarityPath + "/part-r-00000",
       outPutPath, numReduceTasks = numReduceTasks)
+
+
+    //inputFormatClass: Class[_ <: FileInputFormat[_, _]],
+    //outputFormatClass: Class[_ <: FileOutputFormat[_, _]]
 
     asMatrix.setCombinerClass(classOf[MergeToTopKSimilaritiesReducer])
     asMatrix.getConfiguration.setInt(MAX_SIMILARITIES_PER_ROW, maxSimilaritiesPerRow)
