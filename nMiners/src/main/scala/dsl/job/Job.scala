@@ -258,7 +258,7 @@ object similarity_matrix extends Producer {
 
 
 
-    RowSimilarityJobAnalytics.runJob(pathToInput + "/part-r-00000",
+    SimilarityMatrix.generateSimilarityMatrix(pathToInput + "/part-r-00000",
       pathToOutput.get,
       classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
       classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH, numReduceTasks = numProcess)
