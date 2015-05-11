@@ -217,7 +217,11 @@ object SimilarityMatrix {
 //======================================================================================================================================
 //Count Observations
 // ======================================================================================================================================
-
+/**
+ * Save the number of items of each user.
+ * Input: {10: 1 2 3 // 20: 1 2 // 30: 1 // 40:4 }
+ * Output: {40:1.0,20:2.0,10:3.0,30:1.0}
+ */
 class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable] {
   var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE);
 
