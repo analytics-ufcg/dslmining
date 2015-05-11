@@ -23,7 +23,7 @@ class MultiplyTest  extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector) then
+      dsl.job.JobUtils.produce(user_vectors) then
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
       multiply("coocurrence" by "user_vector")  write_on outputPath then dsl.job.execute
 
@@ -38,14 +38,14 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
     the[IllegalArgumentException] thrownBy {
       parse_data on dataSet then
-        dsl.job.JobUtils.produce(user_vector) then
+        dsl.job.JobUtils.produce(user_vectors) then
         dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
         multiply("wrong_matrix" by "user_vector") then dsl.job.execute
     } should have message "there is no produced named wrong_matrix"
 
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector) then
+      dsl.job.JobUtils.produce(user_vectors) then
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
       multiply("matrix_coocurrence" by "user_vector") write_on outputPath then dsl.job.execute
 
@@ -55,7 +55,7 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector as "vector") then
+      dsl.job.JobUtils.produce(user_vectors as "vector") then
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
       multiply("matrix_coocurrence" by "vector") then dsl.job.execute
 
@@ -68,14 +68,14 @@ class MultiplyTest  extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector as "vector") then
+      dsl.job.JobUtils.produce(user_vectors as "vector") then
       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
       multiply("matrix_coocurrence" by "vector") then dsl.job.execute
 
 
     the[Exception] thrownBy {
       parse_data on dataSet then
-        dsl.job.JobUtils.produce(user_vector as "vector") then
+        dsl.job.JobUtils.produce(user_vectors as "vector") then
         dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
         multiply("vector" by "matrix_coocurrence") write_on outputPath then dsl.job.execute
     } should have message "Matrix one's columns and Matrix two's lines are not equal"

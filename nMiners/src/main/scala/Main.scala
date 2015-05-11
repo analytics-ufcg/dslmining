@@ -23,7 +23,7 @@ object Main {
     val output = args(1)
 
     parse_data on dataset then
-      produce(user_vector) then
+      produce(user_vectors) then
       produce(similarity_matrix using COOCURRENCE as "coocurrence") then
       multiply("coocurrence" by "user_vector") then
       produce(recommendation) write_on output then execute

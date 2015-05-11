@@ -14,7 +14,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-    dsl.job.JobUtils.produce(user_vector) write_on outputPath then dsl.job.execute
+    dsl.job.JobUtils.produce(user_vectors) write_on outputPath then dsl.job.execute
 
 
   }
@@ -24,7 +24,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-    dsl.job.JobUtils.produce(user_vector) in (2 process) write_on outputPath then dsl.job.execute
+    dsl.job.JobUtils.produce(user_vectors) in (2 process) write_on outputPath then dsl.job.execute
 
   }
 
@@ -33,7 +33,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector as "user_vec") write_on outputPath then dsl.job.execute
+      dsl.job.JobUtils.produce(user_vectors as "user_vec") write_on outputPath then dsl.job.execute
 
   }
 
@@ -42,7 +42,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector as "user_vec") in (2 process)  write_on outputPath then dsl.job.execute
+      dsl.job.JobUtils.produce(user_vectors as "user_vec") in (2 process)  write_on outputPath then dsl.job.execute
 
   }
 

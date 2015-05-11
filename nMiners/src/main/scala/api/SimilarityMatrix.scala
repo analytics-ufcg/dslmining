@@ -259,7 +259,12 @@ class SumObservationsReducer extends Reducer[NullWritable, VectorWritable, NullW
 //======================================================================================================================================
 //Normalize the vectors and calculate the norms of each one
 // ======================================================================================================================================
-
+/**
+ * Normalize each vector,
+ * Generate the norm of each vector.
+ * Input: Item: {user:value} ======> {1: {20:1, 10:1, 30:1},  2: {10:1}}
+ * Output: user: {item:valueNormalized} ======>  {10: {1:1, 2:1, 3:1}, 20:{2:1}}
+ */
 class VectorNormMapper extends Mapper[IntWritable, VectorWritable, VarIntWritable, VectorWritable]() {
   var similarity: VectorSimilarityMeasure = null
   var norms: Vector = null

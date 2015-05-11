@@ -15,7 +15,7 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vector)  then
+      dsl.job.JobUtils.produce(user_vectors)  then
     dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) write_on outputPath then dsl.job.execute
 
 

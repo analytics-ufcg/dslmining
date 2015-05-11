@@ -25,8 +25,6 @@ trait Job {
 
   val logger : Logger
 
-  val defaultOutPath = ""
-
   var name: String
 
   var numProcess: Option[Int] = None
@@ -35,11 +33,11 @@ trait Job {
 
   var pathToInput = ""
 
-  var pathToOut = defaultOutPath
-
   implicit var aSync = false
 
   def then(job: Job): Job = {
+    //Set the input path of the next job to the output of the current job.
+    //Example: a then b ==> b.input = a.output
     job.pathToInput = pathToOutput.getOrElse("") + "/part-r-00000"
     Context.jobs += this
     job
@@ -48,25 +46,6 @@ trait Job {
   def afterJob() = {}
 
   private def after() = {
-
-    if (this.getClass().isInstance(recommendation)) {
-      val outputFile = new File(pathToOutput.get)
-      outputFile getParentFile() mkdirs()
-      try
-        Files.copy(Paths.get(pathToInput + "/part-r-00000"), Paths.get(pathToOutput.get), REPLACE_EXISTING)
-      catch {
-        case e: Exception => {
-
-          val configuration = new Configuration();
-          val conf = new Configuration()
-          val jobConf = new JobConf(new Configuration())
-          val fs1: FileSystem = FileSystem.get(jobConf)
-          val oi = FileUtil.copy(fs1, new Path(pathToInput + "/part-r-00000"), fs1, new Path(pathToOutput.get), false, conf)
-          println("COPIED ", oi)
-        }
-
-      }
-    }
     this.afterJob()
   }
 
@@ -79,22 +58,6 @@ trait Job {
 
   // Execute the Job
   def run() = {
-
-    //Context.paths(this.name) = pathToOutput.getOrElse("")  + "/part-r-00000"
-    this match {
-      case prod: Producer => {
-        prod.generateOutputPath()
-        val some = Option(prod.produced)
-        some match {
-          case Some(produced) => Context.paths(produced.name) = pathToOutput.getOrElse("") + "/part-r-00000"
-          case None =>
-        }
-
-      }
-
-      case _ =>
-
-    }
   }
 
   private def exec() = {
@@ -128,20 +91,6 @@ trait Job {
 
 object execute
 
-/**
- * Producer is a class that can produce results that can be used anytime
- */
-abstract class Producer extends Job {
-  var produced: Produced
-
-  def generateOutputPath(): Unit = {
-    this.pathToOutput match {
-      case None => this.pathToOutput = Some(Context.basePath + "/data_" + produced.name)
-      case _ =>
-    }
-  }
-
-}
 
 /**
  * Applier is a class that can produce results that should be used immediately
@@ -230,68 +179,6 @@ object parse_data extends Applier {
   }
 }
 
-/**
- * Is a object that can produce similarity matrix that can be used anytime
- */
-object similarity_matrix extends Producer {
-  override var produced: Produced = _
-  override val logger = LoggerFactory.getLogger(this.getClass())
-  override var name: String = this.getClass.getSimpleName
-  var similarity: SimilarityType = null;
-
-  // pathToOutput = Context.basePath + "/data/test2"
-
-  def using(similarity: SimilarityType): Producer = {
-    this.similarity = similarity
-    this
-  }
-
-  override def run() = {
-    super.run()
-
-//    MatrixGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VarIntWritable]],
-//      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
-
-    val BASE_PATH = pathToOutput.get
-    pathToOutput = Some (pathToOutput.get + "/matrix")
-    Context.paths(produced.name) = pathToOutput.getOrElse("") + "/part-r-00000"
-
-
-
-    SimilarityMatrix.generateSimilarityMatrix(pathToInput + "/part-r-00000",
-      pathToOutput.get,
-      classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = this.similarity._type,basePath =  BASE_PATH, numReduceTasks = numProcess)
-  }
-
-}
-
-/**
- * Is a object that can produce user vectors that can be used anytime
- */
-object user_vector extends Producer {
-  override var produced: Produced = _
-  override var name: String = this.getClass.getSimpleName
-  override val logger = LoggerFactory.getLogger(this.getClass())
-  // pathToOutput = Context.basePath + "/data_" + this.produced.name
-
-  // Run the job
-  override def run() = {
-    super.run()
-
-    pathToInput = Context.getInputPath()
-
-    UserVectorGenerator.runJob(pathToInput, pathToOutput.get, inputFormatClass = classOf[TextInputFormat],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]], deleteFolder = true, numReduceTasks = numProcess)
-  }
-}
-
-
-object recommendation extends Producer {
-  override var name: String = this.getClass.getSimpleName
-  override var produced: Produced = _
-  override val logger = LoggerFactory.getLogger(this.getClass())
-}
 
 /** Multiplier is class which produce a consumer job.
   * @param producedOne Produce one
@@ -301,30 +188,26 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
   override val logger = LoggerFactory.getLogger(classOf[Multiplier])
 
-  //pathToOutput = Context.basePath + "/data/test4"
-  //val pathToOutput1 = Context.basePath + "/data/test3"
-
-  //  val path1 = Context.basePath + "/data/test2/part-r-00000"
-  //  val path2 = Context.basePath + "/data/test/part-r-00000"
-  //
-  //
-
-
   // Run the job
+  //First Prepare the matrix, then multiply them.
   override def run() = {
     val path1 = Context.paths(producedOne.name)
     val path2 = Context.paths(producedTwo.name)
     super.run()
+
     val BASE = pathToOutput match {
       case None => Context.basePath
       case Some(path) => path
     }
+
+    //==============================================Prepare the matrices to be multilpied
     val pathToOutput1 = BASE + "/data_prepare"
     PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = pathToOutput1,
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
       outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
       deleteFolder = true, numReduceTasks = numProcess)
 
+    //==============================================Multiply the matrices
     pathToInput = pathToOutput1 + "/part-r-00000"
     val pathToOutput2 = BASE + "/data_multiplied"
     pathToOutput = Some(pathToOutput2)

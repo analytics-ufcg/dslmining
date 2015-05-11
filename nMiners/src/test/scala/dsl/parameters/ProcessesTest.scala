@@ -29,7 +29,7 @@ class ProcessesTest extends FlatSpec with Matchers with BeforeAndAfterAll{
      val output = OUTPUTS("OUTPUT_1") + "output.dat"
 
      parse_data on dataset then
-       dsl.job.JobUtils.produce(user_vector) in (2 process)  then
+       dsl.job.JobUtils.produce(user_vectors) in (2 process)  then
        dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) in (2 process) then
        multiply("similarity_matrix" by "user_vector") in (2 process) then
        dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute

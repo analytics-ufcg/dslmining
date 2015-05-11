@@ -13,8 +13,8 @@ object RunDsl extends App {
   val output = config.getString("nMiners.out")
 
   parse_data on dataset then
-    produce(user_vector)  then
+    produce(user_vectors)  then
     produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-    multiply("coocurrence" by "user_vector") then
+    multiply("coocurrence" by "user_vectors") then
     produce(recommendation) write_on output then execute
 }
