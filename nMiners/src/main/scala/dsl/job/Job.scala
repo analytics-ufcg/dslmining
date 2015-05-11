@@ -329,10 +329,14 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     val pathToOutput2 = BASE + "/data_multiplied"
     pathToOutput = Some(pathToOutput2)
 
-    MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      deleteFolder = true, numReduceTasks = numProcess)
+    try{
+      MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
+        inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+        outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+        deleteFolder = true, numReduceTasks = numProcess)
+    }catch{ case e:Exception => throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
+
+    }
 
   }
 }
