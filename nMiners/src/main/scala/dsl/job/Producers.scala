@@ -25,9 +25,13 @@ abstract class Producer extends Job {
    */
   def generateOutputPath(): Unit = {
     this.pathToOutput match {
-      case None => this.pathToOutput = Some(Context.basePath + "/data_" + produced.name)
+      case None => this.pathToOutput = defaltOutputPath(Context.basePath)
       case _ =>
     }
+  }
+
+  def defaltOutputPath(basePath:String):Option[String] = {
+    Some(basePath + "/data_" + produced.name)
   }
 
   override def run() = {
