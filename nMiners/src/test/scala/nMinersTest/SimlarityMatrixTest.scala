@@ -42,7 +42,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
   }
 
   "Similarity_Matrix_EUCLIDEAN_DISTANCE" should "calculate similarity_matrix euclidean distance" in {
-    val inputPath = BASE_PHATH+ "data_3/input_test_level1.txt"
+    val inputPath = BASE_PHATH+ "data_2_SIMILARITY_EUCLIDEAN_DISTANCE/input_test_level1.txt"
     val uservector = BASE_PHATH_OUTPUT+"user_vector/"
     val uservectorFile = uservector + "part-r-00000"
     val similarity = BASE_PHATH_SIM_OUTPUT+"similarity_matrix/"
@@ -59,7 +59,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
 
 
     val fileLinesTest = io.Source.fromFile(similarity+"/part-r-00000").getLines.toList
-    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_3/outputTest").getLines.toList
+    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_2_SIMILARITY_EUCLIDEAN_DISTANCE/outputTest").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
 
@@ -67,7 +67,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
   }
 
   "Similarity_Matrix_SIMILARITY_COOCCURRENCE" should "calculate similarity_matrix similarity cooccurrence" in {
-    val inputPath = BASE_PHATH+ "data_4/input_test_level1.txt"
+    val inputPath = BASE_PHATH+ "data_2_SIMILARITY_COOCCURRENCE/input_test_level1.txt"
     val uservector = BASE_PHATH_OUTPUT+"user_vector/"
     val uservectorFile = uservector + "part-r-00000"
     val similarity = BASE_PHATH_SIM_OUTPUT+"similarity_matrix/"
@@ -84,7 +84,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
 
 
     val fileLinesTest = io.Source.fromFile(similarity+"/part-r-00000").getLines.toList
-    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_4/outputTest").getLines.toList
+    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_2_SIMILARITY_COOCCURRENCE/outputTest").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
 
@@ -93,7 +93,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
 
 
   "Similarity_Matrix_SIMILARITY_COSINE" should "calculate similarity_matrix similarity cosine" in {
-    val inputPath = BASE_PHATH+ "data_5/input_test_level1.txt"
+    val inputPath = BASE_PHATH+ "data_2_SIMILARITY_COSINE/input_test_level1.txt"
     val uservector = BASE_PHATH_OUTPUT+"user_vector/"
     val uservectorFile = uservector + "part-r-00000"
     val similarity = BASE_PHATH_SIM_OUTPUT+"similarity_matrix/"
@@ -110,7 +110,7 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
 
 
     val fileLinesTest = io.Source.fromFile(similarity+"/part-r-00000").getLines.toList
-    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_5/outputTest").getLines.toList
+    val fileLinesOutput = io.Source.fromFile(BASE_PHATH + "data_2_SIMILARITY_COSINE/outputTest").getLines.toList
     val outputTest = fileLinesTest.reduce(_ + _)
     val output = fileLinesOutput.reduce(_ + _)
 
