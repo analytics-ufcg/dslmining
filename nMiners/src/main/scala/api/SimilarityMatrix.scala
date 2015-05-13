@@ -2,25 +2,23 @@ package api
 
 import java.io.IOException
 import java.util
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.{Arrays, Comparator, Random}
+import java.util.{Comparator, Random}
 
 import com.google.common.primitives.Ints
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{IntWritable, NullWritable}
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, FileOutputFormat, TextOutputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, SequenceFileOutputFormat}
 import org.apache.hadoop.mapreduce.{Job, Mapper, Reducer}
-import org.apache.mahout.cf.taste.hadoop.preparation.{ToItemVectorsReducer, ToItemVectorsMapper}
-import org.apache.mahout.common.mapreduce.{VectorSumReducer, VectorSumCombiner}
-import org.apache.mahout.common.{AbstractJob, ClassUtils, RandomUtils}
+import org.apache.mahout.cf.taste.hadoop.preparation.{ToItemVectorsMapper, ToItemVectorsReducer}
+import org.apache.mahout.common.mapreduce.{VectorSumCombiner, VectorSumReducer}
+import org.apache.mahout.common.{ClassUtils, RandomUtils}
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.{VectorSimilarityMeasures, VectorSimilarityMeasure}
-import org.apache.mahout.math.hadoop.similarity.cooccurrence.{RowSimilarityJob, MutableElement, TopElementsQueue, Vectors}
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.{VectorSimilarityMeasure, VectorSimilarityMeasures}
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.{MutableElement, RowSimilarityJob, TopElementsQueue, Vectors}
 import org.apache.mahout.math.map.OpenIntIntHashMap
-
 import utils.Implicits._
 import utils.MapReduceUtils
 
@@ -47,6 +45,18 @@ object SimilarityMatrix {
   val MAXVALUE_VECTOR_MARKER: Int = Integer.MIN_VALUE + 1
   val NUM_NON_ZERO_ENTRIES_VECTOR_MARKER: Int = Integer.MIN_VALUE + 2
 
+  /**
+   *
+   * @param inputPath file input, must be a uservector result
+   * @param outPutPath path to the output
+   * @param inputFormatClass the format of the input (sequence or text file)
+   * @param outputFormatClass the format of the output (sequence or text file)
+   * @param deleteFolder if the temp folder must be deleted
+   * @param numMapTasks
+   * @param similarityClassnameArg the name of the similarity type
+   * @param basePath base path for temp files
+   * @param numReduceTasks max number of task who the reducer can use
+   */
   def generateSimilarityMatrix(inputPath: String, outPutPath: String, inputFormatClass: Class[_ <: FileInputFormat[_, _]],
              outputFormatClass: Class[_ <: FileOutputFormat[_, _]], deleteFolder: Boolean,
              numMapTasks: Option[Int] = None, similarityClassnameArg: String, basePath: String, numReduceTasks: Option[Int]): Unit = {
@@ -60,9 +70,8 @@ object SimilarityMatrix {
       similarityClassname = VectorSimilarityMeasures.valueOf(similarityClassnameArg).getClassname
     }
     catch {
-      case iae: IllegalArgumentException => {
+      case iae: IllegalArgumentException =>
         similarityClassname = similarityClassnameArg
-      }
     }
 
 
@@ -73,17 +82,17 @@ object SimilarityMatrix {
     val maxObservationsPerRow: Int = DEFAULT_MAX_OBSERVATIONS_PER_ROW
     val maxObservationsPerColumn: Int = DEFAULT_MAX_OBSERVATIONS_PER_COLUMN
 
-    val weightsPath: Path = new Path(basePath, "weight");
+    val weightsPath: Path = new Path(basePath, "weight")
     val normsPath: Path = new Path(basePath, "norms.bin")
     val numNonZeroEntriesPath: Path = new Path(basePath, "numNonZeroEntries.bin")
     val maxValuesPath: Path = new Path(basePath, "maxValues.bin")
     val pairwiseSimilarityPath: Path = new Path(basePath, "pairwiseSimilarity")
     val observationsPerColumnPath: Path = new Path(basePath, "observationsPerColumn.bin")
-    val currentPhase: AtomicInteger = new AtomicInteger
+    /*val currentPhase: AtomicInteger = new AtomicInteger*/
 
     val ratingMatrix = new Path(basePath, "rating_matrix")
-    val itemVectorsPath: Path = new Path(basePath, "itemVectors");
-    val countObsPath: Path = new Path(basePath, "countObs");
+    /*val itemVectorsPath: Path = new Path(basePath, "itemVectors")*/
+    val countObsPath: Path = new Path(basePath, "countObs")
 
 //======================================================================================================================================
 //Generate RatingMatrix
@@ -207,23 +216,19 @@ object SimilarityMatrix {
 
     asMatrix.setCombinerClass(classOf[MergeToTopKSimilaritiesReducer])
     asMatrix.getConfiguration.setInt(MAX_SIMILARITIES_PER_ROW, maxSimilaritiesPerRow)
-    val succeeded: Boolean = asMatrix.waitForCompletion(true)
+    /*val succeeded: Boolean = asMatrix.waitForCompletion(true)*/
 
   }
 
 }
 
-
-//======================================================================================================================================
-//Count Observations
-// ======================================================================================================================================
 /**
  * Save the number of items of each user.
  * Input: {10: 1 2 3 // 20: 1 2 // 30: 1 // 40:4 }
  * Output: {40:1.0,20:2.0,10:3.0,30:1.0}
  */
 class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWritable, VectorWritable] {
-  var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE);
+  var columnCounts: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE)
 
   @throws(classOf[IOException])
   @throws(classOf[InterruptedException])
@@ -232,7 +237,7 @@ class CountObservationsMapper extends Mapper[IntWritable, VectorWritable, NullWr
     val row: Vector = rowVectorWritable.get()
     val i$: util.Iterator[Element] = row.nonZeroes().iterator()
 
-    while (i$.hasNext()) {
+    while (i$.hasNext) {
       val elem: Element = i$.next()
       this.columnCounts.setQuick(elem.index(), this.columnCounts.getQuick(elem.index()) + 1.0D)
     }
@@ -256,12 +261,8 @@ class SumObservationsReducer extends Reducer[NullWritable, VectorWritable, NullW
 }
 
 
-//======================================================================================================================================
-//Normalize the vectors and calculate the norms of each one
-// ======================================================================================================================================
 /**
- * Normalize each vector,
- * Generate the norm of each vector.
+ * Normalize the vectors and calculate the norms of each one
  * Input: Item: {user:value} ======> {1: {20:1, 10:1, 30:1},  2: {10:1}}
  * Output: user: {item:valueNormalized} ======>  {10: {1:1, 2:1, 3:1}, 20:{2:1}}
  */
@@ -316,7 +317,7 @@ class VectorNormMapper extends Mapper[IntWritable, VectorWritable, VarIntWritabl
         neglectedObservations += 1
       }
     }
-    return downsampledRow
+    downsampledRow
   }
 
   @throws(classOf[InterruptedException])
@@ -328,7 +329,7 @@ class VectorNormMapper extends Mapper[IntWritable, VectorWritable, VarIntWritabl
     //      import scala.collection.JavaConversions._
     for (element <- rowVector.nonZeroes.iterator()) {
       val partialColumnVector: RandomAccessSparseVector = new RandomAccessSparseVector(Integer.MAX_VALUE)
-      partialColumnVector.setQuick(row.get toInt, element.get)
+      partialColumnVector.setQuick(row.get, element.get)
       ctx.write(new VarIntWritable(element.index), new VectorWritable(partialColumnVector))
       numNonZeroEntries += 1
       if (maxValue < element.get) {
@@ -336,10 +337,10 @@ class VectorNormMapper extends Mapper[IntWritable, VectorWritable, VarIntWritabl
       }
     }
     if (threshold != SimilarityMatrix.NO_THRESHOLD) {
-      nonZeroEntries.setQuick(row.get toInt, numNonZeroEntries)
-      maxValues.setQuick(row.get toInt, maxValue)
+      nonZeroEntries.setQuick(row.get, numNonZeroEntries)
+      maxValues.setQuick(row.get, maxValue)
     }
-    norms.setQuick(row.get toInt, similarity.norm(rowVector))
+    norms.setQuick(row.get, similarity.norm(rowVector))
   }
 
   protected override def cleanup(ctx: Mapper[IntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
@@ -390,10 +391,9 @@ class MergeVectorsReducer extends Reducer[VarIntWritable, VectorWritable, VarInt
   }
 }
 
-//======================================================================================================================================
-//Calculate the similarity matrix
-// ======================================================================================================================================
-
+/**
+  * Calculate the similarity matrix
+ */
 class CooccurrencesMapper extends Mapper[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable] {
   var similarity: VectorSimilarityMeasure = null
   var numNonZeroEntries: OpenIntIntHashMap = null
@@ -402,7 +402,7 @@ class CooccurrencesMapper extends Mapper[VarIntWritable, VectorWritable, VarIntW
 
   val BY_INDEX: Comparator[Vector.Element] = new Comparator[Element] {
     override def compare(one: Element, two: Element): Int = {
-      return Ints.compare(one.index, two.index)
+      Ints.compare(one.index, two.index)
     }
   }
 
@@ -420,30 +420,29 @@ class CooccurrencesMapper extends Mapper[VarIntWritable, VectorWritable, VarIntW
     val numNonZeroEntriesB: Int = numNonZeroEntries.get(occurrenceB.index)
     val maxValueA: Double = maxValues.get(occurrenceA.index)
     val maxValueB: Double = maxValues.get(occurrenceB.index)
-    return similarity.consider(numNonZeroEntriesA, numNonZeroEntriesB, maxValueA, maxValueB, threshold)
+    similarity.consider(numNonZeroEntriesA, numNonZeroEntriesB, maxValueA, maxValueB, threshold)
   }
 
   @throws(classOf[IOException])
   @throws(classOf[InterruptedException])
   protected override def map(column: VarIntWritable, occurrenceVector: VectorWritable, ctx: Mapper[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
     val occurrences: Array[Vector.Element] = Vectors.toArray(occurrenceVector)
-    Arrays.sort(occurrences, BY_INDEX)
+    util.Arrays.sort(occurrences, BY_INDEX)
     var cooccurrences: Int = 0
     var prunedCooccurrences: Int = 0
     for (n: Int <- 0 until occurrences.length) {
-      print(n)
-      val occurrenceA: Vector.Element = occurrences(n);
-      val dots: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE);
+      val occurrenceA: Vector.Element = occurrences(n)
+      val dots: Vector = new RandomAccessSparseVector(Integer.MAX_VALUE)
       for (m: Int <- n until occurrences.length) {
-        val occurrenceB: Vector.Element = occurrences(m);
+        val occurrenceB: Vector.Element = occurrences(m)
         if (threshold == SimilarityMatrix.NO_THRESHOLD || consider(occurrenceA, occurrenceB)) {
-          dots.setQuick(occurrenceB.index(), similarity.aggregate(occurrenceA.get(), occurrenceB.get()));
-          cooccurrences = cooccurrences + 1;
+          dots.setQuick(occurrenceB.index(), similarity.aggregate(occurrenceA.get(), occurrenceB.get()))
+          cooccurrences = cooccurrences + 1
         } else {
-          prunedCooccurrences = prunedCooccurrences + 1;
+          prunedCooccurrences = prunedCooccurrences + 1
         }
       }
-      ctx.write(new VarIntWritable(occurrenceA.index()), new VectorWritable(dots));
+      ctx.write(new VarIntWritable(occurrenceA.index()), new VectorWritable(dots))
     }
   }
 }
@@ -469,9 +468,9 @@ class SimilarityReducer extends Reducer[VarIntWritable, VectorWritable, VarIntWr
   @throws(classOf[InterruptedException])
   override def reduce(row: VarIntWritable, partialDots: java.lang.Iterable[VectorWritable], ctx: Reducer[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable]#Context) {
     val partialDotsIterator: Iterator[VectorWritable] = partialDots.iterator
-    val dots: Vector = partialDotsIterator.next.get
+    val dots: Vector = partialDotsIterator.next().get
     while (partialDotsIterator.hasNext) {
-      val toAdd: Vector = partialDotsIterator.next.get
+      val toAdd: Vector = partialDotsIterator.next().get
       for (nonZeroElement <- toAdd.nonZeroes) {
         dots.setQuick(nonZeroElement.index, dots.getQuick(nonZeroElement.index) + nonZeroElement.get)
       }
@@ -490,11 +489,6 @@ class SimilarityReducer extends Reducer[VarIntWritable, VectorWritable, VarIntWr
     ctx.write(row, new VectorWritable(similarities))
   }
 }
-
-
-//======================================================================================================================================
-//Unsymmetrify
-// ======================================================================================================================================
 
 
 class UnsymmetrifyMapper extends Mapper[VarIntWritable, VectorWritable, VarIntWritable, VectorWritable] {
@@ -518,7 +512,7 @@ class UnsymmetrifyMapper extends Mapper[VarIntWritable, VectorWritable, VarIntWr
       if (candidateValue > top.get) {
         top.setIndex(nonZeroElement.index)
         top.set(candidateValue)
-        topKQueue.updateTop
+        topKQueue.updateTop()
       }
       transposedPartial.setQuick(row.get, candidateValue)
       ctx.write(new VarIntWritable(nonZeroElement.index), new VectorWritable(transposedPartial))
