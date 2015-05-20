@@ -15,12 +15,18 @@ import utils.MapReduceUtils
  */
 object Main {
 
-
-
   def main(args: Array[String]): Unit = {
 
     val dataset = args(0)
     val output = args(1)
+
+    var a = Array("--input", "data/input.dat","--output", "data/output","--usersFile" ,"data/users.dat","--booleanData","true","-s","SIMILARITY_COSINE")
+
+    val r = new RecommenderJob()
+    val map = r.parseArguments(a)
+    //int numberOfUsers = uservector(prepPath, currentPhase, parsedArgs, minPrefsPerUser, booleanData);
+
+    r.uservector("")
 
     parse_data on dataset then
       produce(user_vectors) then
