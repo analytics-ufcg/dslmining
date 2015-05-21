@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInput
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, SequenceFileOutputFormat, TextOutputFormat}
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
+import org.apache.mahout.common.AbstractJob
 import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
 import utils.MapReduceUtils
 
@@ -17,22 +18,23 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val dataset = args(0)
-    val output = args(1)
+    //val dataset = args(0)
+    //val output = args(1)
 
-    var a = Array("--input", "data/input.dat","--output", "data/output","--usersFile" ,"data/users.dat","--booleanData","true","-s","SIMILARITY_COSINE")
+    var a = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE")
 
-    val r = new RecommenderJob()
-    val map = r.parseArguments(a)
-    //int numberOfUsers = uservector(prepPath, currentPhase, parsedArgs, minPrefsPerUser, booleanData);
+    val recommender = new RecommenderJob()
 
-    r.uservector("")
+    val prepPath: Path = new Path("data/")
 
-    parse_data on dataset then
-      produce(user_vectors) then
-      produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-      multiply("coocurrence" by "user_vector") then
-      produce(recommendation) write_on output then execute
+    val numberOfUsers = recommender.uservector(a, prepPath, 5, true);
+
+
+    //parse_data on dataset then
+    //  produce(user_vectors) then
+    //  produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+    //  multiply("coocurrence" by "user_vector") then
+     // produce(recommendation) write_on output then execute
 
   }
 

@@ -40,6 +40,7 @@ import org.apache.mahout.math.VarLongWritable;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,57 +98,11 @@ public final class RecommenderJob extends AbstractJob {
     private static final int DEFAULT_MAX_SIMILARITIES_PER_ITEM = 100;
     private static final int DEFAULT_MAX_PREFS = 500;
     private static final int DEFAULT_MIN_PREFS_PER_USER = 1;
+    AtomicInteger currentPhase = new AtomicInteger();
+    private Map<String, List<String>> parsedArgs;
 
+  /*  public int run(String[] args) throws Exception {
 
-    public int run(String[] args) throws Exception {
-
-        addInputOption();
-        addOutputOption();
-        addOption("numRecommendations", "n", "Number of recommendations per user",
-                String.valueOf(AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
-        addOption("usersFile", null, "File of users to recommend for", null);
-        addOption("itemsFile", null, "File of items to recommend for", null);
-        addOption("filterFile", "f", "File containing comma-separated userID,itemID pairs. Used to exclude the item from "
-                + "the recommendations for that user (optional)", null);
-        addOption("booleanData", "b", "Treat input as without pref values", Boolean.FALSE.toString());
-        addOption("maxPrefsPerUser", "mxp",
-                "Maximum number of preferences considered per user in final recommendation phase",
-                String.valueOf(UserVectorSplitterMapper.DEFAULT_MAX_PREFS_PER_USER_CONSIDERED));
-        addOption("minPrefsPerUser", "mp", "ignore users with less preferences than this in the similarity computation "
-                + "(default: " + DEFAULT_MIN_PREFS_PER_USER + ')', String.valueOf(DEFAULT_MIN_PREFS_PER_USER));
-        addOption("maxSimilaritiesPerItem", "m", "Maximum number of similarities considered per item ",
-                String.valueOf(DEFAULT_MAX_SIMILARITIES_PER_ITEM));
-        addOption("maxPrefsInItemSimilarity", "mpiis", "max number of preferences to consider per user or item in the "
-                + "item similarity computation phase, users or items with more preferences will be sampled down (default: "
-                + DEFAULT_MAX_PREFS + ')', String.valueOf(DEFAULT_MAX_PREFS));
-        addOption("similarityClassname", "s", "Name of distributed similarity measures class to instantiate, "
-                + "alternatively use one of the predefined similarities (" + VectorSimilarityMeasures.list() + ')', true);
-        addOption("threshold", "tr", "discard item pairs with a similarity value below this", false);
-        addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
-                false);
-        addOption("randomSeed", null, "use this seed for sampling", false);
-        addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
-
-        Map<String, List<String>> parsedArgs = parseArguments(args);
-        if (parsedArgs == null) {
-            return -1;
-        }
-
-        Path outputPath = getOutputPath();
-        int numRecommendations = Integer.parseInt(getOption("numRecommendations"));
-        String usersFile = getOption("usersFile");
-        String itemsFile = getOption("itemsFile");
-        String filterFile = getOption("filterFile");
-        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
-        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
-        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
-        int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
-        int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
-        String similarityClassname = getOption("similarityClassname");
-        double threshold = hasOption("threshold")
-                ? Double.parseDouble(getOption("threshold")) : RowSimilarityJob.NO_THRESHOLD;
-        long randomSeed = hasOption("randomSeed")
-                ? Long.parseLong(getOption("randomSeed")) : RowSimilarityJob.NO_FIXED_RANDOM_SEED;
 
 
 
@@ -159,9 +114,9 @@ public final class RecommenderJob extends AbstractJob {
         Path explicitFilterPath = getTempPath("explicitFilterPath");
         Path partialMultiplyPath = getTempPath("partialMultiply");
         Path prepPath = getTempPath(DEFAULT_PREPARE_PATH);
-        AtomicInteger currentPhase = new AtomicInteger();
 
-        int numberOfUsers = uservector(prepPath, currentPhase, parsedArgs, minPrefsPerUser, booleanData);
+        //User vector
+        int numberOfUsers = uservector(prepPath, parsedArgs, minPrefsPerUser, booleanData);
 
         //--------------------- modifided
 
@@ -175,7 +130,7 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
 
-      /* special behavior if phase 1 is skipped */
+      *//* special behavior if phase 1 is skipped *//*
             if (numberOfUsers == -1) {
                 numberOfUsers = (int) HadoopUtil.countRecords(new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
                         PathType.LIST, null, getConf());
@@ -245,7 +200,7 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
-      /* convert the user/item pairs to filter if a filterfile has been specified */
+      *//* convert the user/item pairs to filter if a filterfile has been specified *//*
             if (filterFile != null) {
                 Job itemFiltering = prepareJob(new Path(filterFile), explicitFilterPath, TextInputFormat.class,
                         ItemFilterMapper.class, VarLongWritable.class, VarLongWritable.class,
@@ -291,11 +246,13 @@ public final class RecommenderJob extends AbstractJob {
         }
 
         return 0;
-    }
+    }*/
 
 
-    public int uservector(Path prepPath, AtomicInteger currentPhase, Map<String, List<String>> parsedArgs, int minPrefsPerUser, boolean booleanData) throws Exception {
+    public int uservector(String[] args, Path prepPath, int minPrefsPerUser, boolean booleanData) throws Exception {
         int numberOfUsers = -1;
+
+        System.out.println(prepareRecommender(args));
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
@@ -305,11 +262,62 @@ public final class RecommenderJob extends AbstractJob {
                     "--booleanData", String.valueOf(booleanData),
                     "--tempDir", getTempPath().toString(),
             });
+       }
 
+       return HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+    }
 
+    public int prepareRecommender(String[] args) throws IOException {
+        addInputOption();
+        addOutputOption();
+        addOption("numRecommendations", "n", "Number of recommendations per user",
+                String.valueOf(AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
+        addOption("usersFile", null, "File of users to recommend for", null);
+        addOption("itemsFile", null, "File of items to recommend for", null);
+        addOption("filterFile", "f", "File containing comma-separated userID,itemID pairs. Used to exclude the item from "
+                + "the recommendations for that user (optional)", null);
+        addOption("booleanData", "b", "Treat input as without pref values", Boolean.FALSE.toString());
+        addOption("maxPrefsPerUser", "mxp",
+                "Maximum number of preferences considered per user in final recommendation phase",
+                String.valueOf(UserVectorSplitterMapper.DEFAULT_MAX_PREFS_PER_USER_CONSIDERED));
+        addOption("minPrefsPerUser", "mp", "ignore users with less preferences than this in the similarity computation "
+                + "(default: " + DEFAULT_MIN_PREFS_PER_USER + ')', String.valueOf(DEFAULT_MIN_PREFS_PER_USER));
+        addOption("maxSimilaritiesPerItem", "m", "Maximum number of similarities considered per item ",
+                String.valueOf(DEFAULT_MAX_SIMILARITIES_PER_ITEM));
+        addOption("maxPrefsInItemSimilarity", "mpiis", "max number of preferences to consider per user or item in the "
+                + "item similarity computation phase, users or items with more preferences will be sampled down (default: "
+                + DEFAULT_MAX_PREFS + ')', String.valueOf(DEFAULT_MAX_PREFS));
+        addOption("similarityClassname", "s", "Name of distributed similarity measures class to instantiate, "
+                + "alternatively use one of the predefined similarities (" + VectorSimilarityMeasures.list() + ')', true);
+        addOption("threshold", "tr", "discard item pairs with a similarity value below this", false);
+        addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
+                false);
+        addOption("randomSeed", null, "use this seed for sampling", false);
+        addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
+
+        parsedArgs = parseArguments(args);
+        if (parsedArgs == null) {
+            return -1;
         }
 
-       return numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+        Path outputPath = getOutputPath();
+        int numRecommendations = Integer.parseInt(getOption("numRecommendations"));
+        String usersFile = getOption("usersFile");
+        String itemsFile = getOption("itemsFile");
+        String filterFile = getOption("filterFile");
+        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
+        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
+        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
+        int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
+        int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
+        String similarityClassname = getOption("similarityClassname");
+        double threshold = hasOption("threshold")
+                ? Double.parseDouble(getOption("threshold")) : RowSimilarityJob.NO_THRESHOLD;
+        long randomSeed = hasOption("randomSeed")
+                ? Long.parseLong(getOption("randomSeed")) : RowSimilarityJob.NO_FIXED_RANDOM_SEED;
+
+
+        return numRecommendations;
     }
 
     private static void setIOSort(JobContext job) {
@@ -339,6 +347,11 @@ public final class RecommenderJob extends AbstractJob {
 
     public static void main(String[] args) throws Exception {
         ToolRunner.run(new Configuration(), new RecommenderJob(), args);
+    }
+
+    @Override
+    public int run(String[] strings) throws Exception {
+        return 0;
     }
 }
 
