@@ -25,9 +25,10 @@ object Main {
 
     val recommender = new RecommenderJob()
 
-    val prepPath: Path = new Path("data/")
+    val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
 
     val numberOfUsers = recommender.uservector(a, prepPath, 5, true);
+    val similarity = recommender.rowSimilarity(a, 10)
 
 
     //parse_data on dataset then
