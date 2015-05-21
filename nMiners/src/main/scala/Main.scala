@@ -21,15 +21,12 @@ object Main {
     //val dataset = args(0)
     //val output = args(1)
 
-    var a = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE")
-
+    val a = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE")
     val recommender = new RecommenderJob()
-
     val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
-
     val numberOfUsers = recommender.uservector(a, prepPath, 5, true);
     val similarity = recommender.rowSimilarity(a, 10)
-
+    val multiply = recommender.multiplication(a,prepPath)
 
     //parse_data on dataset then
     //  produce(user_vectors) then

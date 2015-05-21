@@ -41,6 +41,7 @@ import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures;
 
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -266,13 +267,7 @@ public final class RecommenderJob extends AbstractJob {
     //calculate the co-occurrence matrix
 
 
-        Path outputPath = getOutputPath();
-        String usersFile = getOption("usersFile");
-        String itemsFile = getOption("itemsFile");
-        String filterFile = getOption("filterFile");
-        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
-        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
-        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
+
         int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
         int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
         String similarityClassname = getOption("similarityClassname");
@@ -313,6 +308,50 @@ public final class RecommenderJob extends AbstractJob {
         return maxSimilaritiesPerItem;
     }
 
+    public int multiplication(String[] args, Path prepPath) throws InterruptedException, IOException, ClassNotFoundException {
+        //start the multiplication of the co-occurrence matrix by the user vectors
+        prepareRecommender(args);
+        Path similarityMatrixPath = getTempPath("similarityMatrix");
+        Path partialMultiplyPath = getTempPath("partialMultiply");
+        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
+        String usersFile = getOption("usersFile");
+
+        Path outputPath = getOutputPath();
+        String itemsFile = getOption("itemsFile");
+        String filterFile = getOption("filterFile");
+        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
+        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
+
+        if (shouldRunNextPhase(parsedArgs, currentPhase)) {
+            Job partialMultiply = new Job(getConf(), "partialMultiply");
+            Configuration partialMultiplyConf = partialMultiply.getConfiguration();
+
+            MultipleInputs.addInputPath(partialMultiply, similarityMatrixPath, SequenceFileInputFormat.class,
+                    SimilarityMatrixRowWrapperMapper.class);
+            MultipleInputs.addInputPath(partialMultiply, new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
+                    SequenceFileInputFormat.class, UserVectorSplitterMapper.class);
+            partialMultiply.setJarByClass(ToVectorAndPrefReducer.class);
+            partialMultiply.setMapOutputKeyClass(VarIntWritable.class);
+            partialMultiply.setMapOutputValueClass(VectorOrPrefWritable.class);
+            partialMultiply.setReducerClass(ToVectorAndPrefReducer.class);
+            partialMultiply.setOutputFormatClass(SequenceFileOutputFormat.class);
+            partialMultiply.setOutputKeyClass(VarIntWritable.class);
+            partialMultiply.setOutputValueClass(VectorAndPrefsWritable.class);
+            partialMultiplyConf.setBoolean("mapred.compress.map.output", true);
+            partialMultiplyConf.set("mapred.output.dir", partialMultiplyPath.toString());
+
+            if (usersFile != null) {
+                partialMultiplyConf.set(UserVectorSplitterMapper.USERS_FILE, usersFile);
+            }
+            partialMultiplyConf.setInt(UserVectorSplitterMapper.MAX_PREFS_PER_USER_CONSIDERED, maxPrefsPerUser);
+
+            boolean succeeded = partialMultiply.waitForCompletion(true);
+            if (!succeeded) {
+                return -1;
+            }
+        }
+        return 0;
+    }
 
     public int prepareRecommender(String[] args) throws IOException {
         addInputOption();
@@ -350,9 +389,7 @@ public final class RecommenderJob extends AbstractJob {
 
         int numRecommendations = Integer.parseInt(getOption("numRecommendations"));
 
-        Path similarityMatrixPath = getTempPath("similarityMatrix");
         Path explicitFilterPath = getTempPath("explicitFilterPath");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
 
         return numRecommendations;
     }
