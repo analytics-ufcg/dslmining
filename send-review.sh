@@ -9,7 +9,7 @@ declare REVIWER=""
 declare REVIEW_NUM=""
 declare AUTOMATIC_PUBLISH=""
 
-while getopts ":p:r:" opt; do
+while getopts ":p:r:ap:" opt; do
   case $opt in
     p)
       REVIWER="--target-people=$OPTARG"
