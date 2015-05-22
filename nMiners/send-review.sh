@@ -23,4 +23,4 @@ while getopts ":p:r:" opt; do
   esac
 done
 
-$COMMAND$REVIWER$REVIEW_NUM
+$COMMAND $REVIWER $REVIEW_NUM
