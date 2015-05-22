@@ -7,6 +7,7 @@
 COMMAND="rbt post "
 declare REVIWER=""
 declare REVIEW_NUM=""
+declare AUTOMATIC_PREVIEW=""
 
 while getopts ":p:r:" opt; do
   case $opt in
@@ -16,6 +17,8 @@ while getopts ":p:r:" opt; do
     r)
       REVIEW_NUM="-r=$OPTARG"
       ;;
+    -pu)
+      AUTOMATIC_PREVIEW="-p"
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -27,4 +30,4 @@ while getopts ":p:r:" opt; do
   esac
 done
 
-$COMMAND $REVIWER $REVIEW_NUM
+$COMMAND $REVIWER $REVIEW_NUM $AUTOMATIC_PREVIEW
