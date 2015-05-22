@@ -1,3 +1,9 @@
+#########################################################################
+# Script to send review requests:                                       #
+# Use the parameter -p to set the reviwer(s)                            #
+# Use the parameter -r to send a new diff to a existent review request  #
+#########################################################################
+
 git config reviewboard.url http://150.165.15.104:9080/
 
 COMMAND="rbt post "
