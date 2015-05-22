@@ -19,6 +19,7 @@ while getopts ":p:r:" opt; do
       ;;
     -ap)
       AUTOMATIC_PUBLISH="-p"
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
