@@ -17,7 +17,7 @@ while getopts ":p:r:" opt; do
     r)
       REVIEW_NUM="-r=$OPTARG"
       ;;
-    -pu)
+    -ap)
       AUTOMATIC_PREVIEW="-p"
     \?)
       echo "Invalid option: -$OPTARG" >&2
