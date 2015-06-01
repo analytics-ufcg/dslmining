@@ -34,14 +34,12 @@ import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob;
 import org.apache.mahout.cf.taste.hadoop.similarity.item.ItemSimilarityJob;
 import org.apache.mahout.common.AbstractJob;
 import org.apache.mahout.common.HadoopUtil;
-import org.apache.mahout.common.iterator.sequencefile.PathType;
 import org.apache.mahout.math.VarIntWritable;
 import org.apache.mahout.math.VarLongWritable;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures;
 
 import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,11 +75,11 @@ import java.util.regex.Pattern;
  * <li>--numRecommendations (integer): Number of recommendations to compute per user (10)</li>
  * <li>--booleanData (boolean): Treat input data as having no pref values (false)</li>
  * <li>--maxPrefsPerUser (integer): Maximum number of preferences considered per user in final
- *   recommendation phase (10)</li>
+ * recommendation phase (10)</li>
  * <li>--maxSimilaritiesPerItem (integer): Maximum number of similarities considered per item (100)</li>
  * <li>--minPrefsPerUser (integer): ignore users with less preferences than this in the similarity computation (1)</li>
  * <li>--maxPrefsPerUserInItemSimilarity (integer): max number of preferences to consider per user in
- *   the item similarity computation phase,
+ * the item similarity computation phase,
  * users with more preferences will be sampled down (1000)</li>
  * <li>--threshold (double): discard item pairs with a similarity value below this</li>
  * </ol>
@@ -102,68 +100,93 @@ public final class RecommenderJob extends AbstractJob {
     AtomicInteger currentPhase = new AtomicInteger();
     private Map<String, List<String>> parsedArgs;
 
+    /**
+     *
+     * @param args
+     * @param prepPath Path used to output
+     * @return The number of users
+     * @throws Exception
+     */
+    public int uservector(String[] args, Path prepPath) throws Exception {
+        prepareRecommender(args);
 
-  /*  public int run(String[] args) throws Exception {
+        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
+        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
 
-
-
-
-
-        //--------------------- modifided
-
-
-        
-
-        //User vector
-        int numberOfUsers = uservector(prepPath, parsedArgs, minPrefsPerUser, booleanData);
-
-        //--------------------- modifided
-
-
-'       // not modifided
-       if (shouldRunNextPhase(parsedArgs, currentPhase)) {
-
-      *//* special behavior if phase 1 is skipped *//*
-            if (numberOfUsers == -1) {
-                numberOfUsers = (int) HadoopUtil.countRecords(new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
-                        PathType.LIST, null, getConf());
-            }
-        // not modifided
-
-
-            //calculate the co-occurrence matrix
-            ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                    "--input", new Path(prepPath, PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
-                    "--output", similarityMatrixPath.toString(),
-                    "--numberOfColumns", String.valueOf(numberOfUsers),
-                    "--similarityClassname", similarityClassname,
-                    "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
-                    "--maxObservationsPerColumn", String.valueOf(maxPrefsInItemSimilarity),
-                    "--maxSimilaritiesPerRow", String.valueOf(maxSimilaritiesPerItem),
-                    "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
-                    "--threshold", String.valueOf(threshold),
-                    "--randomSeed", String.valueOf(randomSeed),
+        if (shouldRunNextPhase(parsedArgs, currentPhase)) {
+            ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
+                    "--input", getInputPath().toString(),
+                    "--output", prepPath.toString(),
+                    "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
+                    "--booleanData", String.valueOf(booleanData),
                     "--tempDir", getTempPath().toString(),
             });
-
-            // write out the similarity matrix if the user specified that behavior
-            if (hasOption("outputPathForSimilarityMatrix")) {
-                Path outputPathForSimilarityMatrix = new Path(getOption("outputPathForSimilarityMatrix"));
-
-                Job outputSimilarityMatrix = prepareJob(similarityMatrixPath, outputPathForSimilarityMatrix,
-                        SequenceFileInputFormat.class, ItemSimilarityJob.MostSimilarItemPairsMapper.class,
-                        EntityEntityWritable.class, DoubleWritable.class, ItemSimilarityJob.MostSimilarItemPairsReducer.class,
-                        EntityEntityWritable.class, DoubleWritable.class, TextOutputFormat.class);
-
-                Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
-                mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
-                        new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
-                mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
-                outputSimilarityMatrix.waitForCompletion(true);
-            }
         }
+        return HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+    }
 
+    /**
+     * Calculate the co-occurrence matrix
+     * @param args
+     * @param numberOfUsers
+     * @return
+     * @throws Exception
+     */
+    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) throws Exception {
+        prepareRecommender(args);
+        //
+        numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+
+        int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
+        int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
+        String similarityClassname = getOption("similarityClassname");
+        double threshold = hasOption("threshold")
+                ? Double.parseDouble(getOption("threshold")) : RowSimilarityJob.NO_THRESHOLD;
+        long randomSeed = hasOption("randomSeed")
+                ? Long.parseLong(getOption("randomSeed")) : RowSimilarityJob.NO_FIXED_RANDOM_SEED;
+
+        ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
+                "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
+                "--output", getTempPath("similarityMatrix").toString(),
+                "--numberOfColumns", String.valueOf(numberOfUsers),
+                "--similarityClassname", similarityClassname,
+                "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
+                "--maxObservationsPerColumn", String.valueOf(maxPrefsInItemSimilarity),
+                "--maxSimilaritiesPerRow", String.valueOf(maxSimilaritiesPerItem),
+                "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
+                "--threshold", String.valueOf(threshold),
+                "--randomSeed", String.valueOf(randomSeed),
+                "--tempDir", getTempPath().toString(),
+        });
+
+        // write out the similarity matrix if the user specified that behavior
+        if (hasOption("outputPathForSimilarityMatrix")) {
+            Path outputPathForSimilarityMatrix = new Path(getOption("outputPathForSimilarityMatrix"));
+
+            Job outputSimilarityMatrix = prepareJob(getTempPath("similarityMatrix"), outputPathForSimilarityMatrix,
+                    SequenceFileInputFormat.class, ItemSimilarityJob.MostSimilarItemPairsMapper.class,
+                    EntityEntityWritable.class, DoubleWritable.class, ItemSimilarityJob.MostSimilarItemPairsReducer.class,
+                    EntityEntityWritable.class, DoubleWritable.class, TextOutputFormat.class);
+
+            Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
+            mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
+                    new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
+            mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
+            outputSimilarityMatrix.waitForCompletion(true);
+        }
+        return maxSimilaritiesPerItem;
+    }
+
+    public int multiplication(String[] args, Path prepPath) throws InterruptedException, IOException, ClassNotFoundException {
         //start the multiplication of the co-occurrence matrix by the user vectors
+        prepareRecommender(args);
+        Path similarityMatrixPath = getTempPath("similarityMatrix");
+        Path partialMultiplyPath = getTempPath("partialMultiply");
+        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
+        String usersFile = getOption("usersFile");
+
+
+
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             Job partialMultiply = new Job(getConf(), "partialMultiply");
             Configuration partialMultiplyConf = partialMultiply.getConfiguration();
@@ -192,10 +215,32 @@ public final class RecommenderJob extends AbstractJob {
                 return -1;
             }
         }
+        return 0;
+    }
+
+    /**
+     *
+     * @param args
+     * @param prepPath
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public int recommender(String[] args, Path prepPath) throws IOException, ClassNotFoundException, InterruptedException {
+        prepareRecommender(args);
+        Path explicitFilterPath = getTempPath("explicitFilterPath");
+        Path partialMultiplyPath = getTempPath("partialMultiply");
+        Path outputPath = getOutputPath();
+        String itemsFile = getOption("itemsFile");
+        String filterFile = getOption("filterFile");
+        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
+        int numRecommendations = Integer.parseInt(getOption("numRecommendations"));
+
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
-      *//* convert the user/item pairs to filter if a filterfile has been specified *//*
+      /* convert the user/item pairs to filter if a filterfile has been specified */
             if (filterFile != null) {
                 Job itemFiltering = prepareJob(new Path(filterFile), explicitFilterPath, TextInputFormat.class,
                         ItemFilterMapper.class, VarLongWritable.class, VarLongWritable.class,
@@ -240,116 +285,6 @@ public final class RecommenderJob extends AbstractJob {
             }
         }
 
-        return 0;
-    }*/
-
-
-    public int uservector(String[] args, Path prepPath, int minPrefsPerUser, boolean booleanData) throws Exception {
-        int numberOfUsers = -1;
-
-        System.out.println(prepareRecommender(args));
-
-        if (shouldRunNextPhase(parsedArgs, currentPhase)) {
-            ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
-                    "--input", getInputPath().toString(),
-                    "--output", prepPath.toString(),
-                    "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
-                    "--booleanData", String.valueOf(booleanData),
-                    "--tempDir", getTempPath().toString(),
-            });
-       }
-
-       return HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
-    }
-
-    public int rowSimilarity(String[] args, int numberOfUsers) throws Exception {
-        prepareRecommender(args);
-    //calculate the co-occurrence matrix
-
-
-
-        int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
-        int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
-        String similarityClassname = getOption("similarityClassname");
-        double threshold = hasOption("threshold")
-                ? Double.parseDouble(getOption("threshold")) : RowSimilarityJob.NO_THRESHOLD;
-        long randomSeed = hasOption("randomSeed")
-                ? Long.parseLong(getOption("randomSeed")) : RowSimilarityJob.NO_FIXED_RANDOM_SEED;
-
-        ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
-                "--output",  getTempPath("similarityMatrix").toString(),
-                "--numberOfColumns", String.valueOf(numberOfUsers),
-                "--similarityClassname", similarityClassname,
-                "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
-                "--maxObservationsPerColumn", String.valueOf(maxPrefsInItemSimilarity),
-                "--maxSimilaritiesPerRow", String.valueOf(maxSimilaritiesPerItem),
-                "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
-                "--threshold", String.valueOf(threshold),
-                "--randomSeed", String.valueOf(randomSeed),
-                "--tempDir", getTempPath().toString(),
-        });
-
-        // write out the similarity matrix if the user specified that behavior
-        if (hasOption("outputPathForSimilarityMatrix")) {
-            Path outputPathForSimilarityMatrix = new Path(getOption("outputPathForSimilarityMatrix"));
-
-            Job outputSimilarityMatrix = prepareJob( getTempPath("similarityMatrix"), outputPathForSimilarityMatrix,
-                    SequenceFileInputFormat.class, ItemSimilarityJob.MostSimilarItemPairsMapper.class,
-                    EntityEntityWritable.class, DoubleWritable.class, ItemSimilarityJob.MostSimilarItemPairsReducer.class,
-                    EntityEntityWritable.class, DoubleWritable.class, TextOutputFormat.class);
-
-            Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
-            mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
-                    new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
-            mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
-            outputSimilarityMatrix.waitForCompletion(true);
-        }
-        return maxSimilaritiesPerItem;
-    }
-
-    public int multiplication(String[] args, Path prepPath) throws InterruptedException, IOException, ClassNotFoundException {
-        //start the multiplication of the co-occurrence matrix by the user vectors
-        prepareRecommender(args);
-        Path similarityMatrixPath = getTempPath("similarityMatrix");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
-        int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
-        String usersFile = getOption("usersFile");
-
-        Path outputPath = getOutputPath();
-        String itemsFile = getOption("itemsFile");
-        String filterFile = getOption("filterFile");
-        boolean booleanData = Boolean.valueOf(getOption("booleanData"));
-        int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
-
-        if (shouldRunNextPhase(parsedArgs, currentPhase)) {
-            Job partialMultiply = new Job(getConf(), "partialMultiply");
-            Configuration partialMultiplyConf = partialMultiply.getConfiguration();
-
-            MultipleInputs.addInputPath(partialMultiply, similarityMatrixPath, SequenceFileInputFormat.class,
-                    SimilarityMatrixRowWrapperMapper.class);
-            MultipleInputs.addInputPath(partialMultiply, new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
-                    SequenceFileInputFormat.class, UserVectorSplitterMapper.class);
-            partialMultiply.setJarByClass(ToVectorAndPrefReducer.class);
-            partialMultiply.setMapOutputKeyClass(VarIntWritable.class);
-            partialMultiply.setMapOutputValueClass(VectorOrPrefWritable.class);
-            partialMultiply.setReducerClass(ToVectorAndPrefReducer.class);
-            partialMultiply.setOutputFormatClass(SequenceFileOutputFormat.class);
-            partialMultiply.setOutputKeyClass(VarIntWritable.class);
-            partialMultiply.setOutputValueClass(VectorAndPrefsWritable.class);
-            partialMultiplyConf.setBoolean("mapred.compress.map.output", true);
-            partialMultiplyConf.set("mapred.output.dir", partialMultiplyPath.toString());
-
-            if (usersFile != null) {
-                partialMultiplyConf.set(UserVectorSplitterMapper.USERS_FILE, usersFile);
-            }
-            partialMultiplyConf.setInt(UserVectorSplitterMapper.MAX_PREFS_PER_USER_CONSIDERED, maxPrefsPerUser);
-
-            boolean succeeded = partialMultiply.waitForCompletion(true);
-            if (!succeeded) {
-                return -1;
-            }
-        }
         return 0;
     }
 

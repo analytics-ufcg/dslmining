@@ -24,15 +24,16 @@ object Main {
     val a = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE")
     val recommender = new RecommenderJob()
     val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
-    val numberOfUsers = recommender.uservector(a, prepPath, 5, true);
-    val similarity = recommender.rowSimilarity(a, 10)
+    val numberOfUsers = recommender.uservector(a, prepPath);
+    val similarity = recommender.rowSimilarity(a, prepPath, 10)
     val multiply = recommender.multiplication(a,prepPath)
+    val recommend = recommender.recommender(a, prepPath)
 
-    //parse_data on dataset then
-    //  produce(user_vectors) then
-    //  produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-    //  multiply("coocurrence" by "user_vector") then
-     // produce(recommendation) write_on output then execute
+//    parse_data on dataset then
+//      produce(user_vectors) then
+//      produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+//      multiply("coocurrence" by "user_vector") then
+//     produce(recommendation) write_on output then execute
 
   }
 
