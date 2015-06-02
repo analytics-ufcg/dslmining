@@ -101,41 +101,64 @@ public final class RecommenderJob extends AbstractJob {
     private Map<String, List<String>> parsedArgs;
 
     /**
-     *
-     * @param args
+     * Calculate the user vector matrix
+     * @param args Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @param prepPath Path used to output
      * @return The number of users
-     * @throws Exception
      */
-    public int uservector(String[] args, Path prepPath) throws Exception {
-        prepareRecommender(args);
+    public int uservector(String[] args, Path prepPath)   {
+        try {
+            prepareRecommender(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         int minPrefsPerUser = Integer.parseInt(getOption("minPrefsPerUser"));
         boolean booleanData = Boolean.valueOf(getOption("booleanData"));
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
-            ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
-                    "--input", getInputPath().toString(),
-                    "--output", prepPath.toString(),
-                    "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
-                    "--booleanData", String.valueOf(booleanData),
-                    "--tempDir", getTempPath().toString(),
-            });
+            try {
+                ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
+                        "--input", getInputPath().toString(),
+                        "--output", prepPath.toString(),
+                        "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
+                        "--booleanData", String.valueOf(booleanData),
+                        "--tempDir", getTempPath().toString(),
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+
+        int userVector = -1;
+
+        try {
+            userVector = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return userVector;
     }
 
     /**
      * Calculate the co-occurrence matrix
-     * @param args
-     * @param numberOfUsers
-     * @return
-     * @throws Exception
+     * @param args Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
+     * @param numberOfUsers Number of Users
+     * @return Similarities Per Item
      */
-    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) throws Exception {
-        prepareRecommender(args);
-        //
-        numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) {
+        try {
+            prepareRecommender(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
         int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
@@ -145,50 +168,82 @@ public final class RecommenderJob extends AbstractJob {
         long randomSeed = hasOption("randomSeed")
                 ? Long.parseLong(getOption("randomSeed")) : RowSimilarityJob.NO_FIXED_RANDOM_SEED;
 
-        ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
-                "--output", getTempPath("similarityMatrix").toString(),
-                "--numberOfColumns", String.valueOf(numberOfUsers),
-                "--similarityClassname", similarityClassname,
-                "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
-                "--maxObservationsPerColumn", String.valueOf(maxPrefsInItemSimilarity),
-                "--maxSimilaritiesPerRow", String.valueOf(maxSimilaritiesPerItem),
-                "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
-                "--threshold", String.valueOf(threshold),
-                "--randomSeed", String.valueOf(randomSeed),
-                "--tempDir", getTempPath().toString(),
-        });
+        try {
+            ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
+                    "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH),
+                    PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
+                    "--output", getTempPath("similarityMatrix").toString(),
+                    "--numberOfColumns", String.valueOf(numberOfUsers),
+                    "--similarityClassname", similarityClassname,
+                    "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
+                    "--maxObservationsPerColumn", String.valueOf(maxPrefsInItemSimilarity),
+                    "--maxSimilaritiesPerRow", String.valueOf(maxSimilaritiesPerItem),
+                    "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
+                    "--threshold", String.valueOf(threshold),
+                    "--randomSeed", String.valueOf(randomSeed),
+                    "--tempDir", getTempPath().toString(),
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // write out the similarity matrix if the user specified that behavior
         if (hasOption("outputPathForSimilarityMatrix")) {
             Path outputPathForSimilarityMatrix = new Path(getOption("outputPathForSimilarityMatrix"));
 
-            Job outputSimilarityMatrix = prepareJob(getTempPath("similarityMatrix"), outputPathForSimilarityMatrix,
-                    SequenceFileInputFormat.class, ItemSimilarityJob.MostSimilarItemPairsMapper.class,
-                    EntityEntityWritable.class, DoubleWritable.class, ItemSimilarityJob.MostSimilarItemPairsReducer.class,
-                    EntityEntityWritable.class, DoubleWritable.class, TextOutputFormat.class);
+            Job outputSimilarityMatrix = null;
+            try {
+                outputSimilarityMatrix = prepareJob(getTempPath("similarityMatrix"), outputPathForSimilarityMatrix,
+                        SequenceFileInputFormat.class, ItemSimilarityJob.MostSimilarItemPairsMapper.class,
+                        EntityEntityWritable.class, DoubleWritable.class,
+                        ItemSimilarityJob.MostSimilarItemPairsReducer.class,
+                        EntityEntityWritable.class, DoubleWritable.class, TextOutputFormat.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
             mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
                     new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
             mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
-            outputSimilarityMatrix.waitForCompletion(true);
+            try {
+                outputSimilarityMatrix.waitForCompletion(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return maxSimilaritiesPerItem;
     }
 
-    public int multiplication(String[] args, Path prepPath) throws InterruptedException, IOException, ClassNotFoundException {
-        //start the multiplication of the co-occurrence matrix by the user vectors
-        prepareRecommender(args);
+
+    /**
+     * Calculate the multiplication of the co-occurrence matrix by the user vectors
+     * @param args Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
+     * @param prepPath Path used to output
+     * @return 0
+     */
+    public int multiplication(String[] args, Path prepPath) {
+        try {
+            prepareRecommender(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Path similarityMatrixPath = getTempPath("similarityMatrix");
         Path partialMultiplyPath = getTempPath("partialMultiply");
         int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
         String usersFile = getOption("usersFile");
 
-
-
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
-            Job partialMultiply = new Job(getConf(), "partialMultiply");
+            Job partialMultiply = null;
+            try {
+                partialMultiply = new Job(getConf(), "partialMultiply");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Configuration partialMultiplyConf = partialMultiply.getConfiguration();
 
             MultipleInputs.addInputPath(partialMultiply, similarityMatrixPath, SequenceFileInputFormat.class,
@@ -210,7 +265,16 @@ public final class RecommenderJob extends AbstractJob {
             }
             partialMultiplyConf.setInt(UserVectorSplitterMapper.MAX_PREFS_PER_USER_CONSIDERED, maxPrefsPerUser);
 
-            boolean succeeded = partialMultiply.waitForCompletion(true);
+            boolean succeeded = false;
+            try {
+                succeeded = partialMultiply.waitForCompletion(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             if (!succeeded) {
                 return -1;
             }
@@ -219,16 +283,17 @@ public final class RecommenderJob extends AbstractJob {
     }
 
     /**
-     *
-     * @param args
-     * @param prepPath
+     * Calculate the recommender
+     * @param args Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
+     * @param prepPath Path used to output
      * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
      */
-    public int recommender(String[] args, Path prepPath) throws IOException, ClassNotFoundException, InterruptedException {
-        prepareRecommender(args);
+    public int recommender(String[] args, Path prepPath) {
+        try {
+            prepareRecommender(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Path explicitFilterPath = getTempPath("explicitFilterPath");
         Path partialMultiplyPath = getTempPath("partialMultiply");
         Path outputPath = getOutputPath();
@@ -240,13 +305,26 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
-      /* convert the user/item pairs to filter if a filterfile has been specified */
             if (filterFile != null) {
-                Job itemFiltering = prepareJob(new Path(filterFile), explicitFilterPath, TextInputFormat.class,
-                        ItemFilterMapper.class, VarLongWritable.class, VarLongWritable.class,
-                        ItemFilterAsVectorAndPrefsReducer.class, VarIntWritable.class, VectorAndPrefsWritable.class,
-                        SequenceFileOutputFormat.class);
-                boolean succeeded = itemFiltering.waitForCompletion(true);
+                Job itemFiltering = null;
+                try {
+                    itemFiltering = prepareJob(new Path(filterFile), explicitFilterPath, TextInputFormat.class,
+                            ItemFilterMapper.class, VarLongWritable.class, VarLongWritable.class,
+                            ItemFilterAsVectorAndPrefsReducer.class, VarIntWritable.class, VectorAndPrefsWritable.class,
+                            SequenceFileOutputFormat.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                boolean succeeded = false;
+                try {
+                    succeeded = itemFiltering.waitForCompletion(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 if (!succeeded) {
                     return -1;
                 }
@@ -261,25 +339,43 @@ public final class RecommenderJob extends AbstractJob {
                     ? SequenceFileOutputFormat.class : TextOutputFormat.class;
 
             //extract out the recommendations
-            Job aggregateAndRecommend = prepareJob(
-                    new Path(aggregateAndRecommendInput), outputPath, SequenceFileInputFormat.class,
-                    PartialMultiplyMapper.class, VarLongWritable.class, PrefAndSimilarityColumnWritable.class,
-                    AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
-                    outputFormat);
+            Job aggregateAndRecommend = null;
+            try {
+                aggregateAndRecommend = prepareJob(
+                        new Path(aggregateAndRecommendInput), outputPath, SequenceFileInputFormat.class,
+                        PartialMultiplyMapper.class, VarLongWritable.class, PrefAndSimilarityColumnWritable.class,
+                        AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
+                        outputFormat);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Configuration aggregateAndRecommendConf = aggregateAndRecommend.getConfiguration();
             if (itemsFile != null) {
                 aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
             }
 
             if (filterFile != null) {
-                setS3SafeCombinedInputPath(aggregateAndRecommend, getTempPath(), partialMultiplyPath, explicitFilterPath);
+                try {
+                    setS3SafeCombinedInputPath(aggregateAndRecommend, getTempPath(), partialMultiplyPath, explicitFilterPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             setIOSort(aggregateAndRecommend);
             aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
                     new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
             aggregateAndRecommendConf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
             aggregateAndRecommendConf.setBoolean(BOOLEAN_DATA, booleanData);
-            boolean succeeded = aggregateAndRecommend.waitForCompletion(true);
+            boolean succeeded = false;
+            try {
+                succeeded = aggregateAndRecommend.waitForCompletion(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             if (!succeeded) {
                 return -1;
             }
@@ -288,6 +384,12 @@ public final class RecommenderJob extends AbstractJob {
         return 0;
     }
 
+    /**
+     * Get the args and set the Option
+     * @param args Information about the input path, output path, booleanData, and similarity
+     * @return Number of Recommendations
+     * @throws IOException
+     */
     public int prepareRecommender(String[] args) throws IOException {
         addInputOption();
         addOutputOption();
