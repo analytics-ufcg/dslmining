@@ -26,10 +26,4 @@ object Main extends App {
     val multiply = new RecommenderJob().multiplication(arguments)
     val recommend = new RecommenderJob().recommender(arguments)
 
-//    parse_data on dataset then
-//      produce(user_vectors) then
-//      produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-//      multiply("coocurrence" by "user_vector") then
-//     produce(recommendation) write_on output then execute
-
 }
