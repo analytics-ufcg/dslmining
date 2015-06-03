@@ -360,6 +360,11 @@ public final class RecommenderJob extends AbstractJob {
 
     @Override
     public int run(String[] strings) throws Exception {
+        Path prepPath = new Path("temp/preparePreferenceMatrix/");
+        uservector(strings, prepPath);
+        rowSimilarity(strings, prepPath, 10);
+        multiplication(strings,prepPath);
+        recommender(strings, prepPath);
         return 0;
     }
 }
