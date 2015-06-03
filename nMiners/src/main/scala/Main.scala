@@ -1,4 +1,4 @@
-import org.apache.hadoop.fs.Path
+
 
 /**
  * Created by arthur on 06/04/15.
@@ -19,7 +19,6 @@ object Main extends App {
     args
   }
 
-  val prepPath: Path = new Path("/tmp")
   val numberOfUsers = new RecommenderJob().uservector(arguments);
   val similarity = new RecommenderJob().rowSimilarity(arguments, 10)
   val multiply = new RecommenderJob().multiplication(arguments)
