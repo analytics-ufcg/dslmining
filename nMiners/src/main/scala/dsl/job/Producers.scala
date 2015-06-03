@@ -80,6 +80,8 @@ object similarity_matrix extends Producer {
     this
   }
 
+
+
   override def run() = {
     super.run()
 
