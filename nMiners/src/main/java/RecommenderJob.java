@@ -113,6 +113,7 @@ public final class RecommenderJob extends AbstractJob {
      *
      * @param args     Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @return The number of users
+     * @throws Exception
      */
     public int uservector(String[] args) {
         try {
@@ -296,6 +297,9 @@ public final class RecommenderJob extends AbstractJob {
      *
      * @param args     Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
      * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
     public int recommender(String[] args) {
         try {
@@ -314,6 +318,7 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
+      /* convert the user/item pairs to filter if a filterfile has been specified */
             if (filterFile != null) {
                 Job itemFiltering = null;
                 try {
@@ -471,10 +476,11 @@ public final class RecommenderJob extends AbstractJob {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
-
-
-        System.out.println();
+    public int run(String[] strings) throws Exception {
+        uservector(strings);
+        rowSimilarity(strings, 10);
+        multiplication(strings);
+        recommender(strings);
         return 0;
     }
 }
