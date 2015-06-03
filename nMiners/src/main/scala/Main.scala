@@ -25,7 +25,7 @@ object Main {
     val recommender = new RecommenderJob()
     val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
     val numberOfUsers = recommender.uservector(a, prepPath);
-    val similarity = recommender.rowSimilarity(a, prepPath, 10)
+    val similarity = recommender.rowSimilarity(a, prepPath)
     val multiply = recommender.multiplication(a,prepPath)
     val recommend = recommender.recommender(a, prepPath)
 
@@ -36,7 +36,4 @@ object Main {
 //     produce(recommendation) write_on output then execute
 
   }
-
-
-
 }

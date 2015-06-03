@@ -128,14 +128,12 @@ public final class RecommenderJob extends AbstractJob {
     /**
      * Calculate the co-occurrence matrix
      * @param args
-     * @param numberOfUsers
      * @return
      * @throws Exception
      */
-    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) throws Exception {
+    public int rowSimilarity(String[] args, Path prepPath) throws Exception {
         prepareRecommender(args);
-        //
-        numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+        int numberOfUsers = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
 
         int maxPrefsInItemSimilarity = Integer.parseInt(getOption("maxPrefsInItemSimilarity"));
         int maxSimilaritiesPerItem = Integer.parseInt(getOption("maxSimilaritiesPerItem"));
@@ -362,7 +360,7 @@ public final class RecommenderJob extends AbstractJob {
     public int run(String[] strings) throws Exception {
         Path prepPath = new Path("temp/preparePreferenceMatrix/");
         uservector(strings, prepPath);
-        rowSimilarity(strings, prepPath, 10);
+        rowSimilarity(strings, prepPath);
         multiplication(strings,prepPath);
         recommender(strings, prepPath);
         return 0;
