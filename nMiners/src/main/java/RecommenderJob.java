@@ -92,7 +92,7 @@ import java.util.regex.Pattern;
 public final class RecommenderJob extends AbstractJob {
 
     public static final String BOOLEAN_DATA = "booleanData";
-    public static final String DEFAULT_PREPARE_PATH = "preparePreferenceMatrix";
+//    public static final String DEFAULT_PREPARE_PATH = "preparePreferenceMatrix";
 
     private static final int DEFAULT_MAX_SIMILARITIES_PER_ITEM = 100;
     private static final int DEFAULT_MAX_PREFS = 500;
@@ -102,11 +102,12 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the user vector matrix
-     * @param args Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
+     *
+     * @param args     Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @param prepPath Path used to output
      * @return The number of users
      */
-    public int uservector(String[] args, Path prepPath)   {
+    public int uservector(String[] args, Path prepPath) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -143,7 +144,8 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the co-occurrence matrix
-     * @param args Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
+     *
+     * @param args          Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
      * @param numberOfUsers Number of Users
      * @return Similarities Per Item
      */
@@ -170,7 +172,7 @@ public final class RecommenderJob extends AbstractJob {
 
         try {
             ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                    "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH),
+                    "--input", new Path(prepPath,
                     PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
                     "--output", getTempPath("similarityMatrix").toString(),
                     "--numberOfColumns", String.valueOf(numberOfUsers),
@@ -204,7 +206,7 @@ public final class RecommenderJob extends AbstractJob {
 
             Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
             mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
-                    new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
+                    new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
             mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
             try {
                 outputSimilarityMatrix.waitForCompletion(true);
@@ -222,7 +224,8 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the multiplication of the co-occurrence matrix by the user vectors
-     * @param args Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
+     *
+     * @param args     Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
      * @param prepPath Path used to output
      * @return 0
      */
@@ -284,7 +287,8 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the recommender
-     * @param args Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
+     *
+     * @param args     Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
      * @param prepPath Path used to output
      * @return
      */
@@ -386,6 +390,7 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Get the args and set the Option
+     *
      * @param args Information about the input path, output path, booleanData, and similarity
      * @return Number of Recommendations
      * @throws IOException
@@ -461,7 +466,10 @@ public final class RecommenderJob extends AbstractJob {
     }
 
     @Override
-    public int run(String[] strings) throws Exception {
+    public int run(String[] args) throws Exception {
+
+
+        System.out.println();
         return 0;
     }
 }
