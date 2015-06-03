@@ -92,7 +92,7 @@ import java.util.regex.Pattern;
 public final class RecommenderJob extends AbstractJob {
 
     public static final String BOOLEAN_DATA = "booleanData";
-//    public static final String DEFAULT_PREPARE_PATH = "preparePreferenceMatrix";
+    public static Path prepPath;
 
     private static final int DEFAULT_MAX_SIMILARITIES_PER_ITEM = 100;
     private static final int DEFAULT_MAX_PREFS = 500;
@@ -100,14 +100,21 @@ public final class RecommenderJob extends AbstractJob {
     AtomicInteger currentPhase = new AtomicInteger();
     private Map<String, List<String>> parsedArgs;
 
+    public RecommenderJob(String path) {
+        prepPath = new Path(path);
+    }
+
+    public RecommenderJob() {
+        this(System.getProperty("java.io.tmpdir"));
+    }
+
     /**
      * Calculate the user vector matrix
      *
      * @param args     Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
-     * @param prepPath Path used to output
      * @return The number of users
      */
-    public int uservector(String[] args, Path prepPath) {
+    public int uservector(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -149,7 +156,7 @@ public final class RecommenderJob extends AbstractJob {
      * @param numberOfUsers Number of Users
      * @return Similarities Per Item
      */
-    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) {
+    public int rowSimilarity(String[] args, int numberOfUsers) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -226,10 +233,9 @@ public final class RecommenderJob extends AbstractJob {
      * Calculate the multiplication of the co-occurrence matrix by the user vectors
      *
      * @param args     Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
-     * @param prepPath Path used to output
      * @return 0
      */
-    public int multiplication(String[] args, Path prepPath) {
+    public int multiplication(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -289,10 +295,9 @@ public final class RecommenderJob extends AbstractJob {
      * Calculate the recommender
      *
      * @param args     Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
-     * @param prepPath Path used to output
      * @return
      */
-    public int recommender(String[] args, Path prepPath) {
+    public int recommender(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {

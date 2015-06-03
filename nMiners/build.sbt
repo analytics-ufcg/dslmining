@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "org.apache.camel" % "camel-jetty" % "2.15.1",
   "org.apache.camel" % "camel-core" % "2.15.1",
   "org.slf4j" % "slf4j-log4j12" % "1.7.12",
-  "log4j" % "log4j" % "1.2.17"
+  "log4j" % "log4j" % "1.2.17",
+  "com.google.guava" % "guava" % "18.0"
 )
 
 //Add a new dependency repository - Typesafe Repo
