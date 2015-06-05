@@ -42,6 +42,22 @@ public class PreparePreferenceMatrixJob extends AbstractJob {
         this.addOption("minPrefsPerUser", "mp", "ignore users with less preferences than this (default: 1)", String.valueOf(1));
         this.addOption("booleanData", "b", "Treat input as without pref values", Boolean.FALSE.toString());
         this.addOption("ratingShift", "rs", "shift ratings by this value", "0.0");
+
+        String[] arrayRefVar = new String[10];
+        String outputType = "a";
+
+        for (int i = 0; i < args.length; i++){
+            if (args[i].equals("--outputType")){
+                outputType = args[i+1];
+                i++;
+            }
+            else{
+                arrayRefVar[i] = args[i];
+            }
+        }
+
+        args = arrayRefVar;
+
         Map parsedArgs = this.parseArguments(args);
         if(parsedArgs == null) {
             return -1;
@@ -49,19 +65,39 @@ public class PreparePreferenceMatrixJob extends AbstractJob {
             int minPrefsPerUser = Integer.parseInt(this.getOption("minPrefsPerUser"));
             boolean booleanData = Boolean.valueOf(this.getOption("booleanData")).booleanValue();
             float ratingShift = Float.parseFloat(this.getOption("ratingShift"));
-            Job itemIDIndex = this.prepareJob(this.getInputPath(), this.getOutputPath("itemIDIndex"),
-                    TextInputFormat.class, ItemIDIndexMapper.class, VarIntWritable.class, VarLongWritable.class,
-                    ItemIDIndexReducer.class, VarIntWritable.class, VarLongWritable.class, TextOutputFormat.class);
+
+            Job itemIDIndex;
+            if (outputType.equals("TextOutputFormat.class")){
+                itemIDIndex = this.prepareJob(this.getInputPath(), this.getOutputPath("itemIDIndex"),
+                        TextInputFormat.class, ItemIDIndexMapper.class, VarIntWritable.class, VarLongWritable.class,
+                        ItemIDIndexReducer.class, VarIntWritable.class, VarLongWritable.class, TextOutputFormat.class);
+            } else {
+                itemIDIndex = this.prepareJob(this.getInputPath(), this.getOutputPath("itemIDIndex"),
+                        TextInputFormat.class, ItemIDIndexMapper.class, VarIntWritable.class, VarLongWritable.class,
+                        ItemIDIndexReducer.class, VarIntWritable.class, VarLongWritable.class, SequenceFileOutputFormat.class);
+            }
+
+
             itemIDIndex.setCombinerClass(ItemIDIndexReducer.class);
             boolean succeeded = itemIDIndex.waitForCompletion(true);
             if(!succeeded) {
                 return -1;
             } else {
-                Job toUserVectors = this.prepareJob(this.getInputPath(), this.getOutputPath("userVectors"),
-                        TextInputFormat.class, ToItemPrefsMapper.class, VarLongWritable.class,
-                        booleanData?VarLongWritable.class:EntityPrefWritable.class,
-                        ToUserVectorsReducer.class, VarLongWritable.class,
-                        VectorWritable.class, TextOutputFormat.class);
+                Job toUserVectors;
+                if(outputType.equals("TextOutputFormat.class")){
+                    toUserVectors = this.prepareJob(this.getInputPath(), this.getOutputPath("userVectors"),
+                            TextInputFormat.class, ToItemPrefsMapper.class, VarLongWritable.class,
+                            booleanData?VarLongWritable.class:EntityPrefWritable.class,
+                            ToUserVectorsReducer.class, VarLongWritable.class,
+                            VectorWritable.class, TextOutputFormat.class);
+                } else {
+                    toUserVectors = this.prepareJob(this.getInputPath(), this.getOutputPath("userVectors"),
+                            TextInputFormat.class, ToItemPrefsMapper.class, VarLongWritable.class,
+                            booleanData?VarLongWritable.class:EntityPrefWritable.class,
+                            ToUserVectorsReducer.class, VarLongWritable.class,
+                            VectorWritable.class, SequenceFileOutputFormat.class);
+                }
+
                 toUserVectors.getConfiguration().setBoolean("booleanData", booleanData);
                 toUserVectors.getConfiguration().setInt(ToUserVectorsReducer.MIN_PREFERENCES_PER_USER, minPrefsPerUser);
                 toUserVectors.getConfiguration().set(ToEntityPrefsMapper.RATING_SHIFT, String.valueOf(ratingShift));

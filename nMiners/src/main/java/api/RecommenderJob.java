@@ -109,6 +109,22 @@ public final class RecommenderJob extends AbstractJob {
      * @return The number of users
      */
     public int uservector(String[] args, Path prepPath)   {
+
+        String[] arrayRefVar = new String[8];
+        String outputType = "a";
+
+        for (int i = 0; i < args.length; i++){
+            if (args[i].equals("--outputType")){
+                outputType = args[i+1] + ".class";
+                i++;
+            }
+            else{
+                arrayRefVar[i] = args[i];
+            }
+        }
+
+        args = arrayRefVar;
+
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -126,7 +142,7 @@ public final class RecommenderJob extends AbstractJob {
                         "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
                         "--booleanData", String.valueOf(booleanData),
                         "--tempDir", getTempPath().toString(),
-                        /*"--outputType", String.valueOf(TextOutputFormat.class)*/
+                        "--outputType", String.valueOf(outputType),
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -421,7 +437,7 @@ public final class RecommenderJob extends AbstractJob {
         addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
                 false);
         addOption("randomSeed", null, "use this seed for sampling", false);
-        /*addOption("outputType", "t", "type of the output",null);*/
+        //addOption("outputType", "ot", "Output Type", "TextOutputFormat");
         addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
 
         parsedArgs = parseArguments(args);
