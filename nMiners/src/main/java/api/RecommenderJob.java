@@ -1,3 +1,4 @@
+package api;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -30,6 +31,8 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.mahout.cf.taste.hadoop.EntityEntityWritable;
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable;
 import org.apache.mahout.cf.taste.hadoop.item.*;
+import org.apache.mahout.cf.taste.hadoop.item.PartialMultiplyMapper;
+import org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer;
 import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob;
 import org.apache.mahout.cf.taste.hadoop.similarity.item.ItemSimilarityJob;
 import org.apache.mahout.common.AbstractJob;
@@ -250,7 +253,7 @@ public final class RecommenderJob extends AbstractJob {
                     SimilarityMatrixRowWrapperMapper.class);
             MultipleInputs.addInputPath(partialMultiply, new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
                     SequenceFileInputFormat.class, UserVectorSplitterMapper.class);
-            partialMultiply.setJarByClass(ToVectorAndPrefReducer.class);
+            partialMultiply.setJarByClass(org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer.class);
             partialMultiply.setMapOutputKeyClass(VarIntWritable.class);
             partialMultiply.setMapOutputValueClass(VectorOrPrefWritable.class);
             partialMultiply.setReducerClass(ToVectorAndPrefReducer.class);
@@ -344,14 +347,14 @@ public final class RecommenderJob extends AbstractJob {
                 aggregateAndRecommend = prepareJob(
                         new Path(aggregateAndRecommendInput), outputPath, SequenceFileInputFormat.class,
                         PartialMultiplyMapper.class, VarLongWritable.class, PrefAndSimilarityColumnWritable.class,
-                        AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
+                        org.apache.mahout.cf.taste.hadoop.item.AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
                         outputFormat);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Configuration aggregateAndRecommendConf = aggregateAndRecommend.getConfiguration();
             if (itemsFile != null) {
-                aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
+                aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
             }
 
             if (filterFile != null) {
@@ -362,9 +365,9 @@ public final class RecommenderJob extends AbstractJob {
                 }
             }
             setIOSort(aggregateAndRecommend);
-            aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
+            aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
                     new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
-            aggregateAndRecommendConf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
+            aggregateAndRecommendConf.setInt(api.AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
             aggregateAndRecommendConf.setBoolean(BOOLEAN_DATA, booleanData);
             boolean succeeded = false;
             try {
@@ -394,7 +397,7 @@ public final class RecommenderJob extends AbstractJob {
         addInputOption();
         addOutputOption();
         addOption("numRecommendations", "n", "Number of recommendations per user",
-                String.valueOf(AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
+                String.valueOf(api.AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
         addOption("usersFile", null, "File of users to recommend for", null);
         addOption("itemsFile", null, "File of items to recommend for", null);
         addOption("filterFile", "f", "File containing comma-separated userID,itemID pairs. Used to exclude the item from "

@@ -87,14 +87,14 @@ class AggregateCombiner extends Reducer[VarLongWritable,VectorWritable,  VarLong
 /**
  * Auxiliar object
  */
-object AggregateAndRecommendReducer{
+object ScalaAggregateAndRecommendReducer{
   val ITEMID_INDEX_PATH: String = "itemIDIndexPath"
   val DEFAULT_NUM_RECOMMENDATIONS: Int = 10
   val NUM_RECOMMENDATIONS: String = "numRecommendations"
 
 }
 
-class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable] {
+class ScalaAggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritable, VarLongWritable,RecommendedItemsWritable] {
 
   /**
    * The reduce should be produce the output
@@ -117,7 +117,7 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
 
     val recommendationVector = predictions
 
-    val topItems: PriorityQueue[RecommendedItem] = new PriorityQueue[RecommendedItem]( AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS + 1,
+    val topItems: PriorityQueue[RecommendedItem] = new PriorityQueue[RecommendedItem]( ScalaAggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS + 1,
       Collections.reverseOrder(ByValueRecommendedItemComparator.getInstance()))
     
     val recommendationVectorIterator = recommendationVector.nonZeroes() iterator
@@ -128,7 +128,7 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
       val value =  element.get() toFloat
 
       if (!(value equals Float.NaN) ){
-        if (topItems.size() < AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS) {
+        if (topItems.size() < ScalaAggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS) {
           topItems.add(new GenericRecommendedItem(index, value))
         } else if (value > topItems.peek().getValue) {
           topItems.add(new GenericRecommendedItem(index, value))
@@ -149,7 +149,7 @@ class AggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWritabl
 object MatrixMultiplication {
   /**
    *
-   * Run the Hadoop Job using PartialMultiplyMapper and AggregateAndRecommendReducer
+   * Run the Hadoop Job using PartialMultiplyMapper and api.AggregateAndRecommendReducer
    * @param pathToInput the input file
    * @param outPutPath the path where the output will be put
    * @param inputFormatClass the format of the input (sequential or text)
@@ -164,7 +164,7 @@ object MatrixMultiplication {
              numReduceTasks : Option[Int] = None): Unit ={
 
     val job = MapReduceUtils.prepareJob(jobName = "MatrixMultiplication", mapperClass = classOf[PartialMultiplyMapper],
-      reducerClass = classOf[AggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
+      reducerClass = classOf[ScalaAggregateAndRecommendReducer], mapOutputKeyClass = classOf[VarLongWritable],
       mapOutputValueClass = classOf[VectorWritable],
       outputKeyClass = classOf[VarLongWritable], outputValueClass = classOf[RecommendedItemsWritable],
       inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorAndPrefsWritable]],
@@ -172,8 +172,8 @@ object MatrixMultiplication {
       pathToInput, outPutPath, numReduceTasks = numReduceTasks)
 
     val conf: Configuration = job getConfiguration()
-    conf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
-    conf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
+    conf.set(ScalaAggregateAndRecommendReducer.ITEMID_INDEX_PATH, "")
+    conf.setInt(ScalaAggregateAndRecommendReducer.NUM_RECOMMENDATIONS, 10)
 
     MapReduceUtils.deleteFolder(outPutPath, conf)
     job.waitForCompletion(true)
