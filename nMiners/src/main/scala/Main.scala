@@ -1,5 +1,6 @@
 import api.RecommenderJob
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.mapred.TextOutputFormat
 
 /**
  * Created by arthur on 06/04/15.
@@ -15,9 +16,9 @@ object Main {
     val recommender = new RecommenderJob()
     val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
     val numberOfUsers = recommender.uservector(args, prepPath)
-    val similarity = recommender.rowSimilarity(args, prepPath, 10)
-    val multiply = recommender.multiplication(args,prepPath)
-    val recommend = recommender.recommender(args, prepPath)
+    //val similarity = recommender.rowSimilarity(args, prepPath, 10)
+    //val multiply = recommender.multiplication(args,prepPath)
+    //val recommend = recommender.recommender(args, prepPath)
 
 //    parse_data on dataset then
 //      produce(user_vectors) then

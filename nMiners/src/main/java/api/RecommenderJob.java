@@ -33,7 +33,6 @@ import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable;
 import org.apache.mahout.cf.taste.hadoop.item.*;
 import org.apache.mahout.cf.taste.hadoop.item.PartialMultiplyMapper;
 import org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer;
-import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob;
 import org.apache.mahout.cf.taste.hadoop.similarity.item.ItemSimilarityJob;
 import org.apache.mahout.common.AbstractJob;
 import org.apache.mahout.common.HadoopUtil;
@@ -127,6 +126,7 @@ public final class RecommenderJob extends AbstractJob {
                         "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
                         "--booleanData", String.valueOf(booleanData),
                         "--tempDir", getTempPath().toString(),
+                        /*"--outputType", String.valueOf(TextOutputFormat.class)*/
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -136,7 +136,9 @@ public final class RecommenderJob extends AbstractJob {
         int userVector = -1;
 
         try {
+            Configuration c = getConf();
             userVector = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -419,6 +421,7 @@ public final class RecommenderJob extends AbstractJob {
         addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
                 false);
         addOption("randomSeed", null, "use this seed for sampling", false);
+        /*addOption("outputType", "t", "type of the output",null);*/
         addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
 
         parsedArgs = parseArguments(args);
