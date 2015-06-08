@@ -228,13 +228,15 @@ public final class RecommenderJob extends AbstractJob {
     }
 
     /**
-     * Return the new args
+     * Return the new args without output type
      * @param args Array with all information about the program
      * @return The new args, without outputType
      */
     private String[] formatArray(String[] args){
         int count = 0;
 
+        //Count how many valid item has the args
+        //to build the new args
         for (int j = 0; j < args.length; j++){
             if (!args[j].equals("--outputType")){
                 count++;

@@ -16,8 +16,9 @@ class UserVectorTest extends FlatSpec with Matchers{
   "Level one" should "execute user vector correctly" in {
     val inputPath = BASE_PHATH+ "data_1/input_test_user_vector.txt"
     val nameOutputPath = BASE_PHATH+"output_test_level1";
+    val outputType = "TextOutputFormat";
 
-    val args = Array("--input", inputPath,"--output", nameOutputPath,"--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", "TextOutputFormat")
+    val args = Array("--input", inputPath,"--output", nameOutputPath,"--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", outputType)
     val recommender = new RecommenderJob()
     val prepPath: Path = new Path(nameOutputPath + "/temp/preparePreferenceMatrix/")
     val numberOfUsers = recommender.uservector(args, prepPath)
