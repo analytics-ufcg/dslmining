@@ -28,6 +28,7 @@ public class PreparePreferenceMatrixJob extends AbstractJob {
     public static final String USER_VECTORS = "userVectors";
     public static final String RATING_MATRIX = "ratingMatrix";
     private static final int DEFAULT_MIN_PREFS_PER_USER = 1;
+    private String outputType;
 
     public PreparePreferenceMatrixJob() {
     }
@@ -43,20 +44,7 @@ public class PreparePreferenceMatrixJob extends AbstractJob {
         this.addOption("booleanData", "b", "Treat input as without pref values", Boolean.FALSE.toString());
         this.addOption("ratingShift", "rs", "shift ratings by this value", "0.0");
 
-        String[] arrayRefVar = new String[10];
-        String outputType = "a";
-
-        for (int i = 0; i < args.length; i++){
-            if (args[i].equals("--outputType")){
-                outputType = args[i+1];
-                i++;
-            }
-            else{
-                arrayRefVar[i] = args[i];
-            }
-        }
-
-        args = arrayRefVar;
+        args = formatArray(args);
 
         Map parsedArgs = this.parseArguments(args);
         if(parsedArgs == null) {
@@ -120,6 +108,36 @@ public class PreparePreferenceMatrixJob extends AbstractJob {
                 }
             }
         }
+    }
+
+    /**
+     * Return the new args
+     * @param args Array with all information about the program
+     * @return The new args, without outputType
+     */
+    private String[] formatArray(String[] args){
+        int count = 0;
+
+        for (int j = 0; j < args.length; j++){
+            if (!args[j].equals("--outputType")){
+                count++;
+            } else {
+                j++;
+            }
+        }
+
+        String[] arrayRefVar = new String[count];
+
+        for (int i = 0; i < args.length; i++){
+            if (args[i].equals("--outputType")){
+                outputType = args[i+1];
+                i++;
+            }
+            else{
+                arrayRefVar[i] = args[i];
+            }
+        }
+        return arrayRefVar;
     }
 }
 

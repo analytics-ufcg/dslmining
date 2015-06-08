@@ -41,6 +41,7 @@ import org.apache.mahout.math.VarLongWritable;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures;
 
+import javax.sound.midi.Sequence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,7 @@ public final class RecommenderJob extends AbstractJob {
     private static final int DEFAULT_MIN_PREFS_PER_USER = 1;
     AtomicInteger currentPhase = new AtomicInteger();
     private Map<String, List<String>> parsedArgs;
+    private String outputType = "SequenceFile";
 
     /**
      * Calculate the user vector matrix
@@ -109,21 +111,7 @@ public final class RecommenderJob extends AbstractJob {
      * @return The number of users
      */
     public int uservector(String[] args, Path prepPath)   {
-
-        String[] arrayRefVar = new String[8];
-        String outputType = "a";
-
-        for (int i = 0; i < args.length; i++){
-            if (args[i].equals("--outputType")){
-                outputType = args[i+1] + ".class";
-                i++;
-            }
-            else{
-                arrayRefVar[i] = args[i];
-            }
-        }
-
-        args = arrayRefVar;
+        args = formatArray(args);
 
         try {
             prepareRecommender(args);
@@ -152,7 +140,6 @@ public final class RecommenderJob extends AbstractJob {
         int userVector = -1;
 
         try {
-            Configuration c = getConf();
             userVector = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
 
         } catch (IOException e) {
@@ -238,6 +225,36 @@ public final class RecommenderJob extends AbstractJob {
             }
         }
         return maxSimilaritiesPerItem;
+    }
+
+    /**
+     * Return the new args
+     * @param args Array with all information about the program
+     * @return The new args, without outputType
+     */
+    private String[] formatArray(String[] args){
+        int count = 0;
+
+        for (int j = 0; j < args.length; j++){
+            if (!args[j].equals("--outputType")){
+                count++;
+            } else{
+                j++;
+            }
+        }
+
+        String[] arrayRefVar = new String[count];
+
+        for (int i = 0; i < args.length; i++){
+            if (args[i].equals("--outputType")){
+                outputType = args[i+1] + ".class";
+                i++;
+            }
+            else{
+                arrayRefVar[i] = args[i];
+            }
+        }
+        return arrayRefVar;
     }
 
 
