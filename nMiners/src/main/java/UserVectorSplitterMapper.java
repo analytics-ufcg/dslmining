@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class UserVectorSplitterMapper extends
-        Mapper<VarLongWritable,VectorWritable, VarIntWritable,VectorOrPrefWritable> {
+        Mapper<VarLongWritable, VectorWritable, VarIntWritable, VectorOrPrefWritable> {
 
     private static final Logger log = LoggerFactory.getLogger(UserVectorSplitterMapper.class);
 
@@ -61,9 +61,8 @@ public final class UserVectorSplitterMapper extends
     }
 
     @Override
-    protected void map(VarLongWritable key,
-                       VectorWritable value,
-                       Context context) throws IOException, InterruptedException {
+    protected void map(VarLongWritable key, VectorWritable value, Context context)
+            throws IOException, InterruptedException {
         long userID = key.get();
         if (usersToRecommendFor != null && !usersToRecommendFor.contains(userID)) {
             return;

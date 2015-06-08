@@ -92,7 +92,7 @@ import java.util.regex.Pattern;
 public final class RecommenderJob extends AbstractJob {
 
     public static final String BOOLEAN_DATA = "booleanData";
-    public static final String DEFAULT_PREPARE_PATH = "preparePreferenceMatrix";
+    public static Path prepPath;
 
     private static final int DEFAULT_MAX_SIMILARITIES_PER_ITEM = 100;
     private static final int DEFAULT_MAX_PREFS = 500;
@@ -100,13 +100,22 @@ public final class RecommenderJob extends AbstractJob {
     AtomicInteger currentPhase = new AtomicInteger();
     private Map<String, List<String>> parsedArgs;
 
+    public RecommenderJob(String path) {
+        prepPath = new Path(path);
+    }
+
+    public RecommenderJob() {
+        this(System.getProperty("java.io.tmpdir"));
+    }
+
     /**
      * Calculate the user vector matrix
-     * @param args Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
-     * @param prepPath Path used to output
+     *
+     * @param args     Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @return The number of users
+     * @throws Exception
      */
-    public int uservector(String[] args, Path prepPath)   {
+    public int uservector(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -143,11 +152,12 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the co-occurrence matrix
-     * @param args Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
+     *
+     * @param args          Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
      * @param numberOfUsers Number of Users
      * @return Similarities Per Item
      */
-    public int rowSimilarity(String[] args, Path prepPath, int numberOfUsers) {
+    public int rowSimilarity(String[] args, int numberOfUsers) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -170,7 +180,7 @@ public final class RecommenderJob extends AbstractJob {
 
         try {
             ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                    "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH),
+                    "--input", new Path(prepPath,
                     PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
                     "--output", getTempPath("similarityMatrix").toString(),
                     "--numberOfColumns", String.valueOf(numberOfUsers),
@@ -204,7 +214,7 @@ public final class RecommenderJob extends AbstractJob {
 
             Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
             mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
-                    new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
+                    new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
             mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
             try {
                 outputSimilarityMatrix.waitForCompletion(true);
@@ -222,11 +232,11 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the multiplication of the co-occurrence matrix by the user vectors
-     * @param args Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
-     * @param prepPath Path used to output
+     *
+     * @param args     Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
      * @return 0
      */
-    public int multiplication(String[] args, Path prepPath) {
+    public int multiplication(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -284,11 +294,14 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the recommender
-     * @param args Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
-     * @param prepPath Path used to output
+     *
+     * @param args     Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
      * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
-    public int recommender(String[] args, Path prepPath) {
+    public int recommender(String[] args) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -305,6 +318,7 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
+      /* convert the user/item pairs to filter if a filterfile has been specified */
             if (filterFile != null) {
                 Job itemFiltering = null;
                 try {
@@ -386,6 +400,7 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Get the args and set the Option
+     *
      * @param args Information about the input path, output path, booleanData, and similarity
      * @return Number of Recommendations
      * @throws IOException
@@ -462,6 +477,10 @@ public final class RecommenderJob extends AbstractJob {
 
     @Override
     public int run(String[] strings) throws Exception {
+        uservector(strings);
+        rowSimilarity(strings, 10);
+        multiplication(strings);
+        recommender(strings);
         return 0;
     }
 }
