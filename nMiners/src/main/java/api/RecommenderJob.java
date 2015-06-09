@@ -456,6 +456,7 @@ public final class RecommenderJob extends AbstractJob {
         addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
                 false);
         addOption("randomSeed", null, "use this seed for sampling", false);
+        //addOption("outputType", "ot", "Output Type", "TextOutputFormat");
         addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
 
         parsedArgs = parseArguments(args);
@@ -502,6 +503,10 @@ public final class RecommenderJob extends AbstractJob {
 
     @Override
     public int run(String[] strings) throws Exception {
+        uservector(strings);
+        rowSimilarity(strings, 10);
+        multiplication(strings);
+        recommender(strings);
         return 0;
     }
 }
