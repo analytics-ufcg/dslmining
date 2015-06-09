@@ -19,9 +19,10 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputType = "TextOutputFormat";
 
     val args = Array("--input", inputPath,"--output", nameOutputPath,"--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", outputType)
-    val recommender = new RecommenderJob()
-    val prepPath: Path = new Path(nameOutputPath + "/temp/preparePreferenceMatrix/")
-    val numberOfUsers = recommender.uservector(args, prepPath)
+
+    val prepPath: String = nameOutputPath + "/temp/preparePreferenceMatrix/"
+    val recommender = new RecommenderJob(prepPath)
+    val numberOfUsers = recommender.uservector(args)
 
     val fileLinesTest = io.Source.fromFile(BASE_PHATH+ "data_1/output_test_user_vector.txt").getLines.toList
     val fileLinesOutput = io.Source.fromFile(nameOutputPath + "/temp/preparePreferenceMatrix/userVectors/part-r-00000").getLines.toList

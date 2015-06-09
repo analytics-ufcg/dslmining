@@ -8,50 +8,30 @@ import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOut
 import org.apache.mahout.math.{VarLongWritable, VectorWritable}
 import org.scalatest.{FlatSpec, Matchers}
 
-class SimlarityMatrixTest extends FlatSpec with Matchers{
+class RowSimilarityTest extends FlatSpec with Matchers{
 
   val BASE_PHATH = "src/test/resources/"
-  val BASE_PHATH_OUTPUT = BASE_PHATH + "output_similarity1/"
-  val BASE_PHATH_SIM_OUTPUT = BASE_PHATH_OUTPUT + "matrix/"
+  //val BASE_PHATH_OUTPUT = BASE_PHATH + "output_similarity1/"
+  //val BASE_PHATH_SIM_OUTPUT = BASE_PHATH_OUTPUT + "matrix/"
 
   "Similarity_Matrix" should "calculate similarity_matrix" in {
-    val inputPath = BASE_PHATH+"data_2/input_test_level1.txt"
-    val uservector = BASE_PHATH_OUTPUT+"user_vector/"
-    val uservectorFile = uservector + "part-r-00000"
-    val ratingMatrix = BASE_PHATH_SIM_OUTPUT+"rating_matrix/"
-//    val similarity = BASE_PHATH_SIM_OUTPUT+"similarity_matrix/"
-    val outputType = "TextOutputFormat";
-    val pathOutputMatrix = BASE_PHATH_SIM_OUTPUT + "/data_prepare"
-    val prepPath: Path = new Path(pathOutputMatrix + "/temp/preparePreferenceMatrix/")
+    val outputType = "TextOutputForm";
 
+    val args = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", outputType)
+    val prepPath: String = "temp/preparePreferenceMatrix/"
+    val recommender = new RecommenderJob(prepPath)
+    val numberOfUsers = recommender.uservector(args)
+    val similarity = recommender.rowSimilarity(args, 10)
 
-//    val similarityFile = similarity + "part-r-00000"
+    val fileLinesTest = io.Source.fromFile(BASE_PHATH+ "Similarity/output_similarity").getLines.toList
+    val fileLinesOutput = io.Source.fromFile("/temp/preparePreferenceMatrix/similarityMatrix/part-r-00000").getLines.toList
+    val outputTest = fileLinesTest.reduce(_ + _)
+    val output = fileLinesOutput.reduce(_ + _)
 
-
-    val args = Array("--input", inputPath,"--output", pathOutputMatrix,
-      "--booleanData","true","-s","SIMILARITY_COSINE", "--outputType",
-      outputType)
-
-    val recommender = new RecommenderJob()
-    val similarity = recommender.rowSimilarity(args, prepPath, 10)
-
-    UserVectorGenerator.runJob(inputPath,uservector, classOf[TextInputFormat],
-      classOf[SequenceFileOutputFormat[VarLongWritable, VectorWritable]],true,None)
-
-//    SimilarityMatrix.generateSimilarityMatrix(
-//      uservectorFile,
-//      similarity,
-//      classOf[SequenceFileInputFormat[VarLongWritable,VectorWritable]],
-//      classOf[SequenceFileOutputFormat[IntWritable,VectorWritable]],true,similarityClassnameArg = "SIMILARITY_COOCCURRENCE",basePath = BASE_PHATH_SIM_OUTPUT, numReduceTasks = None)
-//
-//    PrepareMatrixGenerator.runJob(inputPath1 = similarityFile, inputPath2 = uservectorFile, outPutPath = pathOutputMatrix,
-//      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-//      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-//      deleteFolder = true)
-
+    outputTest should equal (output)
   }
 
-  "Similarity_Matrix_EUCLIDEAN_DISTANCE" should "calculate similarity_matrix euclidean distance" in {
+ /* "Similarity_Matrix_EUCLIDEAN_DISTANCE" should "calculate similarity_matrix euclidean distance" in {
     val inputPath = BASE_PHATH+ "data_2_SIMILARITY_EUCLIDEAN_DISTANCE/input_test_level1.txt"
     val uservector = BASE_PHATH_OUTPUT+"user_vector/"
     val uservectorFile = uservector + "part-r-00000"
@@ -125,5 +105,5 @@ class SimlarityMatrixTest extends FlatSpec with Matchers{
     val output = fileLinesOutput.reduce(_ + _)
 
     outputTest should equal (output)
-  }
+  }*/
 }

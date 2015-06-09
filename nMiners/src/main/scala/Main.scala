@@ -1,5 +1,4 @@
 import api.RecommenderJob
-import org.apache.hadoop.fs.Path
 
 /**
  * Created by arthur on 06/04/15.
@@ -11,13 +10,13 @@ object Main {
     //val dataset = args(0)
     //val output = args(1)
 
-    val outputType = "TextOutputFormat";
+    val outputType = "TextOutputForm";
 
     val args = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", outputType)
-    val recommender = new RecommenderJob()
-    val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
-    val numberOfUsers = recommender.uservector(args, prepPath)
-    val similarity = recommender.rowSimilarity(args, prepPath, 10)
+    val prepPath: String = "temp/preparePreferenceMatrix/"
+    val recommender = new RecommenderJob(prepPath)
+    val numberOfUsers = recommender.uservector(args)
+    val similarity = recommender.rowSimilarity(args, 10)
     //val multiply = recommender.multiplication(args,prepPath)
     //val recommend = recommender.recommender(args, prepPath)
 
@@ -28,7 +27,4 @@ object Main {
 //     produce(recommendation) write_on output then execute
 
   }
-
-
-
 }
