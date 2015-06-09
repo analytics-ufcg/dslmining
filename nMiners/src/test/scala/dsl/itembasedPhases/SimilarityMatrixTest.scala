@@ -11,7 +11,7 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
   val config = ConfigFactory.load()
 
   "similarity_matrix" should "save a similarity_matrix using coocurrence" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -22,7 +22,7 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
   }
 
   it should "save a similarity_matrix using coocurrence in 5 process" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -31,7 +31,7 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
   }
 
   it should "save a similarity_matrix using coocurrence and associate to a variable" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -40,7 +40,7 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
   }
 
   it should "save a similarity_matrix using coocurrence and associate to a variable and in 2 process" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then

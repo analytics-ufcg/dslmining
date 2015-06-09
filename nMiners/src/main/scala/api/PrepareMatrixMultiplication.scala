@@ -1,19 +1,13 @@
 package api
 
-import java.{util, lang}
-import java.util.{RandomAccess, Iterator}
-import utils.Implicits._
-import utils.MapReduceUtils
-import com.google.common.collect.Lists
-import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, SequenceFileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
-
-import org.apache.hadoop.mapreduce.{Reducer, Mapper}
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.mahout.cf.taste.hadoop.item.{VectorAndPrefsWritable, VectorOrPrefWritable}
 import org.apache.mahout.math.Vector.Element
 import org.apache.mahout.math._
-
-import scala.collection.mutable.{ListBuffer, ArrayBuffer}
+import utils.Implicits._
+import utils.MapReduceUtils
 
 /**
  * This class represents the first step towards performing matrix multiplication between the co-occurrence matrix and
@@ -23,10 +17,8 @@ class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritab
   val vectorOrPref: VectorOrPrefWritable = new VectorOrPrefWritable
 
   override def  map(key: VarIntWritable, value: VectorWritable , context:Mapper[VarIntWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable]#Context) = {
-    //context write (key, new VectorOrPrefWritable(value.get()))
 
     val similarityMatrixRow:Vector = value.get()
-    /* remove self similarity */
     similarityMatrixRow.set(key.get(), Double.NaN)
 
     context.write(key, new VectorOrPrefWritable(similarityMatrixRow))
@@ -37,7 +29,7 @@ class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritab
 /**
  * This step is necessary to fit the need of having an item-user vector instead of user-item vector.
  */
-class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
+/*class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
   override def map(key: VarLongWritable ,
                    value:VectorWritable,
                    context:Mapper[VarLongWritable,VectorWritable,
@@ -53,7 +45,7 @@ class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  V
       context write(itemIndexWritable,  new VectorOrPrefWritable(userID,preferenceValue toFloat))
     })
   }
-}
+}*/
 
 /**
  * Combines the output from the previous two steps, then starts the multiplication of the item-item co-occurrence matrix with the item-user vectors.
@@ -85,7 +77,6 @@ class ToVectorAndPrefReducer extends Reducer[VarIntWritable, VectorOrPrefWritabl
     })
 
     if (similarityMatrixColumn != null) {
-      import scala.collection.JavaConversions._
 
       vectorAndPrefs.set(similarityMatrixColumn, userIDs,prefValues)
       context.write(key, vectorAndPrefs)
@@ -94,7 +85,9 @@ class ToVectorAndPrefReducer extends Reducer[VarIntWritable, VectorOrPrefWritabl
   }
 }
 
-
+/**
+ *
+ */
 object PrepareMatrixGenerator {
       def runJob(inputPath1:String,inputPath2:String,outPutPath:String, inputFormatClass:Class[_<:FileInputFormat[_,_]],
                  outputFormatClass:Class[_<:FileOutputFormat[_,_]], deleteFolder : Boolean,

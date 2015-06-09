@@ -10,7 +10,7 @@ class UserVectorTest extends FlatSpec with Matchers{
   val config = ConfigFactory.load()
 
   "user_vector" should "save a user vector" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -20,7 +20,7 @@ class UserVectorTest extends FlatSpec with Matchers{
   }
 
   it should "in 2 process" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -29,7 +29,7 @@ class UserVectorTest extends FlatSpec with Matchers{
   }
 
   it should "associate to a variable" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -38,7 +38,7 @@ class UserVectorTest extends FlatSpec with Matchers{
   }
 
   it should "associate to a variable and in 2 process" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then

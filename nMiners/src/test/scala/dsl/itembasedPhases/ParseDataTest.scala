@@ -12,7 +12,7 @@ import scala.reflect.io.Path
 class ParseDataTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   val BASE_PATH = "src/test/resources/data_2/"
   val BASE_OUTPUT_PATH = "src/test/resources/ParseDataTest/"
-  val INPUT_1 = BASE_PATH + "input_test_level1.txt"
+  val INPUT_1 = BASE_PATH + "input_test_user_vector.txt"
   val OUTPUTS = new mutable.HashMap[String,String]()
   OUTPUTS("OUTPUT_1") =  BASE_OUTPUT_PATH + "save_output/"
   OUTPUTS("OUTPUT_2") =  BASE_OUTPUT_PATH + "save_output_2_process/"
