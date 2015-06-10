@@ -1,6 +1,5 @@
 package utils
 
-import api.WikipediaToItemPrefsMapper
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -27,7 +26,7 @@ object MapReduceUtils {
    * @return
    */
   def runMap(jobName: String,
-             mapperClass: Class[WikipediaToItemPrefsMapper],
+             mapperClass: Class[_ <: Mapper[_, _, _, _]],
              outputKeyClass: Class[_],
              outputValueClass: Class[_],
              inputFormatClass: Class[_ <: FileInputFormat[_, _]],
@@ -43,7 +42,7 @@ object MapReduceUtils {
 
     conf setQuietMode true
 
-    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
+    conf set("HADOOP_ROOT_LOGGER", "WARN,console")
 
     numMapTasks match {
       case Some(num) => conf setNumReduceTasks num
@@ -125,7 +124,7 @@ object MapReduceUtils {
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
 
-    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
+    conf set("HADOOP_ROOT_LOGGER", "WARN,console")
 
     numMapTasks match {
       case Some(num) => conf setNumReduceTasks num
@@ -238,7 +237,7 @@ object MapReduceUtils {
                  numReduceTasks: Option[Int] = None): Job = {
     val conf = new JobConf(new Configuration())
     conf setQuietMode true
-    conf set ("HADOOP_ROOT_LOGGER", "WARN,console")
+    conf set("HADOOP_ROOT_LOGGER", "WARN,console")
 
     numReduceTasks match {
       case Some(num) => conf setNumReduceTasks num

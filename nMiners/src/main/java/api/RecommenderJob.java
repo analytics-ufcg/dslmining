@@ -41,7 +41,6 @@ import org.apache.mahout.math.VarLongWritable;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.RowSimilarityJob;
 import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.VectorSimilarityMeasures;
 
-import javax.sound.midi.Sequence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -117,10 +116,11 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the user vector matrix
+     *
      * @param args Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @return The number of users
      */
-    public int uservector(String[] args)   {
+    public int uservector(String[] args) {
         args = formatArray(args);
 
         try {
@@ -135,11 +135,11 @@ public final class RecommenderJob extends AbstractJob {
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             try {
                 ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
-                        "--input", getInputPath().toString(),
+                        "--input", new Path(prepPath, "wikipediaToCSV/part-r-00000").toUri().toString(),
                         "--output", prepPath.toString(),
                         "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
                         "--booleanData", String.valueOf(booleanData),
-                        "--tempDir", getTempPath().toString(),
+                        "--tempDir", prepPath.toUri().toString(),
                         "--outputType", String.valueOf(outputType),
                 });
             } catch (Exception e) {
@@ -161,7 +161,8 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the co-occurrence matrix
-     * @param args Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
+     *
+     * @param args          Information about the input path, numberOfColumns, similarityClassname, maxObservationsPerRow
      * @param numberOfUsers Number of Users
      * @return Similarities Per Item
      */
@@ -188,9 +189,8 @@ public final class RecommenderJob extends AbstractJob {
 
         try {
             ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                    "--input", new Path(getTempPath(DEFAULT_PREPARE_PATH),
-                    PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
-                    "--output", getTempPath("similarityMatrix").toString(),
+                    "--input", new Path(prepPath,PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
+                    "--output", new Path(prepPath, "similarityMatrix").toUri().toString(),
                     "--numberOfColumns", String.valueOf(numberOfUsers),
                     "--similarityClassname", similarityClassname,
                     "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
@@ -199,7 +199,7 @@ public final class RecommenderJob extends AbstractJob {
                     "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
                     "--threshold", String.valueOf(threshold),
                     "--randomSeed", String.valueOf(randomSeed),
-                    "--tempDir", getTempPath().toString(),
+                    "--tempDir", prepPath.toString()
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,30 +239,30 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Return the new args without output type
+     *
      * @param args Array with all information about the program
      * @return The new args, without outputType
      */
-    private String[] formatArray(String[] args){
+    private String[] formatArray(String[] args) {
         int count = 0;
 
         //Count how many valid item has the args
         //to build the new args
-        for (int j = 0; j < args.length; j++){
-            if (!args[j].equals("--outputType")){
+        for (int j = 0; j < args.length; j++) {
+            if (!args[j].equals("--outputType")) {
                 count++;
-            } else{
+            } else {
                 j++;
             }
         }
 
         String[] arrayRefVar = new String[count];
 
-        for (int i = 0; i < args.length; i++){
-            if (args[i].equals("--outputType")){
-                outputType = args[i+1] + ".class";
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--outputType")) {
+                outputType = args[i + 1] + ".class";
                 i++;
-            }
-            else{
+            } else {
                 arrayRefVar[i] = args[i];
             }
         }
@@ -272,17 +272,18 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the multiplication of the co-occurrence matrix by the user vectors
+     *
      * @param args Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
      * @return 0
      */
-    public int multiplication(String[] args) {
+    public int multiplication(String[] args, String path1, String path2) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path similarityMatrixPath = getTempPath("similarityMatrix");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
+        Path similarityMatrixPath = new Path(path1);
+        Path partialMultiplyPath = new Path(prepPath, "partialMultiply");
         int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
         String usersFile = getOption("usersFile");
 
@@ -297,7 +298,7 @@ public final class RecommenderJob extends AbstractJob {
 
             MultipleInputs.addInputPath(partialMultiply, similarityMatrixPath, SequenceFileInputFormat.class,
                     SimilarityMatrixRowWrapperMapper.class);
-            MultipleInputs.addInputPath(partialMultiply, new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
+            MultipleInputs.addInputPath(partialMultiply, new Path(path2),
                     SequenceFileInputFormat.class, UserVectorSplitterMapper.class);
             partialMultiply.setJarByClass(org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer.class);
             partialMultiply.setMapOutputKeyClass(VarIntWritable.class);
@@ -307,6 +308,7 @@ public final class RecommenderJob extends AbstractJob {
             partialMultiply.setOutputKeyClass(VarIntWritable.class);
             partialMultiply.setOutputValueClass(VectorAndPrefsWritable.class);
             partialMultiplyConf.setBoolean("mapred.compress.map.output", true);
+
             partialMultiplyConf.set("mapred.output.dir", partialMultiplyPath.toString());
 
             if (usersFile != null) {
@@ -333,6 +335,7 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Calculate the recommender
+     *
      * @param args Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
      * @return
      */
@@ -342,8 +345,8 @@ public final class RecommenderJob extends AbstractJob {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path explicitFilterPath = getTempPath("explicitFilterPath");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
+        Path explicitFilterPath = new Path(prepPath, "explicitFilterPath");
+        Path partialMultiplyPath = new Path(prepPath, "partialMultiply");
         Path outputPath = getOutputPath();
         String itemsFile = getOption("itemsFile");
         String filterFile = getOption("filterFile");
@@ -434,6 +437,7 @@ public final class RecommenderJob extends AbstractJob {
 
     /**
      * Get the args and set the Option
+     *
      * @param args Information about the input path, output path, booleanData, and similarity
      * @return Number of Recommendations
      * @throws IOException
@@ -513,7 +517,7 @@ public final class RecommenderJob extends AbstractJob {
     public int run(String[] strings) throws Exception {
         uservector(strings);
         rowSimilarity(strings, 10);
-        multiplication(strings);
+        multiplication(strings, "", "");
         recommender(strings);
         return 0;
     }
