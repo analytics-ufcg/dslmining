@@ -19,7 +19,7 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
 
   it should "multiply user vector by similarity matrix using write_on command" in{
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
@@ -33,7 +33,7 @@ class MultiplyTest  extends FlatSpec with Matchers{
   }
 
   it should "multiply user vector by similarity matrix by using as command" in{
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     the[IllegalArgumentException] thrownBy {
@@ -64,7 +64,7 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
 
   it should "get the same matrix in both cases" in{
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then

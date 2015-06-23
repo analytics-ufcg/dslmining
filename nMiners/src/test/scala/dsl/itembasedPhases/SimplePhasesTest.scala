@@ -23,7 +23,7 @@ class SimplePhasesTest extends FlatSpec with Matchers{
   }
 
   "produce similarity_matrix" should "save in output file" in {
-    val dataSet = "src/test/resources/data_2/input_test_level1.txt"
+    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then

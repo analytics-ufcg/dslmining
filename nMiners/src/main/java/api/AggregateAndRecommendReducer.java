@@ -1,4 +1,4 @@
-/*
+package api;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public final class AggregateAndRecommendReducer extends
         Reducer<VarLongWritable,PrefAndSimilarityColumnWritable,VarLongWritable,RecommendedItemsWritable> {
 
-    private static final Logger log = LoggerFactory.getLogger(AggregateAndRecommendReducer.class);
+    private static final Logger log = LoggerFactory.getLogger(ScalaAggregateAndRecommendReducer.class);
 
     static final String ITEMID_INDEX_PATH = "itemIDIndexPath";
     static final String NUM_RECOMMENDATIONS = "numRecommendations";

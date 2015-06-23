@@ -1,3 +1,4 @@
+package api;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -30,7 +31,8 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.mahout.cf.taste.hadoop.EntityEntityWritable;
 import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable;
 import org.apache.mahout.cf.taste.hadoop.item.*;
-import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob;
+import org.apache.mahout.cf.taste.hadoop.item.PartialMultiplyMapper;
+import org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer;
 import org.apache.mahout.cf.taste.hadoop.similarity.item.ItemSimilarityJob;
 import org.apache.mahout.common.AbstractJob;
 import org.apache.mahout.common.HadoopUtil;
@@ -92,13 +94,16 @@ import java.util.regex.Pattern;
 public final class RecommenderJob extends AbstractJob {
 
     public static final String BOOLEAN_DATA = "booleanData";
-    public static Path prepPath;
+    public static final String DEFAULT_PREPARE_PATH = "preparePreferenceMatrix";
 
     private static final int DEFAULT_MAX_SIMILARITIES_PER_ITEM = 100;
     private static final int DEFAULT_MAX_PREFS = 500;
     private static final int DEFAULT_MIN_PREFS_PER_USER = 1;
     AtomicInteger currentPhase = new AtomicInteger();
     private Map<String, List<String>> parsedArgs;
+    private String outputType = "SequenceFile";
+    private Path prepPath;
+
 
     public RecommenderJob(String path) {
         prepPath = new Path(path);
@@ -108,14 +113,16 @@ public final class RecommenderJob extends AbstractJob {
         this(System.getProperty("java.io.tmpdir"));
     }
 
+
     /**
      * Calculate the user vector matrix
      *
-     * @param args     Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
+     * @param args Information about the input path, output path, minPrefsPerUser, booleanData, tempDir
      * @return The number of users
-     * @throws Exception
      */
     public int uservector(String[] args) {
+        args = formatArray(args);
+
         try {
             prepareRecommender(args);
         } catch (IOException e) {
@@ -128,11 +135,12 @@ public final class RecommenderJob extends AbstractJob {
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             try {
                 ToolRunner.run(getConf(), new PreparePreferenceMatrixJob(), new String[]{
-                        "--input", getInputPath().toString(),
+                        "--input", new Path(prepPath, "wikipediaToCSV/part-r-00000").toUri().toString(),
                         "--output", prepPath.toString(),
                         "--minPrefsPerUser", String.valueOf(minPrefsPerUser),
                         "--booleanData", String.valueOf(booleanData),
-                        "--tempDir", getTempPath().toString(),
+                        "--tempDir", prepPath.toUri().toString(),
+                        "--outputType", String.valueOf(outputType),
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,6 +151,7 @@ public final class RecommenderJob extends AbstractJob {
 
         try {
             userVector = HadoopUtil.readInt(new Path(prepPath, PreparePreferenceMatrixJob.NUM_USERS), getConf());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,9 +189,8 @@ public final class RecommenderJob extends AbstractJob {
 
         try {
             ToolRunner.run(getConf(), new RowSimilarityJob(), new String[]{
-                    "--input", new Path(prepPath,
-                    PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
-                    "--output", getTempPath("similarityMatrix").toString(),
+                    "--input", new Path(prepPath,PreparePreferenceMatrixJob.RATING_MATRIX).toString(),
+                    "--output", new Path(prepPath, "similarityMatrix").toUri().toString(),
                     "--numberOfColumns", String.valueOf(numberOfUsers),
                     "--similarityClassname", similarityClassname,
                     "--maxObservationsPerRow", String.valueOf(maxPrefsInItemSimilarity),
@@ -191,7 +199,7 @@ public final class RecommenderJob extends AbstractJob {
                     "--excludeSelfSimilarity", String.valueOf(Boolean.TRUE),
                     "--threshold", String.valueOf(threshold),
                     "--randomSeed", String.valueOf(randomSeed),
-                    "--tempDir", getTempPath().toString(),
+                    "--tempDir", prepPath.toString()
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,7 +222,7 @@ public final class RecommenderJob extends AbstractJob {
 
             Configuration mostSimilarItemsConf = outputSimilarityMatrix.getConfiguration();
             mostSimilarItemsConf.set(ItemSimilarityJob.ITEM_ID_INDEX_PATH_STR,
-                    new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
+                    new Path(getTempPath(DEFAULT_PREPARE_PATH), PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
             mostSimilarItemsConf.setInt(ItemSimilarityJob.MAX_SIMILARITIES_PER_ITEM, maxSimilaritiesPerItem);
             try {
                 outputSimilarityMatrix.waitForCompletion(true);
@@ -229,21 +237,53 @@ public final class RecommenderJob extends AbstractJob {
         return maxSimilaritiesPerItem;
     }
 
+    /**
+     * Return the new args without output type
+     *
+     * @param args Array with all information about the program
+     * @return The new args, without outputType
+     */
+    private String[] formatArray(String[] args) {
+        int count = 0;
+
+        //Count how many valid item has the args
+        //to build the new args
+        for (int j = 0; j < args.length; j++) {
+            if (!args[j].equals("--outputType")) {
+                count++;
+            } else {
+                j++;
+            }
+        }
+
+        String[] arrayRefVar = new String[count];
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--outputType")) {
+                outputType = args[i + 1] + ".class";
+                i++;
+            } else {
+                arrayRefVar[i] = args[i];
+            }
+        }
+        return arrayRefVar;
+    }
+
 
     /**
      * Calculate the multiplication of the co-occurrence matrix by the user vectors
      *
-     * @param args     Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
+     * @param args Information about the input pathpartialMultiply, similarityClassname, maxObservationsPerRow
      * @return 0
      */
-    public int multiplication(String[] args) {
+    public int multiplication(String[] args, String path1, String path2) {
         try {
             prepareRecommender(args);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path similarityMatrixPath = getTempPath("similarityMatrix");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
+        Path similarityMatrixPath = new Path(path1);
+        Path partialMultiplyPath = new Path(prepPath, "partialMultiply");
         int maxPrefsPerUser = Integer.parseInt(getOption("maxPrefsPerUser"));
         String usersFile = getOption("usersFile");
 
@@ -258,9 +298,9 @@ public final class RecommenderJob extends AbstractJob {
 
             MultipleInputs.addInputPath(partialMultiply, similarityMatrixPath, SequenceFileInputFormat.class,
                     SimilarityMatrixRowWrapperMapper.class);
-            MultipleInputs.addInputPath(partialMultiply, new Path(prepPath, PreparePreferenceMatrixJob.USER_VECTORS),
+            MultipleInputs.addInputPath(partialMultiply, new Path(path2),
                     SequenceFileInputFormat.class, UserVectorSplitterMapper.class);
-            partialMultiply.setJarByClass(ToVectorAndPrefReducer.class);
+            partialMultiply.setJarByClass(org.apache.mahout.cf.taste.hadoop.item.ToVectorAndPrefReducer.class);
             partialMultiply.setMapOutputKeyClass(VarIntWritable.class);
             partialMultiply.setMapOutputValueClass(VectorOrPrefWritable.class);
             partialMultiply.setReducerClass(ToVectorAndPrefReducer.class);
@@ -268,6 +308,7 @@ public final class RecommenderJob extends AbstractJob {
             partialMultiply.setOutputKeyClass(VarIntWritable.class);
             partialMultiply.setOutputValueClass(VectorAndPrefsWritable.class);
             partialMultiplyConf.setBoolean("mapred.compress.map.output", true);
+
             partialMultiplyConf.set("mapred.output.dir", partialMultiplyPath.toString());
 
             if (usersFile != null) {
@@ -295,11 +336,8 @@ public final class RecommenderJob extends AbstractJob {
     /**
      * Calculate the recommender
      *
-     * @param args     Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
+     * @param args Information about the input pathpartialMultiply, explicitFilterPath, numRecommendations
      * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
      */
     public int recommender(String[] args) {
         try {
@@ -307,8 +345,8 @@ public final class RecommenderJob extends AbstractJob {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path explicitFilterPath = getTempPath("explicitFilterPath");
-        Path partialMultiplyPath = getTempPath("partialMultiply");
+        Path explicitFilterPath = new Path(prepPath, "explicitFilterPath");
+        Path partialMultiplyPath = new Path(prepPath, "partialMultiply");
         Path outputPath = getOutputPath();
         String itemsFile = getOption("itemsFile");
         String filterFile = getOption("filterFile");
@@ -318,7 +356,6 @@ public final class RecommenderJob extends AbstractJob {
 
         if (shouldRunNextPhase(parsedArgs, currentPhase)) {
             //filter out any users we don't care about
-      /* convert the user/item pairs to filter if a filterfile has been specified */
             if (filterFile != null) {
                 Job itemFiltering = null;
                 try {
@@ -358,14 +395,14 @@ public final class RecommenderJob extends AbstractJob {
                 aggregateAndRecommend = prepareJob(
                         new Path(aggregateAndRecommendInput), outputPath, SequenceFileInputFormat.class,
                         PartialMultiplyMapper.class, VarLongWritable.class, PrefAndSimilarityColumnWritable.class,
-                        AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
+                        org.apache.mahout.cf.taste.hadoop.item.AggregateAndRecommendReducer.class, VarLongWritable.class, RecommendedItemsWritable.class,
                         outputFormat);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Configuration aggregateAndRecommendConf = aggregateAndRecommend.getConfiguration();
             if (itemsFile != null) {
-                aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
+                aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
             }
 
             if (filterFile != null) {
@@ -376,9 +413,9 @@ public final class RecommenderJob extends AbstractJob {
                 }
             }
             setIOSort(aggregateAndRecommend);
-            aggregateAndRecommendConf.set(AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
+            aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
                     new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
-            aggregateAndRecommendConf.setInt(AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
+            aggregateAndRecommendConf.setInt(api.AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
             aggregateAndRecommendConf.setBoolean(BOOLEAN_DATA, booleanData);
             boolean succeeded = false;
             try {
@@ -409,7 +446,7 @@ public final class RecommenderJob extends AbstractJob {
         addInputOption();
         addOutputOption();
         addOption("numRecommendations", "n", "Number of recommendations per user",
-                String.valueOf(AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
+                String.valueOf(api.AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
         addOption("usersFile", null, "File of users to recommend for", null);
         addOption("itemsFile", null, "File of items to recommend for", null);
         addOption("filterFile", "f", "File containing comma-separated userID,itemID pairs. Used to exclude the item from "
@@ -431,6 +468,7 @@ public final class RecommenderJob extends AbstractJob {
         addOption("outputPathForSimilarityMatrix", "opfsm", "write the item similarity matrix to this path (optional)",
                 false);
         addOption("randomSeed", null, "use this seed for sampling", false);
+        //addOption("outputType", "ot", "Output Type", "TextOutputFormat");
         addFlag("sequencefileOutput", null, "write the output into a SequenceFile instead of a text file");
 
         parsedArgs = parseArguments(args);
@@ -479,7 +517,7 @@ public final class RecommenderJob extends AbstractJob {
     public int run(String[] strings) throws Exception {
         uservector(strings);
         rowSimilarity(strings, 10);
-        multiplication(strings);
+        multiplication(strings, "", "");
         recommender(strings);
         return 0;
     }

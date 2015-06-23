@@ -29,7 +29,7 @@ class CooccurrenceColumnWrapperMapper extends Mapper[VarIntWritable,VectorWritab
 /**
  * This step is necessary to fit the need of having an item-user vector instead of user-item vector.
  */
-class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
+/*class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  VarIntWritable,VectorOrPrefWritable] {
   override def map(key: VarLongWritable ,
                    value:VectorWritable,
                    context:Mapper[VarLongWritable,VectorWritable,
@@ -45,7 +45,7 @@ class UserVectorSplitterMapper extends Mapper[VarLongWritable,VectorWritable,  V
       context write(itemIndexWritable,  new VectorOrPrefWritable(userID,preferenceValue toFloat))
     })
   }
-}
+}*/
 
 /**
  * Combines the output from the previous two steps, then starts the multiplication of the item-item co-occurrence matrix with the item-user vectors.

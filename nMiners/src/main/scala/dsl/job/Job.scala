@@ -1,20 +1,13 @@
 package dsl.job
 
-import java.io.File
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-import java.nio.file.{Files, Paths}
 import java.util.concurrent.CountDownLatch
 
 import api._
 import dsl.notification.NotificationEndServer
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{Path, FileUtil, FileSystem}
+import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{IntWritable, Text}
-import org.apache.hadoop.mapred.JobConf
-import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, TextInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, TextOutputFormat}
-import org.apache.mahout.cf.taste.hadoop.item.VectorAndPrefsWritable
-import org.apache.mahout.math.{VarIntWritable, VarLongWritable, VectorWritable}
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.slf4j.{Logger, LoggerFactory}
 import utils.MapReduceUtils
 
@@ -23,7 +16,7 @@ import utils.MapReduceUtils
  */
 trait Job {
 
-  val logger : Logger
+  val logger: Logger
 
   var name: String
 
@@ -38,7 +31,7 @@ trait Job {
   def then(job: Job): Job = {
     //Set the input path of the next job to the output of the current job.
     //Example: a then b ==> b.input = a.output
-    job.pathToInput = pathToOutput.getOrElse("") + "/part-r-00000"
+    job.pathToInput = pathToOutput.get + "/part-r-00000"
     Context.jobs += this
     job
   }
@@ -165,6 +158,8 @@ object parse_data extends Applier {
   def on(path: String): Job = {
     clear()
     this.path = path
+    this.pathToInput = path
+    this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "wikipediaToCSV").toUri().toString)
     name = this.getClass.getSimpleName + s" on $path"
     Context.addInputPath(path)
     this
@@ -176,6 +171,7 @@ object parse_data extends Applier {
   // Run the job
   override def run() = {
     super.run()
+    WikipediaToCSV.runJob(inputPath = path, dirOutputName = pathToOutput.get, deleteFolder = false, numProcess)
   }
 }
 
@@ -187,6 +183,7 @@ object parse_data extends Applier {
 class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
   override val logger = LoggerFactory.getLogger(classOf[Multiplier])
+  this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "partialMultiply").toString)
 
   val FOLDER_MATRIX_PREPARED: String = "/data_prepare"
 
@@ -204,33 +201,36 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
       case Some(path) => path
     }
 
-    if (! (producedOne.producer.getClass().isInstance(similarity_matrix) && producedTwo.producer.getClass().isInstance(user_vectors))){
-        throw new IllegalArgumentException("First member should be a user_vector and second member should be a similarity_matrix")
-    }
-    //==============================================Prepare the matrices to be multilpied
-    val path_matrixPrepared = BASE + FOLDER_MATRIX_PREPARED
-    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = path_matrixPrepared,
-      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-      deleteFolder = true, numReduceTasks = numProcess)
+    val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
+    new RecommenderJob multiplication (arguments, path1, path2)
 
-    //==============================================Multiply the matrices
-    pathToInput = path_matrixPrepared + "/part-r-00000"
-    val path_multplicationProduct = BASE + FOLDER_MULTIPLICATION_PRODUCT
-    pathToOutput = Some(path_multplicationProduct)
-
-//    try{
-      MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get ,
-        inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
-        outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
-        deleteFolder = true, numReduceTasks = numProcess)
-//    }catch{ case e:Exception =>
-//
-//      val a = 2
-//      print(a)
-//      throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
-//
-//    }
+    //    if (!(producedOne.producer.getClass().isInstance(similarity_matrix) && producedTwo.producer.getClass().isInstance(user_vectors))) {
+    //      throw new IllegalArgumentException("First member should be a user_vector and second member should be a similarity_matrix")
+    //    }
+    //    //==============================================Prepare the matrices to be multilpied
+    //    val path_matrixPrepared = BASE + FOLDER_MATRIX_PREPARED
+    //    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = path_matrixPrepared,
+    //      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+    //      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+    //      deleteFolder = true, numReduceTasks = numProcess)
+    //
+    //    //==============================================Multiply the matrices
+    //    pathToInput = path_matrixPrepared + "/part-r-00000"
+    //    val path_multplicationProduct = BASE + FOLDER_MULTIPLICATION_PRODUCT
+    //    pathToOutput = Some(path_multplicationProduct)
+    //
+    //    //    try{
+    //    MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
+    //      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+    //      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+    //      deleteFolder = true, numReduceTasks = numProcess)
+    //    }catch{ case e:Exception =>
+    //
+    //      val a = 2
+    //      print(a)
+    //      throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
+    //
+    //    }
 
   }
 }
