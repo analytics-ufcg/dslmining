@@ -12,16 +12,6 @@ object Main {
     val dataset = "data/input.dat"
     val output = "data/output"
 
-    //    val outputType = "TextOutputFormat";
-    //
-    //    val args = Array("--input", "data/input.dat","--output", "data/output","--booleanData","true","-s","SIMILARITY_COSINE", "--outputType", outputType)
-    //    val recommender = new RecommenderJob()
-    //    val prepPath: Path = new Path("temp/preparePreferenceMatrix/")
-    //    val numberOfUsers = recommender.uservector(args)
-    //val similarity = recommender.rowSimilarity(args, prepPath, 10)
-    //val multiply = recommender.multiplication(args,prepPath)
-    //val recommend = recommender.recommender(args, prepPath)
-
     parse_data on dataset then
       produce(user_vectors as "user_vector") then
       produce(similarity_matrix using COOCURRENCE as "coocurrence") then
