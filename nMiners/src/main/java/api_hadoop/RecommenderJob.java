@@ -1,4 +1,4 @@
-package api;
+package api_hadoop;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -402,7 +402,7 @@ public final class RecommenderJob extends AbstractJob {
             }
             Configuration aggregateAndRecommendConf = aggregateAndRecommend.getConfiguration();
             if (itemsFile != null) {
-                aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
+                aggregateAndRecommendConf.set(api_hadoop.AggregateAndRecommendReducer.ITEMS_FILE, itemsFile);
             }
 
             if (filterFile != null) {
@@ -413,9 +413,9 @@ public final class RecommenderJob extends AbstractJob {
                 }
             }
             setIOSort(aggregateAndRecommend);
-            aggregateAndRecommendConf.set(api.AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
+            aggregateAndRecommendConf.set(api_hadoop.AggregateAndRecommendReducer.ITEMID_INDEX_PATH,
                     new Path(prepPath, PreparePreferenceMatrixJob.ITEMID_INDEX).toString());
-            aggregateAndRecommendConf.setInt(api.AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
+            aggregateAndRecommendConf.setInt(api_hadoop.AggregateAndRecommendReducer.NUM_RECOMMENDATIONS, numRecommendations);
             aggregateAndRecommendConf.setBoolean(BOOLEAN_DATA, booleanData);
             boolean succeeded = false;
             try {
@@ -446,7 +446,7 @@ public final class RecommenderJob extends AbstractJob {
         addInputOption();
         addOutputOption();
         addOption("numRecommendations", "n", "Number of recommendations per user",
-                String.valueOf(api.AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
+                String.valueOf(api_hadoop.AggregateAndRecommendReducer.DEFAULT_NUM_RECOMMENDATIONS));
         addOption("usersFile", null, "File of users to recommend for", null);
         addOption("itemsFile", null, "File of items to recommend for", null);
         addOption("filterFile", "f", "File containing comma-separated userID,itemID pairs. Used to exclude the item from "

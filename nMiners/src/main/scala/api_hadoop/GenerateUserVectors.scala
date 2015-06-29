@@ -1,4 +1,4 @@
-package api
+package api_hadoop
 import java.util.regex.Pattern
 
 import org.apache.hadoop.io._

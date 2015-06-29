@@ -1,4 +1,4 @@
-package api;
+package api_hadoop;
 
 import java.util.Map;
 import org.apache.hadoop.io.IntWritable;
@@ -13,7 +13,6 @@ import org.apache.mahout.cf.taste.hadoop.ToItemPrefsMapper;
 import org.apache.mahout.cf.taste.hadoop.item.ItemIDIndexMapper;
 import org.apache.mahout.cf.taste.hadoop.item.ItemIDIndexReducer;
 import org.apache.mahout.cf.taste.hadoop.item.ToUserVectorsReducer;
-import org.apache.mahout.cf.taste.hadoop.item.ToUserVectorsReducer.Counters;
 import org.apache.mahout.cf.taste.hadoop.preparation.ToItemVectorsMapper;
 import org.apache.mahout.cf.taste.hadoop.preparation.ToItemVectorsReducer;
 import org.apache.mahout.common.AbstractJob;
