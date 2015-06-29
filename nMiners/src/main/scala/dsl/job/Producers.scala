@@ -1,6 +1,6 @@
 package dsl.job
 
-import api.RecommenderJob
+import api_hadoop.RecommenderJob
 import org.apache.hadoop.fs.Path
 import org.slf4j.LoggerFactory
 

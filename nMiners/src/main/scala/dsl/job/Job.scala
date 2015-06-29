@@ -2,7 +2,7 @@ package dsl.job
 
 import java.util.concurrent.CountDownLatch
 
-import api._
+import api_hadoop._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{IntWritable, Text}

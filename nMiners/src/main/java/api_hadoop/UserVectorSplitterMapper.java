@@ -1,4 +1,4 @@
-package api;
+package api_hadoop;
 
 import com.google.common.io.Closeables;
 import org.apache.hadoop.conf.Configuration;

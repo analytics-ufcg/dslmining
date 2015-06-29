@@ -1,4 +1,4 @@
-package api
+package api_hadoop
 
 import java.io.IOException
 import java.util
@@ -149,7 +149,7 @@ class ScalaAggregateAndRecommendReducer extends Reducer[VarLongWritable,VectorWr
 object MatrixMultiplication {
   /**
    *
-   * Run the Hadoop Job using PartialMultiplyMapper and api.AggregateAndRecommendReducer
+   * Run the Hadoop Job using PartialMultiplyMapper and api_hadoop.AggregateAndRecommendReducer
    * @param pathToInput the input file
    * @param outPutPath the path where the output will be put
    * @param inputFormatClass the format of the input (sequential or text)
