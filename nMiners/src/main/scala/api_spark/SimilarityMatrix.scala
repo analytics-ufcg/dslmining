@@ -7,18 +7,13 @@ object SimilarityMatrix extends App {
   val InFile = "data/actions.csv"
   val OutPath = "data/similarity-matrices/"
 
-  def run(inputFile: String, outPath: String, masterNode:String, filter:String) ={
+  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
     ItemSimilarityDriver.main(Array(
       "--input", inputFile,
-      "--output", outPath,
-      "--master", masterNode,
-      "--filter1",filter,
-      "--inDelim", ",",
-      "--itemIDColumn", "2",
-      "--rowIDColumn", "0",
-      "--filterColumn", "1",
-      "--writeAllDatasets"))
+      "--output", outPath.getOrElse(""),
+      "--master", masterNode
+    ))
   }
 
-  run(InFile,OutPath, "local",  "purchase")
+//  run(InFile,OutPath, "local")
 }
