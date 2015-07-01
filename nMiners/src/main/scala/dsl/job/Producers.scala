@@ -76,10 +76,8 @@ object similarity_matrix extends Producer {
 
   override def run() = {
     super.run()
-//    SimilarityMatrix.run("data/actions.csv", "data/similarity-matrices/","local")
     val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
     new RecommenderJob rowSimilarity(arguments, 10)
-
 
     //    val BASE_PATH = pathToOutput.get
     //    pathToOutput = Some(pathToOutput.get + "/matrix")
