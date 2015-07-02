@@ -1,15 +1,10 @@
-package dsl.job
+package dsl_spark.job
 
 import java.util.concurrent.CountDownLatch
 
-import api_hadoop._
 import dsl.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.{IntWritable, Text}
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.slf4j.{Logger, LoggerFactory}
-import utils.MapReduceUtils
 
 /**
  * Job is a trait that produce results
@@ -171,7 +166,7 @@ object parse_data extends Applier {
   // Run the job
   override def run() = {
     super.run()
-    WikipediaToCSV.runJob(inputPath = path, dirOutputName = pathToOutput.get, deleteFolder = false, numProcess)
+//    WikipediaToCSV.runJob(inputPath = path, dirOutputName = pathToOutput.get, deleteFolder = false, numProcess)
   }
 }
 
@@ -202,7 +197,7 @@ class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends C
     }
 
     val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
-    new RecommenderJob multiplication (arguments, path1, path2)
+//    new RecommenderJob multiplication (arguments, path1, path2)
 
     //    if (!(producedOne.producer.getClass().isInstance(similarity_matrix) && producedTwo.producer.getClass().isInstance(user_vectors))) {
     //      throw new IllegalArgumentException("First member should be a user_vector and second member should be a similarity_matrix")
@@ -241,13 +236,13 @@ case class WordCount(val input: String, val output: String) extends Job {
 
   override def run = {
     super.run
-    MapReduceUtils.runJob(jobName = "Prepare", mapperClass = classOf[WordMap],
-      reducerClass = classOf[WordReduce], mapOutputKeyClass = classOf[Text],
-      mapOutputValueClass = classOf[IntWritable],
-      outputKeyClass = classOf[Text], outputValueClass = classOf[IntWritable],
-      inputFormatClass = classOf[TextInputFormat],
-      outputFormatClass = classOf[TextOutputFormat[Text, IntWritable]],
-      inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
+//    MapReduceUtils.runJob(jobName = "Prepare", mapperClass = classOf[WordMap],
+//      reducerClass = classOf[WordReduce], mapOutputKeyClass = classOf[Text],
+//      mapOutputValueClass = classOf[IntWritable],
+//      outputKeyClass = classOf[Text], outputValueClass = classOf[IntWritable],
+//      inputFormatClass = classOf[TextInputFormat],
+//      outputFormatClass = classOf[TextOutputFormat[Text, IntWritable]],
+//      inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
   }
 }
 

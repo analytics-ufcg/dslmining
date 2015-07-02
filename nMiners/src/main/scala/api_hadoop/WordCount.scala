@@ -1,4 +1,4 @@
-package api
+package api_hadoop
 
 import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}

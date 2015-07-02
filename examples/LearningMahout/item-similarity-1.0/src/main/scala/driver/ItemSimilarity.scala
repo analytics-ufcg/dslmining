@@ -13,7 +13,6 @@ object Driver extends App {
       "--output", OutPath,
       "--master", "local",
       "--filter1", "purchase",
-      "--filter2", "view",
       "--inDelim", ",",
       "--itemIDColumn", "2",
       "--rowIDColumn", "0",

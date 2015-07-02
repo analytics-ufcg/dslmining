@@ -1,6 +1,8 @@
-package dsl.job
+package dsl_spark.job
 
-import api_hadoop.RecommenderJob
+//import api_hadoop.RecommenderJob
+
+import api_spark.SimilarityMatrix
 import org.apache.hadoop.fs.Path
 import org.slf4j.LoggerFactory
 
@@ -43,6 +45,7 @@ object user_vectors extends Producer {
   override var name: String = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
   this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "userVectors").toString)
+//  this.pathToOutput = Some(pathToInput)
 
 
   // Run the job
@@ -53,7 +56,7 @@ object user_vectors extends Producer {
     //    pathToInput = Context.getInputPath()
 
     val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE --outputType binary" split " "
-    new RecommenderJob uservector arguments
+//    new RecommenderJob uservector arguments
   }
 }
 
@@ -66,6 +69,7 @@ object similarity_matrix extends Producer {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override var name: String = this.getClass.getSimpleName
   var similarity: SimilarityType = null;
+
   this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "similarityMatrix").toString)
 
   def using(similarity: SimilarityType): Producer = {
@@ -76,8 +80,12 @@ object similarity_matrix extends Producer {
 
   override def run() = {
     super.run()
-    val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
-    new RecommenderJob rowSimilarity(arguments, 10)
+    this pathToInput = Context.getInputPath()
+    SimilarityMatrix.run(pathToInput, pathToOutput,"local")
+
+//    val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
+//    new RecommenderJob rowSimilarity(arguments, 10)
+
 
     //    val BASE_PATH = pathToOutput.get
     //    pathToOutput = Some(pathToOutput.get + "/matrix")
@@ -103,7 +111,7 @@ object recommendation extends Producer {
 
     val out = pathToOutput.get
     val arguments = s"--input $pathToInput --output $out --booleanData true -s SIMILARITY_COSINE" split " "
-    new RecommenderJob recommender arguments
+//    new RecommenderJob recommender arguments
 //    val outputFile = new File(pathToOutput.get)
 //
 //    val jobConf = new JobConf(new Configuration())
