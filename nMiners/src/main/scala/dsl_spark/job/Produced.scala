@@ -1,7 +1,5 @@
 package dsl_spark.job
 
-class Produced (var name: String, var producer: Producer) {
-  override def toString = name
-
-
+class Produced[A] (val name: String, val producer: Producer[_]) {
+  var product : A = _
 }

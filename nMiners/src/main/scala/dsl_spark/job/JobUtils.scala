@@ -1,24 +1,26 @@
 package dsl_spark.job
 
+import org.apache.mahout.math.drm.DrmLike
+
 object JobUtils {
   def in_parallel(jobs: List[Job]) = {
     new Parallel(jobs)
   }
 
-  def produce(tuple: (Producer, String)): Job = produce(tuple._1, tuple._2)
+  def produce(tuple: (Producer[_], String)): Job = produce(tuple._1, tuple._2)
 
-  def produce(producer: Producer, name: String): Job = {
+  def produce(producer: Producer[_], name: String): Job = {
     val produced = new Produced(name,producer)
-    Context.produceds += produced
-    producer.produced = produced
+//    Context.produceds += produced
+//    producer.produced = produced
     producer
   }
 
-  def produce(producer: Producer): Job = produce(producer, producer.name.replaceAll("\\$",""))
+  def produce(producer: Producer[_]): Job = produce(producer, producer.name.replaceAll("\\$",""))
 
-  def multiply(tuple: (Produced, Produced)): Job = multiply(tuple._1, tuple._2)
+  def multiply(tuple: (Produced[DrmLike[Int]], Produced[DrmLike[Int]])): Job = multiply(tuple._1, tuple._2)
 
-  def multiply(a: Produced, b: Produced): Job = new Multiplier(a, b)
+  def multiply(a: Produced[DrmLike[Int]], b: Produced[DrmLike[Int]]): Job = new Multiplier(a, b)
 
   def run = Context.jobs.foreach(_.run)
 }
