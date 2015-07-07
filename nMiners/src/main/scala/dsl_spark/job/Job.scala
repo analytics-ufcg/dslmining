@@ -189,6 +189,7 @@ class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: Produ
     super.run()
 
     produced.product = producedOne.product %*% producedTwo.product
+    Context.produceds += produced
   }
 }
 
