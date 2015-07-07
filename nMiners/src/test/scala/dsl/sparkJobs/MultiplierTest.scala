@@ -7,6 +7,7 @@ import org.apache.mahout.math.scalabindings._
 import org.apache.mahout.sparkbindings._
 import org.scalactic.Equality
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+import scala.collection.JavaConversions.asScalaIterator
 
 /**
  * Created by igleson on 06/07/15.
@@ -23,18 +24,38 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   implicit val context = mahoutSparkContext(masterUrl = "local",
     appName = "MahoutLocalContext")
 
+  /**
+   * Object to compare if two matrixes are equals
+   */
   implicit val matrixEquality = new Equality[Matrix] {
     override def areEqual(a: Matrix, b: Any): Boolean = {
-      if (! b.isInstanceOf[Matrix]) {
+
+      if (!b.isInstanceOf[Matrix]) {
         false
       } else {
         val m = b.asInstanceOf[Matrix]
-        a.
+        if (a.numCols() != m.numCols() || a.numRows() != m.numRows()) {
+          println("nums columns and rows differen")
+          false
+        } else {
+          var res = true
+          for (i <- 0 until m.numCols()) {
+            a.viewRow(i).all().iterator().zip {
+              m.viewRow(i).all().iterator()
+            }.foreach { t => t match {
+              case (e1, e2) => {
+                res &= e1.get == e2.get
+              }
+            }
+            }
+          }
+          res
+        }
       }
     }
   }
 
-  override def beforeAll(): Unit = {
+  override def beforeAll = {
 
     matrixA = drmParallelize(dense(
       (1, 2),
@@ -46,7 +67,7 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     ))
     matrixAxB = drmParallelize(dense(
       (12, 10),
-      (26, 26)
+      (26, 22)
     ))
     producedA = new Produced[DrmLike[Int]]("producedA", null)
     producedA.product = matrixA
@@ -55,7 +76,18 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     producedB.product = matrixB
   }
 
-  "MultiplierJob" should "multiply right" in {
+  override def afterAll = {
+    Context.clearQueues
+  }
+
+  "MultiplierJob" should "produce a produced named \'Multiplier produced1_name by produced2_name\'" in {
+    val mult = new Multiplier(producedA, producedB)
+    mult.run
+
+    Context.produceds should contain(Produced(name = mult.name))
+  }
+
+  it should "multiply right" in {
 
     val mult = new Multiplier(producedA, producedB)
     mult.run
@@ -64,11 +96,9 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     val resutantMatrix = Context.produceds.find(_.name equals producedResultName).map {
       _.product.asInstanceOf[DrmLike[Int]]
-    }  getOrElse {
+    } getOrElse {
       fail(s"Multiplier Job should produce a produced named $producedResultName")
     }
-
-    println( matrixAxB.collect equals resutantMatrix.collect )
 
     resutantMatrix.collect should equal(matrixAxB.collect)
   }
