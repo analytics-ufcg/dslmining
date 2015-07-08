@@ -29,7 +29,7 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
         false
       } else {
         val m = b.asInstanceOf[Matrix]
-        a.
+        true
       }
     }
   }
@@ -37,8 +37,8 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   override def beforeAll(): Unit = {
 
     matrixA = drmParallelize(dense(
-      (1, 2),
-      (3, 4)
+      (1, 0),
+      (1, 1)
     ))
     matrixB = drmParallelize(dense(
       (2, 2),
