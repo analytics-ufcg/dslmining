@@ -221,24 +221,3 @@ object UserVectorDriver extends MahoutSparkDriver {
     drmsUserVector
   }
 }
-
-
-/**
- * The code below are exemplify how to produces a User Vector matrix.
- */
-object UserVector extends App {
-  val InFile = "data/test.csv" //Input Data
-  val OutPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-
-  //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
-
-    val userVectorDrms =   UserVectorDriver.run(Array(
-      "--input", inputFile,
-      "--output", outPath.getOrElse(""),
-      "--master", masterNode
-    )
-    )
-  }
-  run(InFile,OutPath, "local")
-}
