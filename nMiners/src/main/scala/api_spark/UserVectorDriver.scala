@@ -26,6 +26,7 @@ import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 import scala.collection.immutable.HashMap
 
 /**
+ * This code was adaptation of org.apache.mahout.drivers.ItemSimilarityDriver
  * Reads text lines that contain (row id, column id, ...). The IDs are user specified strings which will be preserved in the output.
  * The individual elements will be accumulated into a matrix like
  * org.apache.mahout.math.indexeddataset.IndexedDataset will be used to calculate row-wise
@@ -47,7 +48,7 @@ object UserVectorDriver extends MahoutSparkDriver {
   private var writeSchema: Schema = _
   private var readSchema1: Schema = _
   private var readSchema2: Schema = _
-  var drmsUserVector:DrmLike[Int] = _
+  var drmsUserVector:Array[DrmLike[Int]] = _
 
   /**
    * Entry point, not using Scala App trait
@@ -201,29 +202,29 @@ object UserVectorDriver extends MahoutSparkDriver {
     val maxInterestingItemsPerThing = parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int]
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
-    val primaryDrm = drms(0)
-    drmsUserVector = primaryDrm
-    print("kjfkfdjksdkjsdsdhsdsdisdjsjbssdjskhdsshdskdkjsdf")
-    println(drmsUserVector.collect)
+    drmsUserVector = drms
+
     stop()
     drmsUserVector
   }
 
   /**
    * The method below executes main method and returns the DRMS
-   * @param args Command line args, if empty a help message is printed.
-   * @return
+   * @param args Command line args, if empty a help message is printed. The mainly
+   *             args are:  --input", the inputFile
+                            --output the outputpaht
+                            --master the address of the cluster or "local"
+   * @return a drms who representes the UserVector
    */
-  def run(args: Array[String]):DrmLike[Int] ={
+  def run(args: Array[String]):Array[DrmLike[Int]] ={
     main(args)
-    print(drmsUserVector)
-    return drmsUserVector
+    drmsUserVector
   }
 }
 
 
 /**
- * The code below produces a User Vector matrix.
+ * The code below are exemplify how to produces a User Vector matrix.
  */
 object UserVector extends App {
   val InFile = "data/test.csv" //Input Data
@@ -231,11 +232,13 @@ object UserVector extends App {
 
   //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
   def run(inputFile: String, outPath: Option[String], masterNode:String) ={
-  val something =   UserVectorDriver.run(Array(
+
+    val userVectorDrms =   UserVectorDriver.run(Array(
       "--input", inputFile,
       "--output", outPath.getOrElse(""),
       "--master", masterNode
-    ))
+    )
+    )
   }
   run(InFile,OutPath, "local")
 }
