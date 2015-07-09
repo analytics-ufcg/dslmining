@@ -71,7 +71,7 @@ object UserVectorDriver extends MahoutSparkDriver {
         ItemSimilarityOptions("maxPrefs")) validate { x =>
         if (x > 0) success else failure("Option --maxPrefs must be > 0")
       }
-
+//      SimilarityAnalysis_teste.cooccurrences()
       // not implemented in SimilarityAnalysis.cooccurrence
       // threshold, and minPrefs
       // todo: replacing the threshold with some % of the best values and/or a
@@ -201,9 +201,9 @@ object UserVectorDriver extends MahoutSparkDriver {
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
     val maxInterestingItemsPerThing = parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int]
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
-    val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
-    drmsUserVector = drms
-
+    drmsUserVector  = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
+    SimilarityAnalysis.cooccurrencesIDSs(drmsUserVector)
+//
     stop()
     drmsUserVector
   }
@@ -220,4 +220,22 @@ object UserVectorDriver extends MahoutSparkDriver {
     main(args)
     drmsUserVector
   }
+
+}
+
+
+
+object UserVector extends App {
+  val InFile = "data/actions.csv" //Input Data
+  val OutPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
+
+  //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
+  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
+    UserVectorDriver.run(Array(
+      "--input", inputFile,
+      "--output", outPath.getOrElse(""),
+      "--master", masterNode
+    ))
+  }
+  run(InFile,OutPath, "local")
 }
