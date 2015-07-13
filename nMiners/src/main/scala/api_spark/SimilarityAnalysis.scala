@@ -66,7 +66,7 @@ object SimilarityAnalysis extends Serializable {
    * @param randomSeed when kept to a constant will make repeatable downsampling
    * @param maxInterestingItemsPerThing number of similar items to return per item, default: 50
    * @param maxNumInteractions max number of interactions after downsampling, default: 500
-   * @return a list of [[org.apache.mahout.math.drm.DrmLike]] containing downsampled DRMs for cooccurrence and
+   * @return a list of org.apache.mahout.math.drm.DrmLike containing downsampled DRMs for cooccurrence and
    *         cross-cooccurrence
    */
   def cooccurrences(drmARaw: DrmLike[Int], randomSeed: Int = 0xdeadbeef, maxInterestingItemsPerThing: Int = 50,
@@ -132,11 +132,10 @@ object SimilarityAnalysis extends Serializable {
    * Calculates item (column-wise) similarity using the log-likelihood ratio on A'A, A'B, A'C, ... and returns
    * a list of similarity and cross-similarity matrices. Somewhat easier to use method, which handles the ID
    * dictionaries correctly
-   * @param indexedDatasets first in array is primary/A matrix all others are treated as secondary
    * @param randomSeed use default to make repeatable, otherwise pass in system time or some randomizing seed
    * @param maxInterestingItemsPerThing max similarities per items
    * @param maxNumInteractions max number of input items per item
-   * @return a list of [[org.apache.mahout.math.indexeddataset.IndexedDataset]] containing downsampled
+   * @return a list of org.apache.mahout.math.indexeddataset.IndexedDataset containing downsampled
    *         IndexedDatasets for cooccurrence and cross-cooccurrence
    */
   def cooccurrencesIDSs(drms: Array[DrmLike[Int]],
