@@ -205,7 +205,7 @@ object UserVectorDriver extends MahoutSparkDriver {
     drmsUserVector = drms
 
     stop()
-    drmsUserVector
+
   }
 
   /**

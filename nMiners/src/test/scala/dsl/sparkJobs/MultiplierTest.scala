@@ -34,9 +34,7 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
         false
       } else {
         val m = b.asInstanceOf[Matrix]
-<<<<<<< HEAD
-        true
-=======
+
         if (a.numCols() != m.numCols() || a.numRows() != m.numRows()) {
           println("nums columns and rows differen")
           false
@@ -54,7 +52,6 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
           }
           res
         }
->>>>>>> 77429664b47b1c53ce268f4d935aa3112f3f54a0
       }
     }
   }
