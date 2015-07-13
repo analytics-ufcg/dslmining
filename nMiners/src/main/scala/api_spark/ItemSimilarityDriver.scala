@@ -168,7 +168,7 @@ object A extends Serializable{
         "--master", "local"
       ))
     //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-    print(userVectorDrm(0))
+    print(userVectorDrm(0).collect) //The error is right HERE !!!!
 
     print("oi")
 
