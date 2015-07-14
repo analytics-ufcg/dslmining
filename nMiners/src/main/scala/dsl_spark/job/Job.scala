@@ -2,7 +2,7 @@ package dsl_spark.job
 
 import java.util.concurrent.CountDownLatch
 
-import dsl.notification.NotificationEndServer
+import dsl_hadoop.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
@@ -156,7 +156,8 @@ object parse_data extends Applier {
     clear()
     this.path = path
     this.pathToInput = path
-    this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "wikipediaToCSV").toUri().toString)
+    this.pathToOutput = Some(path)
+    //    this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "wikipediaToCSV").toUri().toString)
     name = this.getClass.getSimpleName + s" on $path"
 //    Context.addInputPath(path)
     this
@@ -168,7 +169,7 @@ object parse_data extends Applier {
   // Run the job
   override def run() = {
     super.run()
-//    WikipediaToCSV.runJob(inputPath = path, dirOutputName = pathToOutput.get, deleteFolder = false, numProcess)
+
   }
 }
 
@@ -199,13 +200,6 @@ case class WordCount(val input: String, val output: String) extends Job {
 
   override def run = {
     super.run
-//    MapReduceUtils.runJob(jobName = "Prepare", mapperClass = classOf[WordMap],
-//      reducerClass = classOf[WordReduce], mapOutputKeyClass = classOf[Text],
-//      mapOutputValueClass = classOf[IntWritable],
-//      outputKeyClass = classOf[Text], outputValueClass = classOf[IntWritable],
-//      inputFormatClass = classOf[TextInputFormat],
-//      outputFormatClass = classOf[TextOutputFormat[Text, IntWritable]],
-//      inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
   }
 }
 

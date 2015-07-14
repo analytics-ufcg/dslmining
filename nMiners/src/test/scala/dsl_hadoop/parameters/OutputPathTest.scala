@@ -1,11 +1,11 @@
-package dsl.parameters
+package dsl_hadoop.parameters
 
 import java.nio.file.{Files, Paths}
 
-import dsl.job.JobUtils._
-import dsl.job._
+import dsl_hadoop.job.JobUtils._
+import dsl_hadoop.job._
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
-import dsl.job.Implicits._
+import dsl_hadoop.job.Implicits._
 
 import scala.collection.mutable
 import scala.reflect.io.Path
@@ -33,10 +33,10 @@ class OutputPathTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     Files.exists(Paths.get(OUTPUTS("OUTPUT_1") )) shouldBe false
 
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors)  then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) then
+      dsl_hadoop.job.JobUtils.produce(user_vectors)  then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE) then
       multiply("similarity_matrix" by "user_vectors") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
 
     Files.exists(Paths.get(OUTPUTS("OUTPUT_1") )) shouldBe true
@@ -63,10 +63,10 @@ class OutputPathTest extends FlatSpec with Matchers with BeforeAndAfterAll{
 
 
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors as "user_v")  then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "user_v")  then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
       multiply("coocurrence" by "user_v") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
     Files.exists(Paths.get(OUTPUTS("OUTPUT_2") )) shouldBe true
     Files.exists(Paths.get(output)) shouldBe true
@@ -88,10 +88,10 @@ class OutputPathTest extends FlatSpec with Matchers with BeforeAndAfterAll{
 
 
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors) write_on (OUTPUTS("OUTPUT_3") + "/userv")  then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_3") + "/cooc")then
+      dsl_hadoop.job.JobUtils.produce(user_vectors) write_on (OUTPUTS("OUTPUT_3") + "/userv")  then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_3") + "/cooc")then
       multiply("coocurrence" by "user_vectors") write_on (OUTPUTS("OUTPUT_3") + "/matrix") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
     Files.exists(Paths.get(OUTPUTS("OUTPUT_3") )) shouldBe true
     Files.exists(Paths.get(OUTPUTS("OUTPUT_3") + "/userv")) shouldBe true
@@ -112,10 +112,10 @@ class OutputPathTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     Files.exists(Paths.get(output )) shouldBe false
 
 
-    parse_data on dataset then  dsl.job.JobUtils.produce(user_vectors as "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/userv") then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_4") + "/cooc") then
+    parse_data on dataset then  dsl_hadoop.job.JobUtils.produce(user_vectors as "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/userv") then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_4") + "/cooc") then
       multiply("coocurrence" by "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/matrix") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
 
 

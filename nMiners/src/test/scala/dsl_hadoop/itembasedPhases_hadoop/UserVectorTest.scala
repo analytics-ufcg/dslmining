@@ -1,8 +1,8 @@
-package dsl.itembasedPhases
+package dsl_hadoop.itembasedPhases_hadoop
 
 import com.typesafe.config.ConfigFactory
-import dsl.job.Implicits._
-import dsl.job._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job._
 import org.scalatest.{FlatSpec, Matchers}
 
 class UserVectorTest extends FlatSpec with Matchers{
@@ -14,7 +14,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-    dsl.job.JobUtils.produce(user_vectors) write_on outputPath then dsl.job.execute
+    dsl_hadoop.job.JobUtils.produce(user_vectors) write_on outputPath then dsl_hadoop.job.execute
 
 
   }
@@ -24,7 +24,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-    dsl.job.JobUtils.produce(user_vectors) in (2 process) write_on outputPath then dsl.job.execute
+    dsl_hadoop.job.JobUtils.produce(user_vectors) in (2 process) write_on outputPath then dsl_hadoop.job.execute
 
   }
 
@@ -33,7 +33,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors as "user_vec") write_on outputPath then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "user_vec") write_on outputPath then dsl_hadoop.job.execute
 
   }
 
@@ -42,7 +42,7 @@ class UserVectorTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors as "user_vec") in (2 process)  write_on outputPath then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "user_vec") in (2 process)  write_on outputPath then dsl_hadoop.job.execute
 
   }
 

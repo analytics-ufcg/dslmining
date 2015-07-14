@@ -1,4 +1,4 @@
-package dsl.sparkJobs
+package dsl_hadoop.sparkJobs
 
 import dsl_spark.job.{Context, Multiplier, Produced}
 import org.apache.mahout.math.Matrix

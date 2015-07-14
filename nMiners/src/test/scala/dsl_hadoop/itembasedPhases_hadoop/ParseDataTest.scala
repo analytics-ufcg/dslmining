@@ -1,10 +1,10 @@
-package dsl.itembasedPhases_hadoop
+package dsl_hadoop.itembasedPhases_hadoop
 
 
 import com.typesafe.config.ConfigFactory
-import dsl.job._
+import dsl_hadoop.job._
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FlatSpec, Matchers}
-import dsl.job.Implicits._
+import dsl_hadoop.job.Implicits._
 
 import scala.collection.mutable
 import scala.reflect.io.Path
@@ -36,7 +36,7 @@ class ParseDataTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   it should "save in an output file" in {
     val dataset = INPUT_1
     val outputpath =  OUTPUTS("OUTPUT_1")
-    parse_data on dataset write_on outputpath then dsl.job.execute
+    parse_data on dataset write_on outputpath then dsl_hadoop.job.execute
 
 
   }
@@ -46,7 +46,7 @@ class ParseDataTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     val dataSet = INPUT_1
     val outputpath  = OUTPUTS("OUTPUT_2")
 
-    parse_data on dataSet in (2 process) write_on outputpath then dsl.job.execute
+    parse_data on dataSet in (2 process) write_on outputpath then dsl_hadoop.job.execute
 
   }
 

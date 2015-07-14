@@ -1,4 +1,4 @@
-package dsl.job
+package dsl_hadoop.job
 
 import java.io.File
 

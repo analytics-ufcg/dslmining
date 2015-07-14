@@ -1,9 +1,9 @@
-package dsl.itembasedPhases_hadoop
+package dsl_hadoop.itembasedPhases_hadoop
 
-import dsl.job._
+import dsl_hadoop.job._
 import org.scalatest.{Matchers, FlatSpec}
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils._
 import java.io._
 
 
@@ -23,9 +23,9 @@ class MultiplyTest  extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors) then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
-      multiply("coocurrence" by "user_vector")  write_on outputPath then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors) then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+      multiply("coocurrence" by "user_vector")  write_on outputPath then dsl_hadoop.job.execute
 
     (new File(outputPath + "data_multiplied").exists()) should be equals(true)
     Path(outputPath).deleteRecursively()
@@ -38,16 +38,16 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
     the[IllegalArgumentException] thrownBy {
       parse_data on dataSet then
-        dsl.job.JobUtils.produce(user_vectors) then
-        dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
-        multiply("wrong_matrix" by "user_vector") then dsl.job.execute
+        dsl_hadoop.job.JobUtils.produce(user_vectors) then
+        dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
+        multiply("wrong_matrix" by "user_vector") then dsl_hadoop.job.execute
     } should have message "there is no produced named wrong_matrix"
 
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors) then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
-      multiply("matrix_coocurrence" by "user_vector") write_on outputPath then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors) then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
+      multiply("matrix_coocurrence" by "user_vector") write_on outputPath then dsl_hadoop.job.execute
 
     (new File(outputPath + "data_multiplied").exists()) should be equals(true)
     Path(outputPath).deleteRecursively()
@@ -55,9 +55,9 @@ class MultiplyTest  extends FlatSpec with Matchers{
 
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors as "vector") then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
-      multiply("matrix_coocurrence" by "vector") then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "vector") then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
+      multiply("matrix_coocurrence" by "vector") then dsl_hadoop.job.execute
 
     (new File(outputPath + "data_multiplied").exists()) should be equals(false)
   }
@@ -68,16 +68,16 @@ class MultiplyTest  extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(user_vectors as "vector") then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
-      multiply("matrix_coocurrence" by "vector") then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "vector") then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
+      multiply("matrix_coocurrence" by "vector") then dsl_hadoop.job.execute
 
 
     the[Exception] thrownBy {
       parse_data on dataSet then
-        dsl.job.JobUtils.produce(user_vectors as "vector") then
-        dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
-        multiply("vector" by "matrix_coocurrence") write_on outputPath then dsl.job.execute
+        dsl_hadoop.job.JobUtils.produce(user_vectors as "vector") then
+        dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "matrix_coocurrence") then
+        multiply("vector" by "matrix_coocurrence") write_on outputPath then dsl_hadoop.job.execute
     } should have message "Matrix one's columns and Matrix two's lines are not equal"
   }
 

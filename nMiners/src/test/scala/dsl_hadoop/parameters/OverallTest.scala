@@ -1,8 +1,8 @@
-package dsl.parameters
+package dsl_hadoop.parameters
 
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
-import dsl.job._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils._
+import dsl_hadoop.job._
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 import scala.collection.mutable
@@ -29,20 +29,20 @@ class OverallTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     val output = OUTPUTS("OUTPUT_1") + "output.dat"
 
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors)  then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) then
+      dsl_hadoop.job.JobUtils.produce(user_vectors)  then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE) then
       multiply("similarity_matrix" by "user_vectors") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
   }
 
   "rundsl with as" should "run" in {
     val dataset = INPUT_1
     val output = OUTPUTS("OUTPUT_2") + "output.dat"
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors as "user_v")  then
-    dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
+      dsl_hadoop.job.JobUtils.produce(user_vectors as "user_v")  then
+    dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") then
       multiply("coocurrence" by "user_v") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
   }
 
@@ -50,20 +50,20 @@ class OverallTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     val dataset = INPUT_1
     val output = OUTPUTS("OUTPUT_3") + "output.dat"
     parse_data on dataset then
-      dsl.job.JobUtils.produce(user_vectors) write_on (OUTPUTS("OUTPUT_3") + "/userv")  then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_3") + "/cooc")then
+      dsl_hadoop.job.JobUtils.produce(user_vectors) write_on (OUTPUTS("OUTPUT_3") + "/userv")  then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_3") + "/cooc")then
       multiply("coocurrence" by "user_vectors") write_on (OUTPUTS("OUTPUT_3") + "/matrix") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
   }
 
   "rundsl with write and as" should "run" in {
     val dataset = INPUT_1
     val output = OUTPUTS("OUTPUT_4") + "output.dat"
-    parse_data on dataset then  dsl.job.JobUtils.produce(user_vectors as "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/userv") then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_4") + "/cooc") then
+    parse_data on dataset then  dsl_hadoop.job.JobUtils.produce(user_vectors as "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/userv") then
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE as "coocurrence") write_on (OUTPUTS("OUTPUT_4") + "/cooc") then
       multiply("coocurrence" by "user_v")  write_on (OUTPUTS("OUTPUT_4") + "/matrix") then
-      dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
 
   }
 

@@ -1,9 +1,9 @@
-package dsl
+package dsl_hadoop
 
 import com.typesafe.config.ConfigFactory
-import dsl.job.Implicits._
-import dsl.job.JobUtils.in_parallel
-import dsl.job.{WordCount, execute}
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils.in_parallel
+import dsl_hadoop.job.{WordCount, execute}
 
 object Paralel extends App {
 
