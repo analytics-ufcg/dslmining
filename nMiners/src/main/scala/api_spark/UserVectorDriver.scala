@@ -38,7 +38,7 @@ import scala.collection.immutable.HashMap
  *       the --sparkExecutorMemory option. Other org.apache.spark.SparkConf key value pairs can be with the -D:k=v
  *       option.
  */
-object UserVectorDriver extends MahoutSparkDriver with Serializable{
+object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
   // define only the options specific to ItemSimilarity
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
@@ -204,7 +204,7 @@ object UserVectorDriver extends MahoutSparkDriver with Serializable{
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
 
-    stop()
+  //  stop()
 
   }
 

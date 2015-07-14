@@ -157,29 +157,3 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   }
 
 }
-object A extends Serializable{
-  def main(args: Array[String]): Unit = {
-
-    val inputFile = "data/actions.csv" //Input Data
-    val outPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-    val userVectorDrm = UserVectorDriver.run(Array(
-        "--input", inputFile,
-        "--output", outPath.getOrElse(""),
-        "--master", "local"
-      ))
-    //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-    print(userVectorDrm(0).collect) //The error is right HERE !!!!
-
-    print("oi")
-
-    def run(inputFile: String, outPath: Option[String], masterNode: String) = {
-
-      ItemSimilarityDriver.run(userVectorDrm, Array(
-        "--input", inputFile,
-        "--output", outPath.getOrElse(""),
-        "--master", masterNode
-      ))
-    }
-    run(inputFile, outPath, "local")
-  }
-}
