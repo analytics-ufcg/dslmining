@@ -18,7 +18,7 @@
 package api_spark
 
 import org.apache.mahout.common.HDFSPathSearch
-import org.apache.mahout.drivers.{MahoutSparkDriver, MahoutSparkOptionParser}
+import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver, MahoutSparkOptionParser}
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
@@ -26,7 +26,10 @@ import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 import scala.collection.immutable.HashMap
 
 /**
+ * **************************************************************************
  * This code was adaptation of org.apache.mahout.drivers.ItemSimilarityDriver
+ * *************************************************************************
+ *  
  * Reads text lines that contain (row id, column id, ...). The IDs are user specified strings which will be preserved in the output.
  * The individual elements will be accumulated into a matrix like
  * org.apache.mahout.math.indexeddataset.IndexedDataset will be used to calculate row-wise
@@ -38,12 +41,10 @@ import scala.collection.immutable.HashMap
  *       the --sparkExecutorMemory option. Other org.apache.spark.SparkConf key value pairs can be with the -D:k=v
  *       option.
  */
-object UserVectorDriver extends MahoutSparkDriver {
-  // define only the options specific to ItemSimilarity
-  private final val ItemSimilarityOptions = HashMap[String, Any](
-    "maxPrefs" -> 500,
-    "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver")
+object UserVectorDriver extends nMinersSparkDriver{
+
+  //The object parser needs to be visible outside. But parser is protected.
+  def getParser(): MahoutOptionParser = parser
 
   private var writeSchema: Schema = _
   private var readSchema1: Schema = _
@@ -52,69 +53,22 @@ object UserVectorDriver extends MahoutSparkDriver {
 
   /**
    * Entry point, not using Scala App trait
+   * It's necessary start the spark before run the main. Use start()
    * @param args  Command line args, if empty a help message is printed.
    */
   override def main(args: Array[String]): Unit = {
 
-    parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
-      head("spark-itemsimilarity", "Mahout 0.10.0")
+    require(mc != null,{println("mc is null. Did you start spark?")})
+    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+    require(parser != null,{println("parser is null. Did you start spark?")})
 
-      //Input output options, non-driver specific
-      parseIOOptions(numInputs = 2)
-
-      //Algorithm control options--driver specific
-      opts = opts ++ ItemSimilarityOptions
-      note("\nAlgorithm control options:")
-      opt[Int]("maxPrefs") abbr "mppu" action { (x, options) =>
-        options + ("maxPrefs" -> x)
-      } text ("Max number of preferences to consider per user (optional). Default: " +
-        ItemSimilarityOptions("maxPrefs")) validate { x =>
-        if (x > 0) success else failure("Option --maxPrefs must be > 0")
-      }
-
-      // not implemented in SimilarityAnalysis.cooccurrence
-      // threshold, and minPrefs
-      // todo: replacing the threshold with some % of the best values and/or a
-      // confidence measure expressed in standard deviations would be nice.
-
-      opt[Int]('m', "maxSimilaritiesPerItem") action { (x, options) =>
-        options + ("maxSimilaritiesPerItem" -> x)
-      } text ("Limit the number of similarities per item to this number (optional). Default: " +
-        ItemSimilarityOptions("maxSimilaritiesPerItem")) validate { x =>
-        if (x > 0) success else failure("Option --maxSimilaritiesPerItem must be > 0")
-      }
-
-      //Driver notes--driver specific
-      note("\nNote: Only the Log Likelihood Ratio (LLR) is supported as a similarity measure.")
-
-      //Input text format
-      parseElementInputSchemaOptions()
-
-      //How to search for input
-      parseFileDiscoveryOptions()
-
-      //Drm output schema--not driver specific, drm specific
-      parseIndexedDatasetFormatOptions()
-
-      //Spark config options--not driver specific
-      parseSparkOptions()
-
-      //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
-      parseGenericOptions()
-
-      help("help") abbr ("h") text ("prints this usage text\n")
-
-    }
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
       process()
     }
   }
 
-  override protected def start(): Unit = {
-
-    super.start()
-
+  def createSchemas: Unit = {
     readSchema1 = new Schema("delim" -> parser.opts("inDelim").asInstanceOf[String],
       "filter" -> parser.opts("filter1").asInstanceOf[String],
       "rowIDColumn" -> parser.opts("rowIDColumn").asInstanceOf[Int],
@@ -195,7 +149,7 @@ object UserVectorDriver extends MahoutSparkDriver {
   }
 
   override def process(): Unit = {
-    start()
+    createSchemas
 
     val indexedDatasets = readIndexedDatasets
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
@@ -203,9 +157,6 @@ object UserVectorDriver extends MahoutSparkDriver {
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
-
-    stop()
-    drmsUserVector
   }
 
   /**

@@ -1,5 +1,7 @@
 package dsl_spark.job
 
+import api_spark.UserVectorDriver
+import dsl.job.user_vectors._
 import org.apache.mahout.math.drm.DrmLike
 import org.slf4j.LoggerFactory
 import org.apache.mahout.math.drm.RLikeDrmOps._
@@ -27,6 +29,15 @@ object user_vectors extends Producer[DrmLike[Int]] {
   // Run the job
   override def run() = {
     super.run()
+
+    val userVectorDrm = UserVectorDriver.run(Array(
+      "--input", pathToInput,
+      "--output", pathToOutput.getOrElse(""),
+      "--master", "local"
+    ))
+
+    this.produced.product = userVectorDrm(0)
+
   }
 }
 
