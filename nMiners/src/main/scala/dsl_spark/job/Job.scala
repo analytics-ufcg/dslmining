@@ -2,6 +2,7 @@ package dsl_spark.job
 
 import java.util.concurrent.CountDownLatch
 
+import api_spark.UserVectorDriver
 import dsl_hadoop.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
 import org.apache.mahout.math.drm.DrmLike
@@ -69,6 +70,8 @@ trait Job {
       })
     } finally {
       NotificationEndServer.stop
+      UserVectorDriver.stop()
+
     }
   }
 
