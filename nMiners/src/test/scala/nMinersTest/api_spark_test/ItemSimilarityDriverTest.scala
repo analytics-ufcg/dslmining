@@ -12,6 +12,8 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
 
        val inputFile = "data/actions.csv" //Input Data
        val outPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
+
+       UserVectorDriver.start()
        val userVectorDrm = UserVectorDriver.run(Array(
            "--input", inputFile,
            "--output", outPath.getOrElse(""),
@@ -20,17 +22,15 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
        //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
        print(userVectorDrm(0).collect) //The error is right HERE !!!!
 
-       print("oi")
-
-
-         val item = ItemSimilarityDriver.run(userVectorDrm, Array(
+         val item = ItemSimilarityDriver.run(userVectorDrm,UserVectorDriver.getParser(), Array(
            "--input", inputFile,
            "--output", outPath.getOrElse(""),
            "--master", "local"
          ))
 
+       print(item(0).collect)
 
-//       print(item.collect) //The error is right HERE !!!!
+       UserVectorDriver.stop()
 
      }
 }
