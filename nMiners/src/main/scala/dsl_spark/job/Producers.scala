@@ -65,7 +65,8 @@ object recommendation extends Producer[DrmLike[Int]] {
     val userVector = userVectorJob.produced.product
     val recMatrix = recMatrixJob.produced.product
 
-    produced.product = recMatrix * userVector
+    //invert the user vector matrix
+    produced.product = recMatrix * ((userVector - 1) * -1 )
     Context.produceds += produced
   }
 
