@@ -107,6 +107,7 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
 //      help("help") abbr ("h") text ("prints this usage text\n")
 //
 //    }
+
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
       process()
@@ -151,45 +152,9 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
     stop()
   }
 
-  def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
+  def run(userVector: Array[DrmLike[Int]], args: Array[String] , ) = {
     userVectorDrm = userVector
-//    main(args)
+    main(args)
   }
 
 }
-<<<<<<< HEAD
-
-
-class B extends java.io.Serializable{
-  def doIt(): Unit = {
-
-    val inputFile = "data/actions.csv" //Input Data
-    val outPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-    val userVectorDrm = UserVectorDriver.run(Array(
-        "--input", inputFile,
-        "--output", outPath.getOrElse(""),
-        "--master", "local"
-      ))
-    //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-//    print(userVectorDrm.map(i => ))
-    print(userVectorDrm(0).collect) //The error is right HERE !!!!
-
-    print("oi")
-
-//    def run(inputFile: String, outPath: Option[String], masterNode: String) = {
-//
-//      ItemSimilarityDriver.run(userVectorDrm, Array(
-//        "--input", inputFile,
-//        "--output", outPath.getOrElse(""),
-//        "--master", masterNode
-//      ))
-//    }
-//    run(inputFile, outPath, "local")
-  }
-}
-
-object A extends App{
-  new B doIt()
-}
-=======
->>>>>>> 53e41ff9abf222647ed02d5f41bb5e5c96921a17

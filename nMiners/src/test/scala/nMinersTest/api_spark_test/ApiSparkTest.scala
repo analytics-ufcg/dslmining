@@ -1,6 +1,6 @@
 package nMinersTest.api_spark_test
 
-import api_spark.SimilarityMatrix
+//import api_spark.SimilarityMatrix
 import org.scalatest.{FlatSpec, Matchers}
 import java.nio.file.{Paths, Files}
 import java.nio.file.{Paths, Files}
