@@ -157,6 +157,7 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   }
 
 }
+<<<<<<< HEAD
 
 
 class B extends java.io.Serializable{
@@ -190,3 +191,5 @@ class B extends java.io.Serializable{
 object A extends App{
   new B doIt()
 }
+=======
+>>>>>>> 53e41ff9abf222647ed02d5f41bb5e5c96921a17

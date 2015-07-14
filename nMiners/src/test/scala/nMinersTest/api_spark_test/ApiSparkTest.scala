@@ -1,9 +1,9 @@
 package nMinersTest.api_spark_test
 
-import java.nio.file.{Files, Paths}
-
-import api_spark.SimilarityMatrixSpark
+import api_spark.SimilarityMatrix
 import org.scalatest.{FlatSpec, Matchers}
+import java.nio.file.{Paths, Files}
+import java.nio.file.{Paths, Files}
 
 /**
  * Created by arthur on 30/06/15.
@@ -15,7 +15,7 @@ class ApiSparkTest  extends FlatSpec with Matchers{
        val InFile = "data/actions.csv"
        val OutPath = Some("data/similarity-matrices/")
 
-       SimilarityMatrixSpark.run(InFile,OutPath,"local")
+      // SimilarityMatrix.run(InFile,OutPath,"local")
 
        Files.exists(Paths.get(OutPath.getOrElse(""))) should be equals(true)
 
@@ -30,7 +30,7 @@ class ApiSparkTest  extends FlatSpec with Matchers{
 
       it should "throw an exception if an empty string is passed as ouput path parameter" in {
         a [Exception] should be thrownBy {
-          SimilarityMatrixSpark.run(InFile,Some(""),"local")
+        //  SimilarityMatrix.run(InFile,Some(""),"local")
         }
       }
 
@@ -41,7 +41,7 @@ class ApiSparkTest  extends FlatSpec with Matchers{
 
         it should "throw an exception if an empty string is passed as input path parameter" in {
            a [Exception] should be thrownBy {
-             SimilarityMatrixSpark.run(InFile,OutPath,"local")
+//             SimilarityMatrix.run(InFile,OutPath,"local")
            }
        }
 }

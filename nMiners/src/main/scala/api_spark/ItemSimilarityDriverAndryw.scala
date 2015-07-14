@@ -18,7 +18,8 @@
 package api_spark
 
 import org.apache.mahout.common.HDFSPathSearch
-import org.apache.mahout.drivers.{MahoutSparkDriver, MahoutSparkOptionParser}
+import org.apache.mahout.drivers.{MahoutSparkOptionParser, MahoutSparkDriver}
+import org.apache.mahout.math.cf.SimilarityAnalysis
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
@@ -26,19 +27,24 @@ import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 import scala.collection.immutable.HashMap
 
 /**
- * This code was adaptation of org.apache.mahout.drivers.ItemSimilarityDriver
- * Reads text lines that contain (row id, column id, ...). The IDs are user specified strings which will be preserved in the output.
+ * Command line interface for [[org.apache.mahout.math.cf.SimilarityAnalysis#cooccurrencesIDSs]]. Reads text lines
+ * that contain (row id, column id, ...). The IDs are user specified strings which will be preserved in the output.
  * The individual elements will be accumulated into a matrix like
- * org.apache.mahout.math.indexeddataset.IndexedDataset will be used to calculate row-wise
- * self-similarity. To process simple elements of text delimited
+ * [[org.apache.mahout.math.indexeddataset.IndexedDataset]] and
+ * [[org.apache.mahout.math.cf.SimilarityAnalysis#cooccurrencesIDSs]] will be used to calculate row-wise
+ * self-similarity, or when using filters or two inputs, will generate two matrices and calculate both the
+ * self-similarity of the primary matrix and the row-wise similarity of the primary to the secondary. Returns one
+ * or two directories of text files formatted as specified in the options. The options allow flexible control of the
+ * input schema, file discovery, output schema, and control of algorithm parameters. To get help run
+ * {{{mahout spark-itemsimilarity}}} for a full explanation of options. To process simple elements of text delimited
  * values (userID,itemID) with or without a strengths and with a separator of tab, comma, or space, you can specify
  * only the input and output file and directory--all else will default to the correct values. Each output line will
  * contain the Item ID and similar items sorted by LLR strength descending.
  * @note To use with a Spark cluster see the --master option, if you run out of heap space check
- *       the --sparkExecutorMemory option. Other org.apache.spark.SparkConf key value pairs can be with the -D:k=v
+ *       the --sparkExecutorMemory option. Other [[org.apache.spark.SparkConf]] key value pairs can be with the -D:k=v
  *       option.
  */
-object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
+object ItemSimilarityDriverAndryw extends MahoutSparkDriver {
   // define only the options specific to ItemSimilarity
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
@@ -48,13 +54,8 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
   private var writeSchema: Schema = _
   private var readSchema1: Schema = _
   private var readSchema2: Schema = _
-  var drmsUserVector:Array[DrmLike[Int]] = _
 
-  /**
-   * Entry point, not using Scala App trait
-   * @param args  Command line args, if empty a help message is printed.
-   */
-  override def main(args: Array[String]): Unit = {
+  def maina(args: Array[String]):(DrmLike[Int],DrmLike[Int]) = {
 
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
       head("spark-itemsimilarity", "Mahout 0.10.0")
@@ -65,7 +66,7 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       //Algorithm control options--driver specific
       opts = opts ++ ItemSimilarityOptions
       note("\nAlgorithm control options:")
-      opt[Int]("maxPrefs") abbr "mppu" action { (x, options) =>
+      opt[Int]("maxPrefs") abbr ("mppu") action { (x, options) =>
         options + ("maxPrefs" -> x)
       } text ("Max number of preferences to consider per user (optional). Default: " +
         ItemSimilarityOptions("maxPrefs")) validate { x =>
@@ -105,13 +106,24 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       help("help") abbr ("h") text ("prints this usage text\n")
 
     }
-    parser.parse(args, parser.opts) map { opts =>
-      parser.opts = opts
-      process()
-    }
+    val a = parser.parse(args, parser.opts)
+    //    map { opts =>
+    parser.opts = a.get
+    processa()
+    //    }
   }
 
-  override protected def start(): Unit = {
+
+  /**
+   * Entry point, not using Scala App trait
+   * @param args  Command line args, if empty a help message is printed.
+   */
+  override def main(args: Array[String]):Unit = {
+
+  }
+
+
+  override protected def start() : Unit = {
 
     super.start()
 
@@ -122,7 +134,7 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       "filterColumn" -> parser.opts("filterColumn").asInstanceOf[Int])
 
     if ((parser.opts("filterColumn").asInstanceOf[Int] != -1 && parser.opts("filter2").asInstanceOf[String] != null)
-      || (parser.opts("input2").asInstanceOf[String] != null && !parser.opts("input2").asInstanceOf[String].isEmpty)) {
+      || (parser.opts("input2").asInstanceOf[String] != null && !parser.opts("input2").asInstanceOf[String].isEmpty )){
       // only need to change the filter used compared to readSchema1
       readSchema2 = new Schema(readSchema1) += ("filter" -> parser.opts("filter2").asInstanceOf[String])
 
@@ -135,7 +147,7 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       "elementDelim" -> parser.opts("elementDelim").asInstanceOf[String])
   }
 
-  def readIndexedDatasets: Array[IndexedDataset] = {
+  private def readIndexedDatasets: Array[IndexedDataset] = {
 
     val inFiles = HDFSPathSearch(parser.opts("input").asInstanceOf[String],
       parser.opts("filenamePattern").asInstanceOf[String], parser.opts("recursive").asInstanceOf[Boolean]).uris
@@ -147,7 +159,7 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       Array()
     } else {
 
-      val datasetA = indexedDatasetDFSReadElements(inFiles, readSchema1)
+      val datasetA = indexedDatasetDFSReadElements(inFiles,readSchema1)
       if (parser.opts("writeAllDatasets").asInstanceOf[Boolean])
         datasetA.dfsWrite(parser.opts("output").asInstanceOf[String] + "../input-datasets/primary-interactions",
           schema = writeSchema)
@@ -175,10 +187,9 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
       } else {
         null.asInstanceOf[IndexedDatasetSpark]
       }
-      if (datasetB != null.asInstanceOf[IndexedDataset]) {
-        // do AtB calc
-        // true row cardinality is the size of the row id index, which was calculated from all rows of A and B
-        val rowCardinality = datasetB.rowIDs.size // the authoritative row cardinality
+      if (datasetB != null.asInstanceOf[IndexedDataset]) { // do AtB calc
+      // true row cardinality is the size of the row id index, which was calculated from all rows of A and B
+      val rowCardinality = datasetB.rowIDs.size // the authoritative row cardinality
 
         val returnedA = if (rowCardinality != datasetA.matrix.nrow) datasetA.newRowCardinality(rowCardinality)
         else datasetA // this guarantees matching cardinality
@@ -194,46 +205,25 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
     }
   }
 
-  override def process(): Unit = {
+  def processa():(DrmLike[Int],DrmLike[Int]) = {
     start()
 
     val indexedDatasets = readIndexedDatasets
-    val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
-    val maxInterestingItemsPerThing = parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int]
-    val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
-    val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
-    drmsUserVector = drms
+    val (idss,b) = SimilarityAnalysisAndryw.cooccurrencesIDSsAndryw(indexedDatasets, parser.opts("randomSeed").asInstanceOf[Int],
+      parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int], parser.opts("maxPrefs").asInstanceOf[Int])
 
-  //  stop()
+//    // todo: allow more than one cross-similarity matrix?
+//    idss(0).dfsWrite(parser.opts("output").asInstanceOf[String] + "similarity-matrix", schema = writeSchema)
+//    if(idss.length > 1)
+//      idss(1).dfsWrite(parser.opts("output").asInstanceOf[String] + "cross-similarity-matrix", schema = writeSchema)
+
+    stop()
+
+    (idss,b)
+  }
+
+  override def process():Unit = {
 
   }
 
-  /**
-   * The method below executes main method and returns the DRMS
-   * @param args Command line args, if empty a help message is printed. The mainly
-   *             args are:  --input", the inputFile
-                            --output the outputpaht
-                            --master the address of the cluster or "local"
-   * @return a drms who representes the UserVector
-   */
-  def run(args: Array[String]):Array[DrmLike[Int]] ={
-    main(args)
-    drmsUserVector
-  }
 }
-
-
-//object UserVectorRun extends App {
-//  val InFile = "data/actions.csv" //Input Data
-//  val OutPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-//
-//  //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-//  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
-//    UserVectorDriver.run(Array(
-//      "--input", inputFile,
-//      "--output", outPath.getOrElse(""),
-//      "--master", masterNode
-//    ))
-//  }
-//  run(InFile,OutPath, "local")
-//}
