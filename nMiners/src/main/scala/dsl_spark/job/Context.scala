@@ -1,8 +1,6 @@
 package dsl_spark.job
 
-import java.io.File
-
-import scala.collection.mutable
+import scala.collection.mutable.HashSet
 import scala.collection.mutable.Queue
 
 object Context {
@@ -14,25 +12,11 @@ object Context {
 
   val jobs = new Queue[Job]()
 
-  val produceds = new Queue[Produced]()
-  val paths = new mutable.HashMap[String,String]()
+  val produceds = new HashSet[Produced[_]]()
 
-  def getInputPath(): String = {
-    paths(INPUT_PATH_KEY)
-  }
-
-  def addFinalOutput(outputPath: String) = {
-    paths(OUTPUT_PATH_KEY) = outputPath
-  }
-  def addInputPath(inputPath: String) = {
-    paths(INPUT_PATH_KEY) = inputPath
-    val file = new File(inputPath)
-    basePath = file.getParent
-  }
 
   def clearQueues() = {
     jobs.clear()
     produceds.clear()
-    paths.clear()
   }
 }
