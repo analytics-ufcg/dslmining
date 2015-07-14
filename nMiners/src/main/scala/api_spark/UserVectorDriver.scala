@@ -26,7 +26,10 @@ import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 import scala.collection.immutable.HashMap
 
 /**
+ * **************************************************************************
  * This code was adaptation of org.apache.mahout.drivers.ItemSimilarityDriver
+ * *************************************************************************
+ *  
  * Reads text lines that contain (row id, column id, ...). The IDs are user specified strings which will be preserved in the output.
  * The individual elements will be accumulated into a matrix like
  * org.apache.mahout.math.indexeddataset.IndexedDataset will be used to calculate row-wise
@@ -41,9 +44,6 @@ import scala.collection.immutable.HashMap
 object UserVectorDriver extends nMinersSparkDriver{
   def getParser(): MahoutOptionParser = parser
 
-  // define only the options specific to ItemSimilarity
-
-
   private var writeSchema: Schema = _
   private var readSchema1: Schema = _
   private var readSchema2: Schema = _
@@ -51,9 +51,14 @@ object UserVectorDriver extends nMinersSparkDriver{
 
   /**
    * Entry point, not using Scala App trait
+   * It's necessary start the spark before run the main. Use start()
    * @param args  Command line args, if empty a help message is printed.
    */
   override def main(args: Array[String]): Unit = {
+
+    require(mc != null,{println("mc is null. Did you start spark?")})
+    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+    require(parser != null,{println("parser is null. Did you start spark?")})
 
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
@@ -61,11 +66,7 @@ object UserVectorDriver extends nMinersSparkDriver{
     }
   }
 
-
-
-
-
-  def processOptions: Unit = {
+  def createSchemas: Unit = {
     readSchema1 = new Schema("delim" -> parser.opts("inDelim").asInstanceOf[String],
       "filter" -> parser.opts("filter1").asInstanceOf[String],
       "rowIDColumn" -> parser.opts("rowIDColumn").asInstanceOf[Int],
@@ -146,8 +147,7 @@ object UserVectorDriver extends nMinersSparkDriver{
   }
 
   override def process(): Unit = {
-//    start()
-    processOptions
+    createSchemas
 
     val indexedDatasets = readIndexedDatasets
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
@@ -155,9 +155,6 @@ object UserVectorDriver extends nMinersSparkDriver{
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
-
-//    stop()
-
   }
 
   /**
@@ -173,19 +170,3 @@ object UserVectorDriver extends nMinersSparkDriver{
     drmsUserVector
   }
 }
-
-
-//object UserVectorRun extends App {
-//  val InFile = "data/actions.csv" //Input Data
-//  val OutPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-//
-//  //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-//  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
-//    UserVectorDriver.run(Array(
-//      "--input", inputFile,
-//      "--output", outPath.getOrElse(""),
-//      "--master", masterNode
-//    ))
-//  }
-//  run(InFile,OutPath, "local")
-//}

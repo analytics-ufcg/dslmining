@@ -17,6 +17,7 @@ package api_spark
 */
 
 
+import api_spark.UserVectorDriver._
 import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver}
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.indexeddataset.Schema
@@ -58,6 +59,11 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
    * @param args  Command line args, if empty a help message is printed.
    */
   override def main(args: Array[String]): Unit = {
+
+    require(mc != null,{println("mc is null. Did you start spark?")})
+    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+    require(parser != null,{println("parser is null. Did you start spark?")})
+
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
       process()
@@ -89,30 +95,35 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   }
 
   override def process(): Unit = {
-//    start()
 
     val idss = SimilarityAnalysis.cooccurrencesIDSs(userVectorDrm, parser.opts("randomSeed").asInstanceOf[Int],
       parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int], parser.opts("maxPrefs").asInstanceOf[Int])
     idssItemSimilarity = idss
-//    // todo: allow more than one cross-similarity matrix?
-//    idss(0).dfsWrite(parser.opts("output").asInstanceOf[String] + "similarity-matrix")
-//    if(idss.length > 1)
-//      idss(1).dfsWrite(parser.opts("output").asInstanceOf[String] + "cross-similarity-matrix")
-
-//    stop()
   }
 
+  /**
+   * Run receiving a uservector, a parser and args. These args will substitute the args from the parser passed.
+   * @param userVector
+   * @param parserA
+   * @param args
+   * @return
+   */
   def run(userVector: Array[DrmLike[Int]], parserA: MahoutOptionParser, args: Array[String] ): List[DrmLike[Int]]= {
         userVectorDrm = userVector
-        print(parser == null)
         parser = parserA
         main(args)
         idssItemSimilarity
   }
 
+  /**
+   * Run receiving a uservector and args. It's necessary to run start() before calling the method.
+   * @param userVector
+   * @param args
+   */
   def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
         userVectorDrm = userVector
         main(args)
+        idssItemSimilarity
   }
 
 }
