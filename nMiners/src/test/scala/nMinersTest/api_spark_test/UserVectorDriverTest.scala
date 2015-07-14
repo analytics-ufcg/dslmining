@@ -16,6 +16,7 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
        val InFile = "data/actions.csv" //Input Data
        val OutPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
 
+       UserVectorDriver.start()
        val userVectorDrm = UserVectorDriver.run(Array(
          "--input", InFile,
          "--output", OutPath.getOrElse(""),
@@ -23,6 +24,8 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
        ))
 
        print(userVectorDrm(0).collect)
+
+       UserVectorDriver.stop()
 
      }
 }

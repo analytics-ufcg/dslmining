@@ -38,12 +38,9 @@ import scala.collection.immutable.HashMap
  *       the --sparkExecutorMemory option. Other org.apache.spark.SparkConf key value pairs can be with the -D:k=v
  *       option.
  */
-object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
+object UserVectorDriver extends nMinersSparkDriver{
   // define only the options specific to ItemSimilarity
-  private final val ItemSimilarityOptions = HashMap[String, Any](
-    "maxPrefs" -> 500,
-    "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver")
+
 
   private var writeSchema: Schema = _
   private var readSchema1: Schema = _
@@ -56,65 +53,17 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
    */
   override def main(args: Array[String]): Unit = {
 
-    parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
-      head("spark-itemsimilarity", "Mahout 0.10.0")
-
-      //Input output options, non-driver specific
-      parseIOOptions(numInputs = 2)
-
-      //Algorithm control options--driver specific
-      opts = opts ++ ItemSimilarityOptions
-      note("\nAlgorithm control options:")
-      opt[Int]("maxPrefs") abbr "mppu" action { (x, options) =>
-        options + ("maxPrefs" -> x)
-      } text ("Max number of preferences to consider per user (optional). Default: " +
-        ItemSimilarityOptions("maxPrefs")) validate { x =>
-        if (x > 0) success else failure("Option --maxPrefs must be > 0")
-      }
-
-      // not implemented in SimilarityAnalysis.cooccurrence
-      // threshold, and minPrefs
-      // todo: replacing the threshold with some % of the best values and/or a
-      // confidence measure expressed in standard deviations would be nice.
-
-      opt[Int]('m', "maxSimilaritiesPerItem") action { (x, options) =>
-        options + ("maxSimilaritiesPerItem" -> x)
-      } text ("Limit the number of similarities per item to this number (optional). Default: " +
-        ItemSimilarityOptions("maxSimilaritiesPerItem")) validate { x =>
-        if (x > 0) success else failure("Option --maxSimilaritiesPerItem must be > 0")
-      }
-
-      //Driver notes--driver specific
-      note("\nNote: Only the Log Likelihood Ratio (LLR) is supported as a similarity measure.")
-
-      //Input text format
-      parseElementInputSchemaOptions()
-
-      //How to search for input
-      parseFileDiscoveryOptions()
-
-      //Drm output schema--not driver specific, drm specific
-      parseIndexedDatasetFormatOptions()
-
-      //Spark config options--not driver specific
-      parseSparkOptions()
-
-      //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
-      parseGenericOptions()
-
-      help("help") abbr ("h") text ("prints this usage text\n")
-
-    }
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
       process()
     }
   }
 
-  override protected def start(): Unit = {
 
-    super.start()
 
+
+
+  def processOptions: Unit = {
     readSchema1 = new Schema("delim" -> parser.opts("inDelim").asInstanceOf[String],
       "filter" -> parser.opts("filter1").asInstanceOf[String],
       "rowIDColumn" -> parser.opts("rowIDColumn").asInstanceOf[Int],
@@ -195,7 +144,8 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
   }
 
   override def process(): Unit = {
-    start()
+//    start()
+    processOptions
 
     val indexedDatasets = readIndexedDatasets
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
@@ -204,7 +154,7 @@ object UserVectorDriver extends MahoutSparkDriver with java.io.Serializable{
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
 
-  //  stop()
+//    stop()
 
   }
 
