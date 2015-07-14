@@ -204,7 +204,7 @@ object UserVectorDriver extends MahoutSparkDriver with Serializable{
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
 
-    stop()
+//    stop()
 
   }
 
