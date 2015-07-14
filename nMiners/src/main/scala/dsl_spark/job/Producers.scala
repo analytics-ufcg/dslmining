@@ -41,7 +41,6 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
   override def run() = {
     super.run()
   }
-
 }
 
 //Copy the prediction matrix to the output specified by the user
