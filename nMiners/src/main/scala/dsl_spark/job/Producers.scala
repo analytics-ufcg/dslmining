@@ -4,6 +4,7 @@ import api_spark.UserVectorDriver
 import dsl.job.user_vectors._
 import org.apache.mahout.math.drm.DrmLike
 import org.slf4j.LoggerFactory
+import org.apache.mahout.math.drm.RLikeDrmOps._
 
 /**
  * Producer is a class that produce results. These results (produceds) can be used by any next command, not only the immediately next command
@@ -59,9 +60,25 @@ object recommendation extends Producer[DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
 
-  override def run() = {
+  produced = new Produced[DrmLike[Int]](this.name, this)
 
+  override def run() = {
     super.run
+
+    val userVectorJob = Context.producedsByType[user_vectors.type].getOrElse {
+      throw new IllegalStateException("You must produce a user vector first")
+    }
+    val recMatrixJob = Context.producedsByType[Multiplier].
+      getOrElse {
+      throw new IllegalStateException("You must multiply the user vector by the similarity matrix first")
+    }
+
+    val userVector = userVectorJob.produced.product
+    val recMatrix = recMatrixJob.produced.product
+
+    //invert the user vector matrix
+    produced.product = recMatrix * ((userVector - 1) * -1 )
+    Context.produceds += produced
   }
 
 }

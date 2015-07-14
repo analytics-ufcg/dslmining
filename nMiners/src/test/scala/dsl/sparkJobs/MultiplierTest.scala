@@ -81,6 +81,8 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   "MultiplierJob" should "produce a produced named \'Multiplier produced1_name by produced2_name\'" in {
+
+
     val mult = new Multiplier(producedA, producedB)
     mult.run
 
