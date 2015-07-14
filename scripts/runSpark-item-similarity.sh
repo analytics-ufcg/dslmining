@@ -1,13 +1,12 @@
-#!/bin/bash
+#!/bin/bashi
 
 ###################################################################################################
-# Script to run mahout com spark                                       			           #
-# O script deve ser rodado dentro da pasta mahout                       			   #
+# Script to run mahout with spark                                     			           #
+# This script must to be run inside the mahout folder                       			   #
 #												   #
-# Para executar o script é necessário informar o nome da maquina que tem			   #	 
-# o spark como master, o arquivo de entrada,    						   #
-# a pasta de saida e os nomes dos slaves.                               			   #
-# Caso não seja passado slaves então ele roda localmente.               			   #
+# To run this script you should pass the machine name which has spark as master, input file,       #
+# output folder, machines slaves(opt)                                    			   #
+# In case where machines slaves are not pass as parameter, spark will run as localhost		   #
 #                                                                       			   #
 # ex:                                                                   			   #
 #                                                                       		  	   #
@@ -23,6 +22,7 @@ INPUT=""
 OUTPUT=""
 I=0
 
+# Set all variables
 while getopts ":m:i:o:s:" opt; do
    case $opt in
    m)
@@ -52,7 +52,8 @@ done
 
 rm -r $SPARK_HOME/conf/slaves
 
-if [ -z "$SLAVE" ]; then # verifica se algum slave foi passado
+# Check if slave is empty
+if [ -z "$SLAVE" ]; then  
     echo "localhost"  >> $SPARK_HOME/conf/slaves
 else
     for i in "${ARRAY_SLAVES[@]}"
@@ -61,6 +62,7 @@ else
     done
 fi
 
+# Run start.sh script
 ./start.sh $SPARK_MASTER $INPUT $OUTPUT
 
 end=`date +%s`
