@@ -38,6 +38,7 @@ while getopts ":m:h:i:o:s:" opt; do
 	OUTPUT=$OPTARG
 	;;
    h)
+	OLD_HADOOP_CONF_DIR=$HADOOP_CONF_DIR
 	export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 	;;
    s)	
@@ -72,7 +73,7 @@ fi
 # Run start.sh script
 ./start.sh $SPARK_MASTER $INPUT $OUTPUT
 
-export HADOOP_CONF_DIR=""
+export HADOOP_CONF_DIR=$OLD_HADOOP_CONF_DIR
 
 end=`date +%s`
 
