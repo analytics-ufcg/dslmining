@@ -11,18 +11,17 @@
 #                                                                       			   #
 # ex:                                                                   			   #
 #                                                                       		  	   #
-#sh runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-4 -s hadoop-node-3  #
-#sh runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out					   #
-#sh runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-3                   #
+#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-4 -s hadoop-node-3   #
+#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out					   #
+#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-3                    #
 ###################################################################################################
 
 start=`date +%s`
 
-SLAVE1=""
-SLAVE2=""
 SPARK_MASTER=""
 INPUT=""
 OUTPUT=""
+I=0
 
 while getopts ":m:i:o:s:" opt; do
    case $opt in
@@ -35,13 +34,11 @@ while getopts ":m:i:o:s:" opt; do
    o)
 	OUTPUT=$OPTARG
 	;;
-   s)		
-	if [ -z "$SLAVE1" ]; then
-		SLAVE1=$OPTARG
-	else
-	        SLAVE2=$OPTARG
-	fi
-	;;
+   s)	
+	SLAVE=$OPTARG
+	ARRAY_SLAVES[I]=$SLAVE
+	I=$I+1
+	;;					
    \?)
 	echo "Invalid option: -$OPTARG" >&2
 	exit 1
@@ -53,17 +50,18 @@ while getopts ":m:i:o:s:" opt; do
    esac
 done
 
-
 rm -r $SPARK_HOME/conf/slaves
 
-if [ -z "$SLAVE1" ]; then # verifica se algum slave foi passado
+if [ -z "$SLAVE" ]; then # verifica se algum slave foi passado
     echo "localhost"  >> $SPARK_HOME/conf/slaves
 else
-    echo $SLAVE1 >> $SPARK_HOME/conf/slaves
-    echo $SLAVE2 >> $SPARK_HOME/conf/slaves
+    for i in "${ARRAY_SLAVES[@]}"
+    do
+	echo $i >> $SPARK_HOME/conf/slaves
+    done
 fi
 
-sh start.sh $SPARK_MASTER $INPUT $OUTPUT
+./start.sh $SPARK_MASTER $INPUT $OUTPUT
 
 end=`date +%s`
 
