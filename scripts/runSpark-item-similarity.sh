@@ -52,7 +52,7 @@ done
 
 rm -r $SPARK_HOME/conf/slaves
 
-# Check if slave is empty
+# Add the namenodes to the slaves file
 if [ -z "$SLAVE" ]; then  
     echo "localhost"  >> $SPARK_HOME/conf/slaves
 else
