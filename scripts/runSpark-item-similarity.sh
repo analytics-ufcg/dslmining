@@ -1,18 +1,21 @@
-#!/bin/bashi
+#!/bin/bash
 
 ###################################################################################################
-# Script to run mahout with spark                                     			           #
-# This script must to be run inside the mahout folder                       			   #
-#												   #
-# To run this script you should pass the machine name which has spark as master, input file,       #
-# output folder, machines slaves(opt)                                    			   #
-# In case where machines slaves are not pass as parameter, spark will run as localhost		   #
-#                                                                       			   #
-# ex:                                                                   			   #
-#                                                                       		  	   #
-#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-4 -s hadoop-node-3   #
-#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out					   #
-#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out -s hadoop-node-3                    #
+# Script to run mahout with spark                                     			           
+# This script must to be run inside the mahout folder                       			   
+#												   
+# To run this script you should pass:
+# The machine name which has spark as master(-m),               				
+# Using HDFS (-h), if you are using a local file don't use this parameter 
+# input file(-i), 
+# output folder(-o), 
+# machines slaves(-s), in case where machines slaves are not pass as parameter spark will run as localhost
+#                                                                       			   
+# ex:                                                                   			   
+#                                                                       		  	   
+#./runSpark-item-similarity.sh -m hadoop-node-1 -h true -i file -o out -s hadoop-node-4 -s hadoop-node-3   
+#./runSpark-item-similarity.sh -m hadoop-node-1 -i file -o out					   
+#./runSpark-item-similarity.sh -m hadoop-node-1 -h t -i file -o out -s hadoop-node-3                    
 ###################################################################################################
 
 start=`date +%s`
@@ -23,7 +26,7 @@ OUTPUT=""
 I=0
 
 # Set all variables
-while getopts ":m:i:o:s:" opt; do
+while getopts ":m:h:i:o:s:" opt; do
    case $opt in
    m)
 	SPARK_MASTER=$OPTARG
@@ -33,6 +36,9 @@ while getopts ":m:i:o:s:" opt; do
 	;;
    o)
 	OUTPUT=$OPTARG
+	;;
+   h)
+	export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 	;;
    s)	
 	SLAVE=$OPTARG
@@ -50,6 +56,7 @@ while getopts ":m:i:o:s:" opt; do
    esac
 done
 
+
 rm -r $SPARK_HOME/conf/slaves
 
 # Add the namenodes to the slaves file
@@ -64,6 +71,8 @@ fi
 
 # Run start.sh script
 ./start.sh $SPARK_MASTER $INPUT $OUTPUT
+
+export HADOOP_CONF_DIR=""
 
 end=`date +%s`
 
