@@ -117,7 +117,8 @@ object SimilarityAnalysis extends Serializable {
     }
 
     // Unpin downsampled interaction matrix
-    drmA.uncache()
+    //Commented by Andryw. Uncache de value?
+    //drmA.uncache()
 
     //debug
     val ataRows = drmSimilarityAtA.nrow
@@ -145,11 +146,13 @@ object SimilarityAnalysis extends Serializable {
   List[DrmLike[Int]] = {
     val primaryDrm = drms(0)
     val secondaryDrms = drms.drop(1)
-    val coocMatrices = cooccurrences(primaryDrm, randomSeed, maxInterestingItemsPerThing,
+    cooccurrences(primaryDrm, randomSeed, maxInterestingItemsPerThing,
       maxNumInteractions, secondaryDrms)
-    coocMatrices
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//Commented, but will be used later when we will implement the ContentBased Algorithm (rowSimiliarity)
+////////////////////////////////////////////////////////////////////////////////////////////////////
 //  /**
 //   * Calculates row-wise similarity using the log-likelihood ratio on AA' and returns a DRM of rows and similar rows
 //   * @param drmARaw Primary interaction matrix
@@ -211,6 +214,7 @@ object SimilarityAnalysis extends Serializable {
 
   }
 
+  /** Compute similarties*/
   def computeSimilarities(drm: DrmLike[Int], numUsers: Int, maxInterestingItemsPerThing: Int,
                           bcastNumInteractionsB: BCast[Vector], bcastNumInteractionsA: BCast[Vector],
                           crossCooccurrence: Boolean = true) = {

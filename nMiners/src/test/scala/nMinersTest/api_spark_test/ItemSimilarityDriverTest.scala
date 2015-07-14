@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
  */
 class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
 
-     "UserVectorDriver" should "run" in {
+     "ItemSimilarityDriver" should "run" in {
 
        val inputFile = "data/actions.csv" //Input Data
        val outPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution

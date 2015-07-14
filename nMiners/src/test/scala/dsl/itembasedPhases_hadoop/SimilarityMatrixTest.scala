@@ -1,4 +1,4 @@
-package dsl.itembasedPhases
+package dsl.itembasedPhases_hadoop
 
 import com.typesafe.config.ConfigFactory
 import dsl.job.Implicits._

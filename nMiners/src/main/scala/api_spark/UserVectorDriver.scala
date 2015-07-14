@@ -42,6 +42,8 @@ import scala.collection.immutable.HashMap
  *       option.
  */
 object UserVectorDriver extends nMinersSparkDriver{
+
+  //The object parser needs to be visible outside. But parser is protected.
   def getParser(): MahoutOptionParser = parser
 
   private var writeSchema: Schema = _

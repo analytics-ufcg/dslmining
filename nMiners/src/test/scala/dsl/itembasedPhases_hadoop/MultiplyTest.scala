@@ -1,4 +1,4 @@
-package dsl.itembasedPhases
+package dsl.itembasedPhases_hadoop
 
 import dsl.job._
 import org.scalatest.{Matchers, FlatSpec}
