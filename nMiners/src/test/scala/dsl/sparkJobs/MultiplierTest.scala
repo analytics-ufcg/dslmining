@@ -6,9 +6,6 @@ import org.apache.mahout.math.scalabindings._
 import org.apache.mahout.sparkbindings._
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
-/**
- * Created by igleson on 06/07/15.
- */
 class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll with CompareMatrixTest {
 
   var matrixA: DrmLike[Int] = _
