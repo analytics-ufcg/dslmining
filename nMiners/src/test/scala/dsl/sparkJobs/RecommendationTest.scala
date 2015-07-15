@@ -9,7 +9,7 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 /**
  * Created by igleson on 14/07/15.
  */
-class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll with CompareMatrixTest{
+class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll with CompareMatrixTest {
 
   var userVector: DrmLike[Int] = _
   var recommendationMatrix: DrmLike[Int] = _
@@ -69,7 +69,7 @@ class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll w
   }
 
   it should "not recommend to a user a item he already consumed" in {
-    val resultantMatrix = Context.produceds.find(_.name equals recommendation.name).map {
+    val resultantMatrix = Context producedsByName recommendation.name map {
       _.product.asInstanceOf[DrmLike[Int]]
     } getOrElse {
       fail("Recommender Job should produce a produced named recommendation")

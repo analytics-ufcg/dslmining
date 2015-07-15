@@ -60,7 +60,7 @@ class MultiplierTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
 
     val producedResultName = mult.getClass.getSimpleName + s" $producedA by $producedB"
 
-    val resutantMatrix = Context.produceds.find(_.name equals producedResultName).map {
+    val resutantMatrix = Context producedsByName producedResultName map {
       _.product.asInstanceOf[DrmLike[Int]]
     } getOrElse {
       fail(s"Multiplier Job should produce a produced named $producedResultName")

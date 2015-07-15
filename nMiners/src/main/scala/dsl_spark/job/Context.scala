@@ -20,6 +20,10 @@ object Context {
   }
   }.map(_.producer.asInstanceOf[T])
 
+  def producedsByName(name: String) = produceds.find {
+    _.name equals name
+  }
+
   def clearQueues() = {
     jobs.clear()
     produceds.clear()
