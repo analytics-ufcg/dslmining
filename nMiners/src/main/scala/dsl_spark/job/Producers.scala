@@ -1,10 +1,9 @@
 package dsl_spark.job
 
 import api_spark.UserVectorDriver
-import dsl.job.user_vectors._
 import org.apache.mahout.math.drm.DrmLike
-import org.slf4j.LoggerFactory
 import org.apache.mahout.math.drm.RLikeDrmOps._
+import org.slf4j.LoggerFactory
 
 /**
  * Producer is a class that produce results. These results (produceds) can be used by any next command, not only the immediately next command
@@ -22,7 +21,7 @@ trait Producer[A] extends Job {
 /**
  * Is a object that can produce user vectors
  */
-object user_vectors extends Producer[DrmLike[Int]] {
+case object user_vectors extends Producer[DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
 
@@ -45,7 +44,7 @@ object user_vectors extends Producer[DrmLike[Int]] {
 /**
  * Is a object that can produce similarity matrix
  */
-object similarity_matrix extends Producer[DrmLike[Int]] {
+case object similarity_matrix extends Producer[DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override var name = this.getClass.getSimpleName
 
@@ -55,7 +54,7 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
 }
 
 //Copy the prediction matrix to the output specified by the user
-object recommendation extends Producer[DrmLike[Int]] {
+case object recommendation extends Producer[DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
 
@@ -64,20 +63,19 @@ object recommendation extends Producer[DrmLike[Int]] {
   override def run() = {
     super.run
 
-    val userVectorJob = Context.producedsByType[user_vectors.type].getOrElse {
-      throw new IllegalStateException("You must produce a user vector first")
-    }
-    val recMatrixJob = Context.producedsByType[Multiplier].
-      getOrElse {
+    val recMatrixProduced = Context.producedsByType[Multiplier].getOrElse {
       throw new IllegalStateException("You must multiply the user vector by the similarity matrix first")
     }
 
-    val userVector = userVectorJob.produced.product
-    val recMatrix = recMatrixJob.produced.product
+    val userVectorProduced = Context.producedsByType[user_vectors.type].getOrElse {
+      throw new IllegalStateException("You must produce a user vector first")
+    }
+
+    val userVector = userVectorProduced.produced.product
+    val recMatrix = recMatrixProduced.produced.product
 
     //invert the user vector matrix
-    produced.product = recMatrix * ((userVector - 1) * -1 )
+    produced.product = recMatrix * ((userVector - 1) * -1)
     Context.produceds += produced
   }
-
 }
