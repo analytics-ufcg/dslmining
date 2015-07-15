@@ -60,8 +60,8 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
    */
   override def main(args: Array[String]): Unit = {
 
-    require(mc != null,{println("mc is null. Did you start spark?")})
-    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+//    require(mc != null,{println("mc is null. Did you start spark?")})
+//    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
     require(parser != null,{println("parser is null. Did you start spark?")})
 
     parser.parse(args, parser.opts) map { opts =>
