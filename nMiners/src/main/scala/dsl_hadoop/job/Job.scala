@@ -1,13 +1,15 @@
-package dsl_spark.job
+package dsl_hadoop.job
 
 import java.util.concurrent.CountDownLatch
 
-import api_spark.UserVectorDriver
+import api_hadoop._
 import dsl_hadoop.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
-import org.apache.mahout.math.drm.DrmLike
-import org.apache.mahout.math.drm.RLikeDrmOps._
+import org.apache.hadoop.io.{IntWritable, Text}
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.slf4j.{Logger, LoggerFactory}
+import utils.MapReduceUtils
 
 /**
  * Job is a trait that produce results
@@ -43,7 +45,7 @@ trait Job {
   // Write on path
   def write_on(path: String) = {
     pathToOutput = Some(path)
-//    Context.addFinalOutput(path)
+    Context.addFinalOutput(path)
     this
   }
 
@@ -70,8 +72,6 @@ trait Job {
       })
     } finally {
       NotificationEndServer.stop
-      UserVectorDriver.stop()
-
     }
   }
 
@@ -159,10 +159,9 @@ object parse_data extends Applier {
     clear()
     this.path = path
     this.pathToInput = path
-    this.pathToOutput = Some(path)
-    //    this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "wikipediaToCSV").toUri().toString)
+    this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "wikipediaToCSV").toUri().toString)
     name = this.getClass.getSimpleName + s" on $path"
-//    Context.addInputPath(path)
+    Context.addInputPath(path)
     this
   }
 
@@ -172,7 +171,7 @@ object parse_data extends Applier {
   // Run the job
   override def run() = {
     super.run()
-
+    WikipediaToCSV.runJob(inputPath = path, dirOutputName = pathToOutput.get, deleteFolder = false, numProcess)
   }
 }
 
@@ -181,19 +180,58 @@ object parse_data extends Applier {
   * @param producedOne Produce one
   * @param producedTwo Produce two
   */
-class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: Produced[DrmLike[Int]])
-  extends Consumer with Producer[DrmLike[Int]]{
-
+class Multiplier(val producedOne: Produced, val producedTwo: Produced) extends Consumer {
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"
   override val logger = LoggerFactory.getLogger(classOf[Multiplier])
+  this.pathToOutput = Some(new Path(System.getProperty("java.io.tmpdir"), "partialMultiply").toString)
 
-  produced = new Produced[DrmLike[Int]](this.name, this)
+  val FOLDER_MATRIX_PREPARED: String = "/data_prepare"
 
+  val FOLDER_MULTIPLICATION_PRODUCT: String = "/data_multiplied"
+
+  // Run the job
+  //First Prepare the matrix, then multiply them.
   override def run() = {
+    val path1 = Context.paths(producedOne.name)
+    val path2 = Context.paths(producedTwo.name)
     super.run()
 
-    produced.product = producedOne.product %*% producedTwo.product
-    Context.produceds += produced
+    val BASE = pathToOutput match {
+      case None => Context.basePath
+      case Some(path) => path
+    }
+
+    val arguments = s"--input $pathToInput --output $pathToOutput --booleanData true -s SIMILARITY_COSINE" split " "
+    new RecommenderJob multiplication (arguments, path1, path2)
+
+    //    if (!(producedOne.producer.getClass().isInstance(similarity_matrix) && producedTwo.producer.getClass().isInstance(user_vectors))) {
+    //      throw new IllegalArgumentException("First member should be a user_vector and second member should be a similarity_matrix")
+    //    }
+    //    //==============================================Prepare the matrices to be multilpied
+    //    val path_matrixPrepared = BASE + FOLDER_MATRIX_PREPARED
+    //    PrepareMatrixGenerator.runJob(inputPath1 = path1, inputPath2 = path2, outPutPath = path_matrixPrepared,
+    //      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+    //      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+    //      deleteFolder = true, numReduceTasks = numProcess)
+    //
+    //    //==============================================Multiply the matrices
+    //    pathToInput = path_matrixPrepared + "/part-r-00000"
+    //    val path_multplicationProduct = BASE + FOLDER_MULTIPLICATION_PRODUCT
+    //    pathToOutput = Some(path_multplicationProduct)
+    //
+    //    //    try{
+    //    MatrixMultiplication.runJob(pathToInput = pathToInput, outPutPath = pathToOutput.get,
+    //      inputFormatClass = classOf[SequenceFileInputFormat[VarIntWritable, VectorWritable]],
+    //      outputFormatClass = classOf[SequenceFileOutputFormat[VarIntWritable, VectorAndPrefsWritable]],
+    //      deleteFolder = true, numReduceTasks = numProcess)
+    //    }catch{ case e:Exception =>
+    //
+    //      val a = 2
+    //      print(a)
+    //      throw new Exception("Matrix one's columns and Matrix two's lines are not equal")
+    //
+    //    }
+
   }
 }
 
@@ -203,6 +241,13 @@ case class WordCount(val input: String, val output: String) extends Job {
 
   override def run = {
     super.run
+    MapReduceUtils.runJob(jobName = "Prepare", mapperClass = classOf[WordMap],
+      reducerClass = classOf[WordReduce], mapOutputKeyClass = classOf[Text],
+      mapOutputValueClass = classOf[IntWritable],
+      outputKeyClass = classOf[Text], outputValueClass = classOf[IntWritable],
+      inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[TextOutputFormat[Text, IntWritable]],
+      inputPath = input, outputPath = output, deleteFolder = true, numMapTasks = numProcess)
   }
 }
 

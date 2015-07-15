@@ -1,4 +1,4 @@
-package dsl_spark
+package dsl_hadoop
 
 import com.typesafe.config.ConfigFactory
 import dsl_hadoop.job.Implicits._

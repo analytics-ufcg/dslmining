@@ -17,7 +17,7 @@ package api_spark
 */
 
 
-import org.apache.mahout.drivers.MahoutSparkDriver
+import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver}
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.indexeddataset.Schema
 
@@ -52,61 +52,17 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   private var readSchema1: Schema = _
   private var readSchema2: Schema = _
   var userVectorDrm: Array[DrmLike[Int]] = _
+  var idssItemSimilarity:List[DrmLike[Int]]=_
   /**
    * Entry point, not using Scala App trait
    * @param args  Command line args, if empty a help message is printed.
    */
   override def main(args: Array[String]): Unit = {
 
-//    parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
-//      head("spark-itemsimilarity", "Mahout 0.10.0")
-//
-//      //Input output options, non-driver specific
-//      parseIOOptions(numInputs = 2)
-//
-//      //Algorithm control options--driver specific
-//      opts = opts ++ ItemSimilarityOptions
-//      note("\nAlgorithm control options:")
-//      opt[Int]("maxPrefs") abbr ("mppu") action { (x, options) =>
-//        options + ("maxPrefs" -> x)
-//      } text ("Max number of preferences to consider per user (optional). Default: " +
-//        ItemSimilarityOptions("maxPrefs")) validate { x =>
-//        if (x > 0) success else failure("Option --maxPrefs must be > 0")
-//      }
-//
-//      // not implemented in SimilarityAnalysis.cooccurrence
-//      // threshold, and minPrefs
-//      // todo: replacing the threshold with some % of the best values and/or a
-//      // confidence measure expressed in standard deviations would be nice.
-//
-//      opt[Int]('m', "maxSimilaritiesPerItem") action { (x, options) =>
-//        options + ("maxSimilaritiesPerItem" -> x)
-//      } text ("Limit the number of similarities per item to this number (optional). Default: " +
-//        ItemSimilarityOptions("maxSimilaritiesPerItem")) validate { x =>
-//        if (x > 0) success else failure("Option --maxSimilaritiesPerItem must be > 0")
-//      }
-//
-//      //Driver notes--driver specific
-//      note("\nNote: Only the Log Likelihood Ratio (LLR) is supported as a similarity measure.")
-//
-//      //Input text format
-//      parseElementInputSchemaOptions()
-//
-//      //How to search for input
-//      parseFileDiscoveryOptions()
-//
-//      //Drm output schema--not driver specific, drm specific
-//      parseIndexedDatasetFormatOptions()
-//
-//      //Spark config options--not driver specific
-//      parseSparkOptions()
-//
-//      //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
-//      parseGenericOptions()
-//
-//      help("help") abbr ("h") text ("prints this usage text\n")
-//
-//    }
+    require(mc != null,{println("mc is null. Did you start spark?")})
+    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+    require(parser != null,{println("parser is null. Did you start spark?")})
+
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
       process()
@@ -138,42 +94,35 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   }
 
   override def process(): Unit = {
-    start()
 
     val idss = SimilarityAnalysis.cooccurrencesIDSs(userVectorDrm, parser.opts("randomSeed").asInstanceOf[Int],
       parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int], parser.opts("maxPrefs").asInstanceOf[Int])
-
-    // todo: allow more than one cross-similarity matrix?
-    idss(0).dfsWrite(parser.opts("output").asInstanceOf[String] + "similarity-matrix")
-    if(idss.length > 1)
-      idss(1).dfsWrite(parser.opts("output").asInstanceOf[String] + "cross-similarity-matrix")
-
-    stop()
+    idssItemSimilarity = idss
   }
 
+  /**
+   * Run receiving a uservector, a parser and args. These args will substitute the args from the parser passed.
+   * @param userVector
+   * @param parserA
+   * @param args
+   * @return
+   */
+  def run(userVector: Array[DrmLike[Int]], parserA: MahoutOptionParser, args: Array[String] ): List[DrmLike[Int]]= {
+        userVectorDrm = userVector
+        parser = parserA
+        main(args)
+        idssItemSimilarity
+  }
+
+  /**
+   * Run receiving a uservector and args. It's necessary to run start() before calling the method.
+   * @param userVector
+   * @param args
+   */
   def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
-    userVectorDrm = userVector
-//    main(args)
+        userVectorDrm = userVector
+        main(args)
+        idssItemSimilarity
   }
 
-}
-object UserVector extends App {
-  val inputFile = "data/actions.csv" //Input Data
-  val outPath = Some("data/similarity-matrices/") // Output path where the matrix should be after the execution
-  val userVectorDrm = UserVectorDriver.run(Array(
-      "--input", inputFile,
-      "--output", outPath.getOrElse(""),
-      "--master", "local"
-    ))
-  //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
-  print(userVectorDrm(0).collect)
-  def run(inputFile: String, outPath: Option[String], masterNode:String) ={
-
-    ItemSimilarityDriver.run(userVectorDrm ,Array(
-      "--input", inputFile,
-      "--output", outPath.getOrElse(""),
-      "--master", masterNode
-    ))
-  }
-  run(inputFile,outPath, "local")
 }
