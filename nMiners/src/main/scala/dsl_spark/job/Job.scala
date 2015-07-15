@@ -4,7 +4,6 @@ import java.util.concurrent.CountDownLatch
 
 import api_spark.UserVectorDriver
 import dsl_hadoop.notification.NotificationEndServer
-import org.apache.hadoop.fs.Path
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.{Logger, LoggerFactory}
@@ -29,7 +28,7 @@ trait Job {
   def then(job: Job): Job = {
     //Set the input path of the next job to the output of the current job.
     //Example: a then b ==> b.input = a.output
-    job.pathToInput = pathToOutput.get + "/part-r-00000"
+//    job.pathToInput = pathToOutput.get
     Context.jobs += this
     job
   }

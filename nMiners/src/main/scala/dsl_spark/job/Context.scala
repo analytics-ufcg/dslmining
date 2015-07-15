@@ -15,9 +15,9 @@ object Context {
   val produceds = new HashSet[Produced[_]]()
 
   def producedsByType[T <: Producer[_]] : Option[T] = produceds.find { p => p.producer match {
-    case _: T => true
+    case producer: T => true
     case _ => false
-  }}.map(_.asInstanceOf[T])
+  }}.map(_.producer.asInstanceOf[T])
 
   def clearQueues() = {
     jobs.clear()
