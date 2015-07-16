@@ -41,6 +41,7 @@ object user_vectors extends Producer[DrmLike[Int]] {
       "--master", "local"
     ))
 
+
     this.produced.product = userVectorDrm(0)
 
   }

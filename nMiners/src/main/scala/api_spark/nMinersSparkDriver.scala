@@ -2,6 +2,8 @@ package api_spark
 
 import org.apache.mahout.drivers
 import org.apache.mahout.drivers.{MahoutSparkOptionParser}
+import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext}
+import org.apache.mahout.math.indexeddataset.{Schema, IndexedDataset}
 import scala.collection.immutable.HashMap
 
 /**
@@ -76,4 +78,14 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
   override def stop(): Unit = {
     super.stop()
   }
+
+  def writeDFS(path:String): Unit
+
+  def writeDFS(drm:CheckpointedDrm[Int],path:String,schema:Schema,indexedDataset: IndexedDataset)(implicit sc: DistributedContext):Unit = {
+    val matrixWithNames = indexedDataset.create(drm,indexedDataset.columnIDs,indexedDataset.columnIDs)
+    matrixWithNames.dfsWrite(path,schema)(sc)
+
+  }
+
+
 }
