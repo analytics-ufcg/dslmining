@@ -111,7 +111,7 @@ object ItemSimilarityDriver extends nMinersSparkDriver {
     require(idssItemSimilarity(0)!= null,"drm is null")
     require(indexedDataset!= null,"indexedDataSet is null")
 
-    super.writeDFS(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)(mc)
+    super.writeDFS(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
   }
 
   def writeDFS(path:String,schema:Schema):Unit = {

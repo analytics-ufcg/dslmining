@@ -77,8 +77,6 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
 
       }
 
-
-
     it should "save a DRM" in {
 
       val InFile = "data/actions.csv" //Input Data
@@ -97,10 +95,5 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
       UserVectorDriver.writeDFS("src/test/resources/UserVectors")
 
       UserVectorDriver.stop()
-
-
-
     }
-
-
 }
