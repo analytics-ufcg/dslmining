@@ -19,7 +19,7 @@ package api_spark
 
 import org.apache.mahout.common.HDFSPathSearch
 import org.apache.mahout.drivers.MahoutOptionParser
-import org.apache.mahout.math.drm.DrmLike
+import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 
@@ -43,11 +43,13 @@ object UserVectorDriver extends nMinersSparkDriver{
 
   //The object parser needs to be visible outside. But parser is protected.
   def getParser(): MahoutOptionParser = parser
+  def getContext(): DistributedContext = mc
 
-  private var writeSchema: Schema = _
+  var writeSchema: Schema = _
   private var readSchema1: Schema = _
   private var readSchema2: Schema = _
   var drmsUserVector:Array[DrmLike[Int]] = _
+  var indexedDataset: IndexedDataset = _
 
   /**
    * Entry point, not using Scala App trait
@@ -56,9 +58,10 @@ object UserVectorDriver extends nMinersSparkDriver{
    */
   override def main(args: Array[String]): Unit = {
 
-    require(mc != null,{println("mc is null. Did you start spark?")})
-    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
-    require(parser != null,{println("parser is null. Did you start spark?")})
+    require(mc != null,"mc is null. Did you start spark?")
+    require(sparkConf != null,"sparkConf is null. Did you start spark?")
+    require(parser != null,"parser is null. Did you start spark?")
+//    assert(mc.asInstanceOf[SparkDistributedContext].sc.stop(),"context is stoped. Did you start spark?")
 
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
@@ -150,11 +153,18 @@ object UserVectorDriver extends nMinersSparkDriver{
     createSchemas
 
     val indexedDatasets = readIndexedDatasets
+    indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
     val maxInterestingItemsPerThing = parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int]
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
+    val a = indexedDatasets(0).create(drms(0), indexedDatasets(0).columnIDs, indexedDatasets(0).columnIDs)
+    val   writeSchema = new Schema(
+      "rowKeyDelim" -> parser.opts("rowKeyDelim").asInstanceOf[String],
+      "columnIdStrengthDelim" -> parser.opts("columnIdStrengthDelim").asInstanceOf[String],
+      "omitScore" -> parser.opts("omitStrength").asInstanceOf[Boolean],
+      "elementDelim" -> parser.opts("elementDelim").asInstanceOf[String])
   }
 
   /**
@@ -169,4 +179,9 @@ object UserVectorDriver extends nMinersSparkDriver{
     main(args)
     drmsUserVector
   }
+
+  def writeDFS(path:String):Unit = {
+    super.writeDFS(this.drmsUserVector(0),path,this.writeSchema,this.indexedDataset)(mc)
+  }
+
 }

@@ -17,9 +17,9 @@ package api_spark
 */
 
 
-import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver}
-import org.apache.mahout.math.drm.DrmLike
-import org.apache.mahout.math.indexeddataset.Schema
+import org.apache.mahout.drivers.MahoutOptionParser
+import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
+import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema}
 
 import scala.collection.immutable.HashMap
 
@@ -41,7 +41,7 @@ import scala.collection.immutable.HashMap
  *       the --sparkExecutorMemory option. Other org.apache.spark.SparkConf key value pairs can be with the -D:k=v
  *       option.
  */
-object ItemSimilarityDriver extends MahoutSparkDriver {
+object ItemSimilarityDriver extends nMinersSparkDriver {
   // define only the options specific to ItemSimilarity
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
@@ -53,15 +53,17 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
   private var readSchema2: Schema = _
   var userVectorDrm: Array[DrmLike[Int]] = _
   var idssItemSimilarity:List[DrmLike[Int]]=_
+  var indexedDataset: IndexedDataset = _
+
   /**
    * Entry point, not using Scala App trait
    * @param args  Command line args, if empty a help message is printed.
    */
   override def main(args: Array[String]): Unit = {
 
-//    require(mc != null,{println("mc is null. Did you start spark?")})
-    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
-    require(parser != null,{println("parser is null. Did you start spark?")})
+    require(mc != null,"mc is null. Did you start spark?")
+//    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
+    require(parser != null,"parser is null. Did you start spark?")
 
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts
@@ -69,31 +71,7 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
     }
   }
 
-  override protected def start() : Unit = {
-
-    super.start()
-
-    readSchema1 = new Schema("delim" -> parser.opts("inDelim").asInstanceOf[String],
-      "filter" -> parser.opts("filter1").asInstanceOf[String],
-      "rowIDColumn" -> parser.opts("rowIDColumn").asInstanceOf[Int],
-      "columnIDPosition" -> parser.opts("itemIDColumn").asInstanceOf[Int],
-      "filterColumn" -> parser.opts("filterColumn").asInstanceOf[Int])
-
-    if ((parser.opts("filterColumn").asInstanceOf[Int] != -1 && parser.opts("filter2").asInstanceOf[String] != null)
-      || (parser.opts("input2").asInstanceOf[String] != null && !parser.opts("input2").asInstanceOf[String].isEmpty )){
-      // only need to change the filter used compared to readSchema1
-      readSchema2 = new Schema(readSchema1) += ("filter" -> parser.opts("filter2").asInstanceOf[String])
-
-    }
-
-    writeSchema = new Schema(
-      "rowKeyDelim" -> parser.opts("rowKeyDelim").asInstanceOf[String],
-      "columnIdStrengthDelim" -> parser.opts("columnIdStrengthDelim").asInstanceOf[String],
-      "omitScore" -> parser.opts("omitStrength").asInstanceOf[Boolean],
-      "elementDelim" -> parser.opts("elementDelim").asInstanceOf[String])
-  }
-
-  override def process(): Unit = {
+   override def process(): Unit = {
 
     val idss = SimilarityAnalysis.cooccurrencesIDSs(userVectorDrm, parser.opts("randomSeed").asInstanceOf[Int],
       parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int], parser.opts("maxPrefs").asInstanceOf[Int])
@@ -107,22 +85,35 @@ object ItemSimilarityDriver extends MahoutSparkDriver {
    * @param args
    * @return
    */
-  def run(userVector: Array[DrmLike[Int]], parserA: MahoutOptionParser, args: Array[String] ): List[DrmLike[Int]]= {
+  def run(userVector: Array[DrmLike[Int]], args: Array[String] )(parserA: MahoutOptionParser, mcA: DistributedContext,indexedDatasetA: IndexedDataset): List[DrmLike[Int]]= {
         userVectorDrm = userVector
         parser = parserA
+        mc = mcA
+        indexedDataset = indexedDatasetA
         main(args)
         idssItemSimilarity
   }
+//
+//  /**
+//   * Run receiving a uservector and args. It's necessary to run start() before calling the method.
+//   * @param userVector
+//   * @param args
+//   */
+//  def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
+//        userVectorDrm = userVector
+//        main(args)
+//        idssItemSimilarity
+//  }
+  def writeDFS(path:String):Unit = {
+    require(writeSchema!= null,"WriteSchema is null")
+    require(idssItemSimilarity(0)!= null,"drm is null")
+    require(indexedDataset!= null,"indexedDataSet is null")
 
-  /**
-   * Run receiving a uservector and args. It's necessary to run start() before calling the method.
-   * @param userVector
-   * @param args
-   */
-  def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
-        userVectorDrm = userVector
-        main(args)
-        idssItemSimilarity
+    super.writeDFS(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
   }
 
+  def writeDFS(path:String,schema:Schema):Unit = {
+    this.writeSchema = schema
+    writeDFS(path)
+  }
 }
