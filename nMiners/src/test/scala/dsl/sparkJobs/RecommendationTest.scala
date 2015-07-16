@@ -6,9 +6,6 @@ import org.apache.mahout.math.scalabindings._
 import org.apache.mahout.sparkbindings._
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
-/**
- * Created by igleson on 14/07/15.
- */
 class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll with CompareMatrixTest {
 
   var userVector: DrmLike[Int] = _
@@ -22,7 +19,7 @@ class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll w
     appName = "MahoutLocalContext")
 
   override def beforeAll = {
-
+  
     userVector = drmParallelize(dense(
       (0, 0, 0),
       (1, 0, 0),

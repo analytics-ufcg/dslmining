@@ -1,4 +1,4 @@
-package dsl.job
+package dsl_hadoop.job
 
 /**
  * Abstract class that is responsible to create all Similarity Type

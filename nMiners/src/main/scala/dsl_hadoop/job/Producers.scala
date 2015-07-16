@@ -1,4 +1,4 @@
-package dsl.job
+package dsl_hadoop.job
 
 import api_hadoop.RecommenderJob
 import org.apache.hadoop.fs.Path

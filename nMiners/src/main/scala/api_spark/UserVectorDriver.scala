@@ -21,7 +21,9 @@ import org.apache.mahout.common.HDFSPathSearch
 import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver, MahoutSparkOptionParser}
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
+import org.apache.mahout.sparkbindings.SparkDistributedContext
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
+import org.apache.spark.SparkContext
 
 import scala.collection.immutable.HashMap
 
@@ -58,9 +60,10 @@ object UserVectorDriver extends nMinersSparkDriver{
    */
   override def main(args: Array[String]): Unit = {
 
-    require(mc != null,{println("mc is null. Did you start spark?")})
-    require(sparkConf != null,{println("sparkConf is null. Did you start spark?")})
-    require(parser != null,{println("parser is null. Did you start spark?")})
+    require(mc != null,"mc is null. Did you start spark?")
+    require(sparkConf != null,"sparkConf is null. Did you start spark?")
+    require(parser != null,"parser is null. Did you start spark?")
+//    assert(mc.asInstanceOf[SparkDistributedContext].sc.stop(),"context is stoped. Did you start spark?")
 
     parser.parse(args, parser.opts) map { opts =>
       parser.opts = opts

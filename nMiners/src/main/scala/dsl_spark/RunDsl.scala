@@ -1,9 +1,9 @@
 package dsl_spark
 
 import com.typesafe.config.ConfigFactory
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
-import dsl.job._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils._
+import dsl_hadoop.job._
 
 object RunDsl extends App {
 

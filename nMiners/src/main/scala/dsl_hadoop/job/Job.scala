@@ -1,9 +1,9 @@
-package dsl.job
+package dsl_hadoop.job
 
 import java.util.concurrent.CountDownLatch
 
 import api_hadoop._
-import dsl.notification.NotificationEndServer
+import dsl_hadoop.notification.NotificationEndServer
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{IntWritable, Text}
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat

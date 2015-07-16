@@ -1,4 +1,4 @@
-package dsl.notification
+package dsl_hadoop.notification
 
 import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.main.Main

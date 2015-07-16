@@ -1,8 +1,8 @@
-package dsl.itembasedPhases_hadoop
+package dsl_hadoop.itembasedPhases_hadoop
 import com.typesafe.config.ConfigFactory
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
-import dsl.job._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils._
+import dsl_hadoop.job._
 
 
 import org.scalatest.{FlatSpec, Matchers}
@@ -27,7 +27,7 @@ class SimplePhasesTest extends FlatSpec with Matchers{
     val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
 
     parse_data on dataSet then
-      dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) write_on outputPath then dsl.job.execute
+      dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE) write_on outputPath then dsl_hadoop.job.execute
 
   }
 

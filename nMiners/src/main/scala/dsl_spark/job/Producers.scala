@@ -21,13 +21,18 @@ trait Producer[A] extends Job {
 /**
  * Is a object that can produce user vectors
  */
-case object user_vectors extends Producer[DrmLike[Int]] {
+object user_vectors extends Producer[DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
 
   // Run the job
   override def run() = {
+    this.produced = new Produced(this.name,this)
+
     super.run()
+
+    //REMOVE FROM HERE
+    UserVectorDriver.start()
 
     val userVectorDrm = UserVectorDriver.run(Array(
       "--input", pathToInput,
@@ -44,7 +49,7 @@ case object user_vectors extends Producer[DrmLike[Int]] {
 /**
  * Is a object that can produce similarity matrix
  */
-case object similarity_matrix extends Producer[DrmLike[Int]] {
+object similarity_matrix extends Producer[DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override var name = this.getClass.getSimpleName
 
@@ -54,7 +59,7 @@ case object similarity_matrix extends Producer[DrmLike[Int]] {
 }
 
 //Copy the prediction matrix to the output specified by the user
-case object recommendation extends Producer[DrmLike[Int]] {
+object recommendation extends Producer[DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
 

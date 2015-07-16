@@ -1,5 +1,6 @@
-package dsl.sparkJobs
+package dsl_hadoop.sparkJobs
 
+import dsl.sparkJobs.CompareMatrixTest
 import dsl_spark.job.{Context, Multiplier, Produced}
 import org.apache.mahout.math.drm.{DrmLike, drmParallelize}
 import org.apache.mahout.math.scalabindings._

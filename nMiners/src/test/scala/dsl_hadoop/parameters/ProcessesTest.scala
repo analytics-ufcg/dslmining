@@ -1,8 +1,8 @@
-package dsl.parameters
+package dsl_hadoop.parameters
 
-import dsl.job.Implicits._
-import dsl.job.JobUtils._
-import dsl.job._
+import dsl_hadoop.job.Implicits._
+import dsl_hadoop.job.JobUtils._
+import dsl_hadoop.job._
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 import scala.collection.mutable
@@ -29,10 +29,10 @@ class ProcessesTest extends FlatSpec with Matchers with BeforeAndAfterAll{
      val output = OUTPUTS("OUTPUT_1") + "output.dat"
 
      parse_data on dataset then
-       dsl.job.JobUtils.produce(user_vectors) in (2 process)  then
-       dsl.job.JobUtils.produce(similarity_matrix using COOCURRENCE) in (2 process) then
+       dsl_hadoop.job.JobUtils.produce(user_vectors) in (2 process)  then
+       dsl_hadoop.job.JobUtils.produce(similarity_matrix using COOCURRENCE) in (2 process) then
        multiply("similarity_matrix" by "user_vector") in (2 process) then
-       dsl.job.JobUtils.produce(recommendation) write_on output then dsl.job.execute
+       dsl_hadoop.job.JobUtils.produce(recommendation) write_on output then dsl_hadoop.job.execute
    }
 
 

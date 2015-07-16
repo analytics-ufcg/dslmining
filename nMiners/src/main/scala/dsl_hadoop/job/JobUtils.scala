@@ -1,4 +1,4 @@
-package dsl.job
+package dsl_hadoop.job
 
 object JobUtils {
   def in_parallel(jobs: List[Job]) = {
