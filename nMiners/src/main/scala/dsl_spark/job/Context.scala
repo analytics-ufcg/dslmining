@@ -2,6 +2,7 @@ package dsl_spark.job
 
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Queue
+import scala.reflect.ClassTag
 
 object Context {
 
@@ -14,10 +15,14 @@ object Context {
 
   val produceds = new HashSet[Produced[_]]()
 
-  def producedsByType[T <: Producer[_]] : Option[T] = produceds.find { p => p.producer match {
-    case _: T => true
-    case _ => false
-  }}.map(_.asInstanceOf[T])
+  def producedsByType[T <: Producer[_]](implicit tag: ClassTag[T]): Option[T] = produceds.find { p => p.producer match {
+    case e => tag.runtimeClass equals e.getClass
+  }
+  }.map(_.producer.asInstanceOf[T])
+
+  def producedsByName(name: String) = produceds.find {
+    _.name equals name
+  }
 
   def clearQueues() = {
     jobs.clear()

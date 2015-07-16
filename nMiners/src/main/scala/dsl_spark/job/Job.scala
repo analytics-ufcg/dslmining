@@ -181,7 +181,7 @@ object parse_data extends Applier {
   * @param producedOne Produce one
   * @param producedTwo Produce two
   */
-class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: Produced[DrmLike[Int]])
+case class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: Produced[DrmLike[Int]])
   extends Consumer with Producer[DrmLike[Int]]{
 
   override var name: String = this.getClass.getSimpleName + s" $producedOne by $producedTwo"

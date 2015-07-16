@@ -17,7 +17,6 @@ package api_spark
 */
 
 
-import api_spark.UserVectorDriver._
 import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver}
 import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema}
