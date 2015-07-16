@@ -18,11 +18,10 @@ trait CompareMatrixTest {
       } else {
         val m = b.asInstanceOf[Matrix]
         if (a.numCols() != m.numCols() || a.numRows() != m.numRows()) {
-          println("nums columns and rows differen")
           false
         } else {
           var res = true
-          for (i <- 0 until m.numCols()) {
+          for (i <- 0 until m.numRows()) {
             a.viewRow(i).all().iterator().zip {
               m.viewRow(i).all().iterator()
             }.foreach { t => t match {

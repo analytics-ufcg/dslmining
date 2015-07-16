@@ -19,7 +19,7 @@ class RecommendationTest extends FlatSpec with Matchers with BeforeAndAfterAll w
     appName = "MahoutLocalContext")
 
   override def beforeAll = {
-  
+
     userVector = drmParallelize(dense(
       (0, 0, 0),
       (1, 0, 0),
