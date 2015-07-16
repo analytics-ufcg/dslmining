@@ -33,6 +33,7 @@ trait Job {
   def then(job: Job): Job = {
     //Set the input path of the next job to the output of the current job.
     //Example: a then b ==> b.input = a.output
+    //TODO set the new input path
 //    job.pathToInput = pathToOutput.get
     Context.jobs += this
     job
