@@ -53,7 +53,7 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
         "--input", inputFile,
         "--output", outPath.getOrElse(""),
         "--master", "local"
-      ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(),UserVectorDriver.indexedDataset)
+      ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
 
 
       ItemSimilarityDriver.writeDFS("src/test/resources/ItemSimilarityMatrix",UserVectorDriver.writeSchema)

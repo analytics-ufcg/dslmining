@@ -26,8 +26,6 @@ trait Job {
   
   var isWiretable = false
 
-  var result = ""
-  
   implicit var aSync = false
 
   def then(job: Job): Job = {
@@ -43,9 +41,7 @@ trait Job {
 
   private def after() = {
     this.afterJob()
-    if (isWiretable)  {
-      println("dEU CERTO")
-    }
+
   }
 
   // Write on path

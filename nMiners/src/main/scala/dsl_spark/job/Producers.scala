@@ -1,6 +1,7 @@
 package dsl_spark.job
 
-import api_spark.UserVectorDriver
+import api_spark.{ItemSimilarityDriver, UserVectorDriver}
+import org.apache.mahout.math.drm
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.LoggerFactory
@@ -21,10 +22,14 @@ trait Producer[A] extends Job {
 /**
  * Is a object that can produce user vectors
  */
-object user_vectors extends Producer[DrmLike[Int]] {
+object user_vectors extends Producer[drm.DrmLike[Int]] {
   override var name = this.getClass.getSimpleName
   override val logger = LoggerFactory.getLogger(this.getClass())
-
+  override def afterJob(): Unit ={
+    if (this.isWiretable) {
+      UserVectorDriver.writeDFS(pathToOutput.get)
+    }
+  }
   // Run the job
   override def run() = {
     this.produced = new Produced(this.name,this)
@@ -52,9 +57,23 @@ object user_vectors extends Producer[DrmLike[Int]] {
 object similarity_matrix extends Producer[DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override var name = this.getClass.getSimpleName
+  this.produced = new Produced(this.name,this)
+  override def afterJob(): Unit ={
+    if (this.isWiretable) {
+      ItemSimilarityDriver.writeDFS( this.pathToOutput.get ,UserVectorDriver.writeSchema)
+    }
+  }
 
   override def run() = {
     super.run()
+
+    val itemSimilarity = ItemSimilarityDriver.run(Array(user_vectors.produced.product), Array(
+      "--input", pathToInput,
+      "--output", this.pathToOutput.get,
+      "--master", "local"
+    ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
+
+    this.produced.product = itemSimilarity(0)
   }
 
 }
