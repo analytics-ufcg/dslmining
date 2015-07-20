@@ -16,7 +16,7 @@ object Context {
   val produceds = new HashSet[Produced[_]]()
 
   def producedsByType[T <: Producer[_]](implicit tag: ClassTag[T]): Option[T] = produceds.find { p => p.producer match {
-    case e => tag.runtimeClass equals e.getClass
+    case e => (e!= null) && (tag.runtimeClass equals e.getClass)
   }
   }.map(_.producer.asInstanceOf[T])
 

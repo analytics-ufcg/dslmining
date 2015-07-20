@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory
 trait Producer[A] extends Job {
   var produced: Produced[A] = _
 
+  def clear() = {
+    this.isWiretable = false;
+  }
+
   override def run() = {
     super.run()
 
@@ -32,7 +36,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
   }
   // Run the job
   override def run() = {
-    this.produced = new Produced(this.name,this)
+//    this.produced = new Produced(this.name,this)
 
     super.run()
 
@@ -46,8 +50,12 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     ))
 
     this.produced.product = userVectorDrm(0)
+    this.produced.producer = this
 
+//    Context.produceds.add(this.produced)
   }
+
+
 }
 
 
@@ -57,7 +65,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
 object similarity_matrix extends Producer[DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override var name = this.getClass.getSimpleName
-  this.produced = new Produced(this.name,this)
+//  this.produced = new Produced(this.name,this)
   override def afterJob(): Unit ={
     if (this.isWiretable) {
       ItemSimilarityDriver.writeDRM( this.pathToOutput.get ,UserVectorDriver.writeSchema)
@@ -69,11 +77,15 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
 
     val itemSimilarity = ItemSimilarityDriver.run(Array(user_vectors.produced.product), Array(
       "--input", pathToInput,
-      "--output", this.pathToOutput.get,
+      "--output", this.pathToOutput.getOrElse(""),
       "--master", "local"
     ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
 
     this.produced.product = itemSimilarity(0)
+    this.produced.producer = this
+
+    //    Context.produceds.add(this.produced)
+
   }
 
 }

@@ -1,7 +1,7 @@
 package dsl_spark.job
 
 import java.util.concurrent.CountDownLatch
-import api_spark.UserVectorDriver
+import api_spark.{ItemSimilarityDriver, UserVectorDriver}
 import dsl_hadoop.notification.NotificationEndServer
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
@@ -157,6 +157,9 @@ object parse_data extends Applier {
 
   def clear() = {
     Context.clearQueues()
+    user_vectors.clear()
+    similarity_matrix.clear()
+    recommendation.clear()
   }
 
   // Get a data file
@@ -194,6 +197,11 @@ case class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: 
 
   produced = new Produced[DrmLike[Int]](this.name, this)
 
+  override def afterJob(): Unit ={
+    if (this.isWiretable) {
+      ItemSimilarityDriver.writeDRM(this.pathToOutput.get ,UserVectorDriver.writeSchema)
+    }
+  }
   override def run() = {
     super.run()
 
