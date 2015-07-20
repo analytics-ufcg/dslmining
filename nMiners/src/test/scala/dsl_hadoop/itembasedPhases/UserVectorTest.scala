@@ -11,19 +11,18 @@ class UserVectorTest extends FlatSpec with Matchers{
 
   "user_vector" should "run" in {
     val dataSet = "src/test/resources/data_1/actions.csv"
-    val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
+
+    parse_data on dataSet then
+      dsl_spark.job.JobUtils.produce(user_vectors) then dsl_spark.job.execute
+  }
+
+  "user_vector" should "write" in {
+    val dataSet = "src/test/resources/data_1/actions.csv"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors) write_on outputPath then dsl_spark.job.execute
-  }
-
-  "user_vector" should "save a user vector" in {
-//    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
-//    val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
-//
-//    parse_data on dataSet then
-//    dsl.job.JobUtils.produce(user_vectors) write_on outputPath then dsl.job.execute
-
 
   }
 

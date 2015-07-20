@@ -5,6 +5,7 @@ import org.apache.mahout.math.drm
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.LoggerFactory
+import utils.Writer
 
 /**
  * Producer is a class that produce results. These results (produceds) can be used by any next command, not only the immediately next command
@@ -31,7 +32,8 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      UserVectorDriver.writeDRM(pathToOutput.get)
+      Writer.writeDRM(this.produced.product, this.pathToOutput.get)
+
     }
   }
   // Run the job
@@ -52,7 +54,11 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     this.produced.product = userVectorDrm(0)
     this.produced.producer = this
 
-//    Context.produceds.add(this.produced)
+    Writer.context = UserVectorDriver.getContext()
+    Writer.indexedDataset = UserVectorDriver.indexedDataset
+    Writer.writeSchema = UserVectorDriver.writeSchema
+
+    //    Context.produceds.add(this.produced)
   }
 
 
@@ -68,7 +74,7 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
 //  this.produced = new Produced(this.name,this)
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      ItemSimilarityDriver.writeDRM( this.pathToOutput.get ,UserVectorDriver.writeSchema)
+      Writer.writeDRM(this.produced.product, this.pathToOutput.get)
     }
   }
 
@@ -96,6 +102,13 @@ object recommendation extends Producer[DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
 
   produced = new Produced[DrmLike[Int]](this.name, this)
+
+
+  override def afterJob(): Unit ={
+    if (this.isWiretable) {
+      Writer.writeDRM(this.produced.product, this.pathToOutput.get)
+    }
+  }
 
   override def run() = {
     super.run

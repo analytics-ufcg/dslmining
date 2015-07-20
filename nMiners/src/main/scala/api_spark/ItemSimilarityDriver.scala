@@ -99,26 +99,26 @@ object ItemSimilarityDriver extends nMinersSparkDriver {
         idssItemSimilarity
   }
 
-  /**
-   * 
-   * @param path
-   */
-  def writeDRM(path:String):Unit = {
-    require(writeSchema!= null,"WriteSchema is null")
-    require(idssItemSimilarity(0)!= null,"drm is null")
-    require(indexedDataset!= null,"indexedDataSet is null")
+//  /**
+//   *
+//   * @param path
+//   */
+//  def writeDRM(path:String):Unit = {
+//    require(writeSchema!= null,"WriteSchema is null")
+//    require(idssItemSimilarity(0)!= null,"drm is null")
+//    require(indexedDataset!= null,"indexedDataSet is null")
+//
+//    super.writeDRM(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
+//  }
 
-    super.writeDRM(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
-  }
 
-
-  /**
-   * WriteDRM.
-   * @param path
-   * @param schema Text's schema
-   */
-  def writeDRM(path:String,schema:Schema):Unit = {
-    this.writeSchema = schema
-    writeDRM(path)
-  }
+//  /**
+//   * WriteDRM.
+//   * @param path
+//   * @param schema Text's schema
+//   */
+//  def writeDRM(path:String,schema:Schema):Unit = {
+//    this.writeSchema = schema
+//    writeDRM(path)
+//  }
 }

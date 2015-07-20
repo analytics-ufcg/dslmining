@@ -2,6 +2,7 @@ package nMinersTest.api_spark_test
 
 import api_spark.{ItemSimilarityDriver, UserVectorDriver}
 import org.scalatest.{FlatSpec, Matchers}
+import utils.Writer
 
 /**
  * Created by arthur on 30/06/15.
@@ -49,6 +50,10 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
       //The method below takes the correct parameters in order to call the Main from ItemSimilarity object
       print(userVectorDrm(0).collect)
 
+      Writer.context = UserVectorDriver.getContext()
+      Writer.indexedDataset = UserVectorDriver.indexedDataset
+      Writer.writeSchema = UserVectorDriver.writeSchema
+
       val item = ItemSimilarityDriver.run(userVectorDrm, Array(
         "--input", inputFile,
         "--output", outPath.getOrElse(""),
@@ -56,7 +61,7 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
       ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
 
 
-      ItemSimilarityDriver.writeDRM("src/test/resources/ItemSimilarityMatrix",UserVectorDriver.writeSchema)
+      Writer.writeDRM(item(0),"src/test/resources/ItemSimilarityMatrix")
 
       UserVectorDriver.stop()
 

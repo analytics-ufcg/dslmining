@@ -7,6 +7,7 @@ import api_spark.UserVectorDriver
 import org.apache.mahout.drivers.ItemSimilarityDriver._
 import org.apache.mahout.math.indexeddataset.Schema
 import org.scalatest.{FlatSpec, Matchers}
+import utils.Writer
 
 /**
  * Created by arthur on 30/06/15.
@@ -92,7 +93,12 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
 
       print(userVectorDrm(0).collect)
 
-      UserVectorDriver.writeDRM("src/test/resources/UserVectors")
+      Writer.context = UserVectorDriver.getContext()
+      Writer.indexedDataset = UserVectorDriver.indexedDataset
+      Writer.writeSchema = UserVectorDriver.writeSchema
+
+      Writer.writeDRM(userVectorDrm(0),"src/test/resources/UserVectors")
+
 
       UserVectorDriver.stop()
     }

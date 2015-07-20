@@ -27,14 +27,14 @@ class RecommendationTest extends FlatSpec with Matchers{
   }
 
   it should "write" in {
-//    val dataSet = "src/test/resources/data_1/actions.csv"
-//    val outputPath: String = "src/test/resources/DSL_Tests/multiply/"
-//
-//    parse_data on dataSet then
-//      dsl_spark.job.JobUtils.produce(user_vectors) then
-//      dsl_spark.job.JobUtils.produce(similarity_matrix) then
-//      multiply("similarity_matrix" by "user_vectors") then dsl_spark.job.execute
+    val dataSet = "src/test/resources/data_1/actions.csv"
+    val outputPath: String = "src/test/resources/DSL_Tests/recommender/"
 
+    parse_data on dataSet then
+      dsl_spark.job.JobUtils.produce(user_vectors) then
+      dsl_spark.job.JobUtils.produce(similarity_matrix) then
+      multiply("similarity_matrix" by "user_vectors") then
+      dsl_spark.job.JobUtils.produce(recommendation) write_on(outputPath) then dsl_spark.job.execute
 
   }
 

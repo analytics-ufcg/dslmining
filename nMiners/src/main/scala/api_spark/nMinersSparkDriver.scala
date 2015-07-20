@@ -79,13 +79,6 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
     super.stop()
   }
 
-  def writeDRM(path:String): Unit
-
-  def writeDRM(drm:CheckpointedDrm[Int],path:String,schema:Schema,indexedDataset: IndexedDataset)(implicit sc: DistributedContext):Unit = {
-    val matrixWithNames = indexedDataset.create(drm,indexedDataset.columnIDs,indexedDataset.columnIDs)
-    matrixWithNames.dfsWrite(path,schema)(sc)
-
-  }
-
+//  def writeDRM(path:String): Unit
 
 }

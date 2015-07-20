@@ -6,6 +6,7 @@ import dsl_hadoop.notification.NotificationEndServer
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.{Logger, LoggerFactory}
+import utils.Writer
 
 //import scala.tools.nsc.typechecker.PatternMatching.Logic.False
 
@@ -199,7 +200,7 @@ case class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: 
 
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      ItemSimilarityDriver.writeDRM(this.pathToOutput.get ,UserVectorDriver.writeSchema)
+      Writer.writeDRM(produced.product,this.pathToOutput.get)
     }
   }
   override def run() = {

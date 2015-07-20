@@ -180,7 +180,7 @@ object UserVectorDriver extends nMinersSparkDriver{
     drmsUserVector
   }
 
-  def writeDRM(path:String):Unit = {
-    super.writeDRM(this.drmsUserVector(0),path,this.writeSchema,this.indexedDataset)(mc)
-  }
+//  def writeDRM(path:String):Unit = {
+//    super.writeDRM(this.drmsUserVector(0),path,this.writeSchema,this.indexedDataset)(mc)
+//  }
 }
