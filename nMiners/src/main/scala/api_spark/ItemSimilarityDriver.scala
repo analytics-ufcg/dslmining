@@ -17,10 +17,9 @@ package api_spark
 */
 
 
-import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver}
+import org.apache.mahout.drivers.MahoutOptionParser
 import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema}
-import org.apache.mahout.sparkbindings.SparkDistributedContext
 
 import scala.collection.immutable.HashMap
 

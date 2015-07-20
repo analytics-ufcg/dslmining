@@ -11,7 +11,7 @@ object Main {
 
     parse_data on dataset then
       produce(user_vectors as "user_vector") then
-      produce(similarity_matrix) then
+      produce(similarity_matrix) write_on output then
       multiply("coocurrence" by "user_vector") then
       produce(recommendation) write_on output then execute
   }

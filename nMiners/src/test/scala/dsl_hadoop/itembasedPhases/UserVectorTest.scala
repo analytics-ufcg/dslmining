@@ -15,8 +15,6 @@ class UserVectorTest extends FlatSpec with Matchers{
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors) write_on outputPath then dsl_spark.job.execute
-
-
   }
 
   "user_vector" should "save a user vector" in {

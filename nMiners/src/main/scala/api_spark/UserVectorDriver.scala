@@ -18,14 +18,10 @@
 package api_spark
 
 import org.apache.mahout.common.HDFSPathSearch
-import org.apache.mahout.drivers.{MahoutOptionParser, MahoutSparkDriver, MahoutSparkOptionParser}
-import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext, DrmLike}
+import org.apache.mahout.drivers.MahoutOptionParser
+import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
-import org.apache.mahout.sparkbindings.SparkDistributedContext
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
-import org.apache.spark.SparkContext
-
-import scala.collection.immutable.HashMap
 
 /**
  * **************************************************************************
@@ -184,7 +180,7 @@ object UserVectorDriver extends nMinersSparkDriver{
     drmsUserVector
   }
 
-     def writeDRM(path:String):Unit = {
-      super.writeDRM(this.drmsUserVector(0),path,this.writeSchema,this.indexedDataset)(mc)
-    }
+  def writeDRM(path:String):Unit = {
+    super.writeDRM(this.drmsUserVector(0),path,this.writeSchema,this.indexedDataset)(mc)
+  }
 }
