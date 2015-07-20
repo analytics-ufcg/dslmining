@@ -92,7 +92,7 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
 
       print(userVectorDrm(0).collect)
 
-      UserVectorDriver.writeDFS("src/test/resources/UserVectors")
+      UserVectorDriver.writeDRM("src/test/resources/UserVectors")
 
       UserVectorDriver.stop()
     }

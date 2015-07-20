@@ -80,41 +80,46 @@ object ItemSimilarityDriver extends nMinersSparkDriver {
   }
 
   /**
-   * Run receiving a uservector, a parser and args. These args will substitute the args from the parser passed.
+   * Run receiving a ItemSimilarity job.
+   * It needs a uservector.
+   * It has 2 parameters list because the first is related to the job itself and the second are configuration parameters
+   *
    * @param userVector
-   * @param parserA
    * @param args
+   * @param parserA
+   * @param context
+   * @param indexedDatasetA
    * @return
    */
-  def run(userVector: Array[DrmLike[Int]], args: Array[String] )(parserA: MahoutOptionParser, mcA: DistributedContext,indexedDatasetA: IndexedDataset): List[DrmLike[Int]]= {
+  def run(userVector: Array[DrmLike[Int]], args: Array[String] )(parserA: MahoutOptionParser, context: DistributedContext,indexedDatasetA: IndexedDataset): List[DrmLike[Int]]= {
         userVectorDrm = userVector
         parser = parserA
-        mc = mcA
+        mc = context
         indexedDataset = indexedDatasetA
         main(args)
         idssItemSimilarity
   }
-//
-//  /**
-//   * Run receiving a uservector and args. It's necessary to run start() before calling the method.
-//   * @param userVector
-//   * @param args
-//   */
-//  def run(userVector: Array[DrmLike[Int]], args: Array[String] ) = {
-//        userVectorDrm = userVector
-//        main(args)
-//        idssItemSimilarity
-//  }
-  def writeDFS(path:String):Unit = {
+
+  /**
+   * 
+   * @param path
+   */
+  def writeDRM(path:String):Unit = {
     require(writeSchema!= null,"WriteSchema is null")
     require(idssItemSimilarity(0)!= null,"drm is null")
     require(indexedDataset!= null,"indexedDataSet is null")
 
-    super.writeDFS(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
+    super.writeDRM(this.idssItemSimilarity(0),path,this.writeSchema,this.indexedDataset)
   }
 
-  def writeDFS(path:String,schema:Schema):Unit = {
+
+  /**
+   * WriteDRM.
+   * @param path
+   * @param schema Text's schema
+   */
+  def writeDRM(path:String,schema:Schema):Unit = {
     this.writeSchema = schema
-    writeDFS(path)
+    writeDRM(path)
   }
 }
