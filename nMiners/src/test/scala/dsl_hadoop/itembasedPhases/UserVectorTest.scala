@@ -4,6 +4,7 @@ package dsl_spark.itembasedPhases  //    UserVectorDriver.start()
 import com.typesafe.config.ConfigFactory
 import dsl_spark.job.{user_vectors, parse_data}
 import org.scalatest.{FlatSpec, Matchers}
+import dsl_spark.job.Implicits._
 
 class UserVectorTest extends FlatSpec with Matchers{
   val BASE_PHATH = "src/test/data/"
@@ -36,11 +37,11 @@ class UserVectorTest extends FlatSpec with Matchers{
   }
 
   it should "associate to a variable" in {
-//    val dataSet = "src/test/resources/data_2/input_test_user_vector.txt"
-//    val outputPath: String = "src/test/resources/SimplePhasesTest/output_sim/"
-//
-//    parse_data on dataSet then
-//      dsl.job.JobUtils.produce(user_vectors as "user_vec") write_on outputPath then dsl.job.execute
+    val dataSet = "src/test/resources/data_1/actions.csv"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
+
+    parse_data on dataSet then
+      dsl_spark.job.JobUtils.produce(user_vectors as "matrix") write_on outputPath then dsl_spark.job.execute
 
   }
 
