@@ -11,7 +11,7 @@ import dsl_spark.job.JobUtils._
 import dsl_spark.job.{parse_data, recommendation, similarity_matrix, user_vectors}
 import org.scalatest.{FlatSpec, Matchers}
 
-class RecommendationTest_dsl extends FlatSpec with Matchers{
+class RecommendationTest extends FlatSpec with Matchers{
   val BASE_PHATH = "src/test/data/"
   val config = ConfigFactory.load()
 
