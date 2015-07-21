@@ -32,7 +32,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_rowCol(this.produced.product, this.pathToOutput.get)
+      Writer.writeDRM_userItem(this.produced.product, this.pathToOutput.get)
 
     }
   }
@@ -74,7 +74,7 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
 //  this.produced = new Produced(this.name,this)
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_colCol(this.produced.product, this.pathToOutput.get)
+      Writer.writeDRM_itemItem(this.produced.product, this.pathToOutput.get)
     }
   }
 
@@ -106,7 +106,7 @@ object recommendation extends Producer[DrmLike[Int]] {
 
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_rowCol(this.produced.product, this.pathToOutput.get)
+      Writer.writeDRM_userItem(this.produced.product, this.pathToOutput.get)
     }
   }
 

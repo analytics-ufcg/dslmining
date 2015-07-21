@@ -1,4 +1,4 @@
-package dsl_hadoop.itembasedPhases
+package dsl_spark
 
 //    UserVectorDriver.start()
 
@@ -6,30 +6,28 @@ package dsl_hadoop.itembasedPhases
 import java.io.File
 
 import com.typesafe.config.ConfigFactory
-import dsl_spark.job.{parse_data, user_vectors,similarity_matrix}
-import org.scalatest.{FlatSpec, Matchers}
 import dsl_spark.job.Implicits._
+import dsl_spark.job.{parse_data, user_vectors}
+import org.scalatest.{FlatSpec, Matchers}
 
-class SimilarityMatrixTest extends FlatSpec with Matchers{
+class UserVectorTest extends FlatSpec with Matchers{
   val BASE_PHATH = "src/test/data/"
   val config = ConfigFactory.load()
 
-  "similarity_matrix" should "run" in {
+  "user_vector" should "run" in {
     val dataSet = "src/test/resources/data_1/actions.csv"
-    val outputPath: String = "src/test/resources/DSL_Tests/output_sim/"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
 
     parse_data on dataSet then
-      dsl_spark.job.JobUtils.produce(user_vectors) then
-      dsl_spark.job.JobUtils.produce(similarity_matrix) then dsl_spark.job.execute
+      dsl_spark.job.JobUtils.produce(user_vectors) then dsl_spark.job.execute
   }
 
-  it should "write" in {
+  "user_vector" should "write" in {
     val dataSet = "src/test/resources/data_1/actions.csv"
-    val outputPath: String = "src/test/resources/DSL_Tests/output_sim/"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
 
     parse_data on dataSet then
-      dsl_spark.job.JobUtils.produce(user_vectors) then
-      dsl_spark.job.JobUtils.produce(similarity_matrix) write_on outputPath then dsl_spark.job.execute
+      dsl_spark.job.JobUtils.produce(user_vectors) write_on outputPath then dsl_spark.job.execute
 
     fileExists(new File(outputPath)) should be equals true
     delete(new File(outputPath)) should be equals true
@@ -48,11 +46,10 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
 
   it should "associate to a variable" in {
     val dataSet = "src/test/resources/data_1/actions.csv"
-    val outputPath: String = "src/test/resources/DSL_Tests/output_sim/"
+    val outputPath: String = "src/test/resources/DSL_Tests/users_vectors/"
 
     parse_data on dataSet then
-      dsl_spark.job.JobUtils.produce(user_vectors as "matrix1") then
-      dsl_spark.job.JobUtils.produce(similarity_matrix as "matrix2") write_on outputPath then dsl_spark.job.execute
+      dsl_spark.job.JobUtils.produce(user_vectors as "matrix") write_on outputPath then dsl_spark.job.execute
 
     fileExists(new File(outputPath)) should be equals true
     delete(new File(outputPath)) should be equals true
@@ -78,7 +75,6 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
   def fileExists(file: File): Boolean ={
     file.exists()
   }
-
 
 
 }

@@ -1,4 +1,4 @@
-package dsl.sparkJobs
+package dsl_spark.Job
 
 import org.apache.mahout.math.Matrix
 import org.scalactic.Equality

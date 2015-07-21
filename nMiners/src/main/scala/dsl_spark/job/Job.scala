@@ -200,7 +200,7 @@ case class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: 
 
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_rowCol(produced.product,this.pathToOutput.get)
+      Writer.writeDRM_userItem(produced.product,this.pathToOutput.get)
     }
   }
   override def run() = {

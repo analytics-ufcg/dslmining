@@ -1,4 +1,4 @@
-package dsl.sparkJobs
+package dsl_spark.Job
 
 import dsl_spark.job.{Context, Multiplier, Produced, _}
 import org.apache.mahout.math.drm.{DrmLike, drmParallelize, _}

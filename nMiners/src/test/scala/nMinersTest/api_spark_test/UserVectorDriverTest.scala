@@ -97,7 +97,7 @@ class UserVectorDriverTest  extends FlatSpec with Matchers{
       Writer.indexedDataset = UserVectorDriver.indexedDataset
       Writer.writeSchema = UserVectorDriver.writeSchema
 
-      Writer.writeDRM_rowCol(userVectorDrm(0),"src/test/resources/UserVectors")
+      Writer.writeDRM_userItem(userVectorDrm(0),"src/test/resources/UserVectors")
 
 
       UserVectorDriver.stop()

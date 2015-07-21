@@ -61,7 +61,7 @@ class ItemSimilarityDriverTest  extends FlatSpec with Matchers{
       ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
 
 
-      Writer.writeDRM_colCol(item(0),"src/test/resources/ItemSimilarityMatrix")
+      Writer.writeDRM_itemItem(item(0),"src/test/resources/ItemSimilarityMatrix")
 
       UserVectorDriver.stop()
 
