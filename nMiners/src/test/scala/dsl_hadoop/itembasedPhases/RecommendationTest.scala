@@ -53,7 +53,9 @@ class RecommendationTest extends FlatSpec with Matchers{
     val dataSet = "src/test/resources/data_1/actions.csv"
     val outputPath: String = "src/test/resources/DSL_Tests/recommender/"
 
-    delete(new File(outputPath))
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors as "matrix1") then
@@ -77,5 +79,8 @@ class RecommendationTest extends FlatSpec with Matchers{
     file.delete
   }
 
+  def fileExists(file: File): Boolean ={
+    file.exists()
+  }
 
 }

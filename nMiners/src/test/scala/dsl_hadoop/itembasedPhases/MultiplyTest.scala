@@ -48,28 +48,38 @@ class MultiplyTest extends FlatSpec with Matchers{
     val dataSet = "src/test/resources/data_1/actions.csv"
     val outputPath: String = "src/test/resources/DSL_Tests/multiply/"
 
-    delete(new File(outputPath))
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
+
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors as "matrix1")then
       dsl_spark.job.JobUtils.produce(similarity_matrix as "matrix2") then
       multiply("matrix1" by "matrix2") write_on (outputPath) then dsl_spark.job.execute
 
-    delete(new File(outputPath))
+
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors)then
       dsl_spark.job.JobUtils.produce(similarity_matrix as "matrix2") then
       multiply("user_vectors" by "matrix2") write_on (outputPath) then dsl_spark.job.execute
 
-    delete(new File(outputPath))
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
 
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors as "matrix1")then
       dsl_spark.job.JobUtils.produce(similarity_matrix) then
       multiply("matrix1" by "similarity_matrix") write_on (outputPath) then dsl_spark.job.execute
 
-    delete(new File(outputPath))
+    fileExists(new File(outputPath)) should be equals true
+//    delete(new File(outputPath)) should be equals true
+//    fileExists(new File(outputPath)) should be equals false
   }
 
   it should "associate to a variable and in 2 process" in {
@@ -81,10 +91,14 @@ class MultiplyTest extends FlatSpec with Matchers{
 
   }
 
-  def delete(file: File) {
+  def delete(file: File):Boolean ={
     if (file.isDirectory)
       Option(file.listFiles).map(_.toList).getOrElse(Nil).foreach(delete(_))
-    file.delete
+    return file.delete
+  }
+
+  def fileExists(file: File): Boolean ={
+    file.exists()
   }
 
 }
