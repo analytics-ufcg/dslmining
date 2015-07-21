@@ -13,10 +13,11 @@ object Writer {
   var context: DistributedContext = _
 
   /**
-   * The method below takes a DRM object and a path in order to create a file that represents the multiplication among indexedDataset's columns
-   * based on DRM object.
+    * it saves the matrix values that are represented by drm along the user names and item names.
+    * The drm does not have the user and item names. These were replaced by indexes in order to improve the calculation.
+    *This way, it must use the indexedDataset to make a mapping the items to user names and item.
    * @param drm
-   *            DRM object used for multiplication
+   *            DRM object used for multiplication is an user-item matrix
    * @param path
    *             Outputh path
    */
@@ -27,10 +28,11 @@ object Writer {
   }
 
   /**
-   * The method below takes a DRM object and a path in order to create a file that represents the multiplication among indexedDataset's rows and columns
-   * based on DRM object.
+   * it saves the matrix values that are represented by drm along the user names and item names.
+   * The drm does not have the user and item names. These were replaced by indexes in order to improve the calculation.
+   *This way, it must use the indexedDataset to make a mapping the items to user names and item.
    * @param drm
-   *            DRM object used for multiplication
+   *            DRM object used for multiplication is an item-item matrix
    * @param path
    *             Outputh path
    */
