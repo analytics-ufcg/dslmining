@@ -78,8 +78,8 @@ class MultiplyTest extends FlatSpec with Matchers{
       multiply("matrix1" by "similarity_matrix") write_on (outputPath) then dsl_spark.job.execute
 
     fileExists(new File(outputPath)) should be equals true
-//    delete(new File(outputPath)) should be equals true
-//    fileExists(new File(outputPath)) should be equals false
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
   }
 
   it should "associate to a variable and in 2 process" in {

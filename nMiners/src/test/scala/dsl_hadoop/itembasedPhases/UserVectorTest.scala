@@ -1,6 +1,8 @@
 package dsl_spark.itembasedPhases  //    UserVectorDriver.start()
 
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import dsl_spark.job.{user_vectors, parse_data}
 import org.scalatest.{FlatSpec, Matchers}
@@ -25,6 +27,10 @@ class UserVectorTest extends FlatSpec with Matchers{
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors) write_on outputPath then dsl_spark.job.execute
 
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
+
   }
 
   it should "in 2 process" in {
@@ -43,6 +49,10 @@ class UserVectorTest extends FlatSpec with Matchers{
     parse_data on dataSet then
       dsl_spark.job.JobUtils.produce(user_vectors as "matrix") write_on outputPath then dsl_spark.job.execute
 
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
+
   }
 
   it should "associate to a variable and in 2 process" in {
@@ -54,6 +64,15 @@ class UserVectorTest extends FlatSpec with Matchers{
 
   }
 
+  def delete(file: File):Boolean ={
+    if (file.isDirectory)
+      Option(file.listFiles).map(_.toList).getOrElse(Nil).foreach(delete(_))
+    return file.delete
+  }
+
+  def fileExists(file: File): Boolean ={
+    file.exists()
+  }
 
 
 }

@@ -3,6 +3,8 @@ package dsl_hadoop.itembasedPhases
 //    UserVectorDriver.start()
 
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import dsl_spark.job.{parse_data, user_vectors,similarity_matrix}
 import org.scalatest.{FlatSpec, Matchers}
@@ -29,6 +31,9 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
       dsl_spark.job.JobUtils.produce(user_vectors) then
       dsl_spark.job.JobUtils.produce(similarity_matrix) write_on outputPath then dsl_spark.job.execute
 
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
 
   }
 
@@ -49,6 +54,10 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
       dsl_spark.job.JobUtils.produce(user_vectors as "matrix1") then
       dsl_spark.job.JobUtils.produce(similarity_matrix as "matrix2") write_on outputPath then dsl_spark.job.execute
 
+    fileExists(new File(outputPath)) should be equals true
+    delete(new File(outputPath)) should be equals true
+    fileExists(new File(outputPath)) should be equals false
+
   }
 
   it should "associate to a variable and in 2 process" in {
@@ -58,6 +67,16 @@ class SimilarityMatrixTest extends FlatSpec with Matchers{
 //    parse_data on dataSet then
 //      dsl.job.JobUtils.produce(user_vectors as "user_vec") in (2 process)  write_on outputPath then dsl.job.execute
 
+  }
+
+  def delete(file: File):Boolean ={
+    if (file.isDirectory)
+      Option(file.listFiles).map(_.toList).getOrElse(Nil).foreach(delete(_))
+    return file.delete
+  }
+
+  def fileExists(file: File): Boolean ={
+    file.exists()
   }
 
 

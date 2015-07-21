@@ -17,7 +17,12 @@ object Writer {
     matrixWithNames.dfsWrite(path,schema)(sc)
   }
 
-  def writeDRM(drm:CheckpointedDrm[Int],path:String):Unit = {
+  def writeDRM_colCol(drm:CheckpointedDrm[Int],path:String):Unit = {
+    val matrixWithNames = indexedDataset.create(drm,indexedDataset.columnIDs,indexedDataset.columnIDs)
+    matrixWithNames.dfsWrite(path,writeSchema)(context)
+  }
+
+  def writeDRM_rowCol(drm:CheckpointedDrm[Int],path:String):Unit = {
     val matrixWithNames = indexedDataset.create(drm,indexedDataset.rowIDs,indexedDataset.columnIDs)
     matrixWithNames.dfsWrite(path,writeSchema)(context)
   }
