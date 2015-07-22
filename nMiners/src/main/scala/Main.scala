@@ -6,8 +6,11 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val dataset = "data/input.dat"
-    val output = "data/output"
+//    val dataset = "data/input.dat"
+//    val output = "data/output"
+
+    val dataset = args(0)
+    val output = args(1)
 
     parse_data on dataset then
       produce(user_vectors as "user_vector") then

@@ -13,11 +13,11 @@ object Writer {
   var context: DistributedContext = _
 
   /**
-    * it saves the matrix values that are represented by drm along the user names and item names.
+    * it saves the matrix values that are represented by DRM along the user names and item names.
     * The drm does not have the user and item names. These were replaced by indexes in order to improve the calculation.
-    *This way, it must use the indexedDataset to make a mapping the items to user names and item.
+    *This way, the indexedDataset is used to make a mapping the items to user names and item .
    * @param drm
-   *            DRM object used for multiplication is an user-item matrix
+   *            DRM object used for multiplication is a user-item matrix
    * @param path
    *             Outputh path
    */
@@ -28,9 +28,9 @@ object Writer {
   }
 
   /**
-   * it saves the matrix values that are represented by drm along the user names and item names.
+   * it saves the matrix values that are represented by DRM along the user names and item names.
    * The drm does not have the user and item names. These were replaced by indexes in order to improve the calculation.
-   *This way, it must use the indexedDataset to make a mapping the items to user names and item.
+   *This way, the indexedDataset is used to make a mapping the items to user names and item.
    * @param drm
    *            DRM object used for multiplication is an item-item matrix
    * @param path
