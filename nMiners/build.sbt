@@ -14,3 +14,5 @@ libraryDependencies += "org.apache.mahout" % "mahout-core" % "0.9"
 libraryDependencies += "org.apache.camel" % "camel-jetty" % "2.15.1"
 libraryDependencies += "org.apache.camel" % "camel-core" % "2.15.1"
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
+libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "2.6.0"
+
