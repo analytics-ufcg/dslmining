@@ -2,11 +2,11 @@ package nMinersTest.api_spark_test
 
 import java.nio.file.{Files, Paths}
 
-import api_hadoop.SimilarityMatrix
-import api_spark.UserVectorDriver
+import hadoop.api.SimilarityMatrix
 import org.apache.mahout.drivers.ItemSimilarityDriver._
 import org.apache.mahout.math.indexeddataset.Schema
 import org.scalatest.{FlatSpec, Matchers}
+import spark.api.UserVectorDriver
 import utils.Writer
 
 /**

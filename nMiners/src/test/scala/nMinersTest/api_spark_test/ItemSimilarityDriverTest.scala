@@ -1,6 +1,7 @@
 package nMinersTest.api_spark_test
 
-import api_spark.{ItemSimilarityDriver, UserVectorDriver}
+import spark.api.{UserVectorDriver, ItemSimilarityDriver}
+
 import org.scalatest.{FlatSpec, Matchers}
 import utils.Writer
 

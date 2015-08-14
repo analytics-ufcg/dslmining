@@ -1,6 +1,6 @@
 //package nMinersTest
 //
-//import api_hadoop._
+//import hadoop.api_hadoop._
 //import org.apache.hadoop.io.IntWritable
 //import org.apache.hadoop.mapreduce.lib.input.{TextInputFormat, SequenceFileInputFormat}
 //import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, SequenceFileOutputFormat}
