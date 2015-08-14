@@ -7,9 +7,7 @@ import Implicits._
 object Main {
 
   def main(args: Array[String]): Unit = {
-
-val config = ConfigFactory.load()
-
+    
     val dataset = "data/input.dat"
     val output = "src/main/resources/output2.dat"
 
