@@ -41,22 +41,15 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
   // Run the job
   override def run() = {
 //    this.produced = new Produced(this.name,this)
-    println(UserVectorDriver.getContext())
-
     super.run()
-    println(UserVectorDriver.getContext())
-
     //REMOVE FROM HERE
     UserVectorDriver.start()
-    println(UserVectorDriver.getContext())
-
 
     val userVectorDrm = UserVectorDriver.run(Array(
       "--input", pathToInput,
       "--output", pathToOutput.getOrElse(""),
       "--master", "local"
     ))
-    println(UserVectorDriver.getContext())
 
 
     this.produced.product = userVectorDrm(0)
