@@ -8,3 +8,6 @@ The DSL is being built using Scala. The code will be translated to a Scala code 
 
 ### examples
 Folder that contains some examples involving Scala, Apache Mahout and Apache Hadoop. The team made this examples to study and understand these technologies.
+
+### nMiners
+

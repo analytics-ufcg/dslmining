@@ -1,6 +1,6 @@
 //package nMinersTest
 //
-//import api_hadoop.RecommenderJob
+//import hadoop.api_hadoop.RecommenderJob
 //import org.apache.hadoop.fs.Path
 //
 ////import Utils._
