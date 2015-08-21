@@ -1,0 +1,25 @@
+clean
+compile
+clean
+run
+compile
+clean
+compile
+clean
+compile
+clean
+compile
+clean
+compile
+clean
+compile
+project spark
+clean
+compile
+project spark
+test:compile
+project spark
+import api.{ItemSimilarityDriver, UserVectorDriver}
+import org.scalatest.{FlatSpec, Matchers}
+test:compile
+project spark
