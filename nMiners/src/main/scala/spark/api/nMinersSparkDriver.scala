@@ -9,7 +9,7 @@ import scala.collection.immutable.HashMap
 /**
  * Created by andryw on 14/07/15.
  */
-abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
+abstract class nMinersSparkDriver extends MahoutSparkDriver{
 
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
