@@ -11,10 +11,11 @@ object Main {
 //    val dataset = "data/input.dat"
 //    val output = "src/main/resources/output2.dat"
 
-//    val dataset = "/local/data/wiki_data_10m.txt"
-//     val output = "/home/andryw/OUT_TEST"
-    val dataset = args(0)
-    val output = args(1)
+    val dataset = "/home/viana/wiki_data_1m.txt"
+    val output = "/home/viana/OUT_TEST3"
+
+    //val dataset = args(0)
+    //val output = args(1)
 
     parse_data on dataset then
       produce(user_vectors as "user_vector") then

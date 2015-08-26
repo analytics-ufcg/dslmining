@@ -25,6 +25,8 @@ import org.apache.spark.SparkConf
 import org.apache.mahout.sparkbindings._
 import org.apache.spark.SparkConf
 
+import scala.collection.TraversableOnce
+
 /**
  * Extend this class to create a Mahout CLI driver. Minimally you must override process and main.
  * Also define a Map of options for the command line parser. The following template may help:
@@ -80,14 +82,15 @@ abstract class MahoutSparkDriver extends MahoutDriver {
     if (!_useExistingContext) {
       sparkConf.set("spark.kryo.referenceTracking", "false")
         .set("spark.kryoserializer.buffer.mb", "200")// this is default for Mahout optimizer, change it with -D option
-
+        .set("spark.executor.memory", "2G")
       if (parser.opts("sparkExecutorMem").asInstanceOf[String] != "")
         sparkConf.set("spark.executor.memory", parser.opts("sparkExecutorMem").asInstanceOf[String])
       //else leave as set in Spark config
       mc = mahoutSparkContext(
         masterUrl = "spark://teste-t:7077",
         appName = parser.opts("appName").asInstanceOf[String],
-        sparkConf = sparkConf)
+        sparkConf = sparkConf,
+        customJars = List("/home/viana/nMiners_test-t.jar") )
     }
   }
 
