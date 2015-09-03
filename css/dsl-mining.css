@@ -248,10 +248,14 @@ table.default thead {
 }
 
 h1.box{
-    color: red;
+    /*color: red;*/
 }
 .box {
     text-align: center;
     line-height: 50%;
-    color: red;
+    /*color: red;*/
+}
+
+#equipe img{
+    border-radius: 25%;
 }
