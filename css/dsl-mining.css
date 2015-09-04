@@ -255,3 +255,7 @@ h1.box{
     line-height: 50%;
     /*color: red;*/
 }
+
+#equipe img{
+    border-radius: 25%;
+}
