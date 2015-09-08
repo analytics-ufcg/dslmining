@@ -37,19 +37,19 @@
                     <a href="#page-top"></a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#intro">Introdução</a>
+                    <a href="#intro">Introduction</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#doc">Documentação</a>
+                    <a href="#doc">Documentation</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#examples">Exemplos</a>
+                    <a href="#examples">Examples</a>
                 </li>
                 <li class="page-scroll">
                     <a href="#performance">Performance</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#equipe">Equipe</a>
+                    <a href="#equipe">Team</a>
                 </li>
             </ul>
         </div>
@@ -138,74 +138,29 @@
                 <div class="col-lg-6 text-left" style="margin-top:2%;">
 
                    <code style="font-size: 150%;"> <b>parse_data on</b> “Path/to/DataSet” <b>then</b><br> &nbsp;<b>produce(</b>user_vectors<b>)</b> <b>then</b><br>
-                       &nbsp;<b>produce(</b>similarity_matrix<b>) then</b><br> &nbsp;<b>multiply(</b>"similarity_matrix" <b>by</b> "user_vectors"<b>)then</b><br> &nbsp;<b>produce(</b>recommendation<b>)</b><br>
-                       &nbsp;<b>write_on</b> “OutPut/Path” <b>then execute</b>
+                       &nbsp;<b>produce(</b>similarity_matrix<b>) then</b><br> &nbsp;<b>multiply(</b>"similarity_matrix" <b>by</b> "user_vectors"<b>)then</b><br>
+                       &nbsp;<b>produce(</b>recommendation<b>)</b><br> &nbsp;<b>write_on</b> “OutPut/Path” <b>then execute</b>
                    </code>
 
 
                 </div>
 
-                <div class="col-lg-6 text-left" style="border: 1vw solid #a1a1a1;border-radius:25%;padding: 2% 2%; ">
-
-                    <p style="font-size: 150%;">This example demonstrates how an item-based recommender can be built.
-                        We had just to break each part of the algorithm into pieces of simple code.
-                        This way, we could build the item and user matrix in order to multiplicate
-                        both of them to generate the recommendation matrix that was written into the
-                        output path passed by the user. The image below ilustrates the whole processing </p>
-
+                <div class="col-lg-6 text-justify" style="border: 1vw solid #a1a1a1;border-radius:25%;padding: 2% 2%; ">
+                    <p style="font-size: 150%;">This is an example of item-based collaborative filtering which is based on the
+                        similarity between items calculated using people's ratings of those items. We had just to break each part
+                        of the algorithm into pieces of simple code. This way, we could build the item and user matrix in order
+                        to multiplicate both of them to generate the recommendation matrix that was written into the
+                        output path passed by the user. The image below ilustrates the whole processing. </p>
                 </div>
 
                 <img src="http://2.bp.blogspot.com/-pgOdYWmcD3s/T4m2UkQ1rwI/AAAAAAAAAFM/0-WyV_vDTYI/s1600/shortEq.jpg" style="margin-top: 2%;border-radius: 10%">
             </div>
-
-
-            <!--<div class="col-lg-9 col-lg-offset-1">-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um User Based Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION-->
-                    <!--neighbourhood_size 10</code>-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um Item Based Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using-->
-                    <!--PEARSON_CORRELATION</code>-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um Matrix Factorization Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using-->
-                    <!--ALS_FACTORIZER features 5-->
-                    <!--lambda 0.5 iterations 50</code>-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um User Based Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION-->
-                    <!--neighbourhood_size 10</code>-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um Item Based Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using-->
-                    <!--PEARSON_CORRELATION</code>-->
-
-                <!--<h2>-->
-                    <!--<li>Criando um Matrix Factorization Recommender</li>-->
-                <!--</h2>-->
-                <!--<code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using-->
-                    <!--ALS_FACTORIZER features 5-->
-                    <!--lambda 0.5 iterations 50</code>-->
-            <!--</div>-->
-            <!--end section Exemplos-->
         </section>
 
         <section id="doc">
             <div class="row">
                 <div class="col-lg-12 text-center ">
-                    <h1 class="margin-title"><b>Documentação</b></h1>
+                    <h1 class="margin-title"><b>Documentation</b></h1>
                 </div>
             </div>
 
@@ -215,43 +170,57 @@
                         <h2>
                             <li>parse_data:</li>
                         </h2>
-                        <p> it takes the path to the user`s dataset
-                            .</p>
+                        <p> it takes the path to the user's dataset.</p>
+                        <p>Example: <code>parse_data on ("Path/to/dataSet")</code></p>
+
+                        <h2>
+                            <li>write_on: </li>
+                        </h2>
+                        <p> it takes a path in order to write into it an output detemined by the user.</p>
+                        <p>Example: <code>write_on “OutPut/Path”</code></p>
+
+                        <h2>
+                            <li>produce: </li>
+                        </h2>
+                        <p>it is used in order to create a matrix that can represent either a user vector, or an item similarity matrix or a recommendation matrix.
+                            This way, it can take three different arguments: similarity_matrix/user_vectors/recommendation.</p>
+                        <p>Example:
+                                        <ul>
+                                            <li>
+                                                <code>produce(user_vectors)</code>
+                                            </li>
+                                            <li>
+                                                <code>produce(similarity_matrix)</code>
+                                            </li>
+                                            <li>
+                                                <code>produce(recommendation)</code>
+                                            </li>
+                                        </ul>
+                        </p>
+
+                        <h2>
+                            <li>multiply:</li>
+                        </h2>
+                        <p>It mutiplies two matrix and returns the produced matrix.</p>
+                        <p>Example: <code>multiply("similarity_matrix"by "user_vectors")</code></p>
 
                         <h2>
                             <li>then: </li>
                         </h2>
                         <p>it is used in order to take the output from the previous method and pass it to a next method.</p>
-
-                        <h2>
-                            <li>produce: </li>
-                        </h2>
-                        <p>it used in order to create a matrix that can represent either a user vector, or an item similarity matrix or a recommendation matrix.
-                            This way, it can take three different arguments: similarity_matrix/user_vectors/recommendation.</p>
-
-                        <h2>
-                            <li>multiply:</li>
-                        </h2>
-                        <p>It mutiplies two matrix and returns the produced matrix.
-                        </p>
+                        <p>Example: <code>parse_data on “Path/to/DataSet” <b>then</b>&nbsp;produce(user_vectors)</code></p>
 
                         <h2>
                             <li>as:</li>
                         </h2>
-                        <p> it creates a alias that is attached to a object, so that the user can use this object by calling its alias instead of object`s name.
-                        </p>
-
-                        <h2>
-                            <li>write_on: </li>
-                        </h2>
-                        <p> it takes a path in order to write into it an output detemined by the user.
-                        </p>
+                        <p> it creates a alias that is attached to a object, so that the user can use this object by calling its alias instead of object`s name.</p>
+                        <p>Example: <code>produce(user_vectors <b>as</b> matrix_one)</code></p>
 
                         <h2>
                             <li>execute:</li>
                         </h2>
-                        <p> it runs the whole command and that`s why it is always the last command written.
-                        </p>
+                        <p> it runs the whole command and that's why it is always the last command written.</p>
+                        <p>Example: <code>parse_data on ("Path/to/dataSet") the produce (user_vectors) then <b>execute</b></code></p>
                     </ul>
                 </div>
             </div>
@@ -276,7 +245,7 @@
         <section id="equipe" class="container-fluid">
             <div class="row-fluid">
                 <div class="col-lg-12 text-center">
-                    <h1 class="margin-title"><b>EQUIPE</b></h1>
+                    <h1 class="margin-title"><b>TEAM</b></h1>
                 </div>
             </div>
             <div class="container-fluid">
