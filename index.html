@@ -98,10 +98,110 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-12 text-justify">
+                    <p style="font-size: 200%;">&nbsp;&nbsp;The main project’s goal is to create a tool that can assist data scientists to manipulate big data
+                        in order to implement and run data mining algorithms in parallel.</p>
+
+                        <p  style="font-size: 200%;">&nbsp;&nbsp;The tool is a DSL that was built using Scala language.
+                            The DSL code will be translated to a Scala code that uses Apache Mahout Library’s algorithms to process big data.
+                            Apache Mahout is a library that provides a set of data mining algorithms that run on top of Apache Spark.
+                            Apache Spark is a framework that processes big data loading it into a cluster's memory and query it repeatedly.
+                            Some studies<sup>2</sup> point out that Spark is a tool 100x faster than Hadoop.</p>
+
+                        <ol style="font-size: 200%;">
+                            <li>
+                                <a>http://www.forbes.com/sites/bernardmarr/2015/06/22/spark-or-hadoop-which-is-the-best-big-data-framework</a>
+                            </li>
+                            <li>
+                                <a>http://spark.apache.org/</a>
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
+
 		</section>
 	</div>
 
     <div class="container-fluid">
+
+        <section id="examples" class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h1 class="margin-title"><b>Exemplos</b></h1>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <h3>Recommendation Example</h3>
+                <div class="col-lg-6 text-left" style="margin-top:2%;">
+
+                   <code style="font-size: 150%;"> <b>parse_data on</b> “Path/to/DataSet” <b>then</b><br> &nbsp;<b>produce(</b>user_vectors<b>)</b> <b>then</b><br>
+                       &nbsp;<b>produce(</b>similarity_matrix<b>) then</b><br> &nbsp;<b>multiply(</b>"similarity_matrix" <b>by</b> "user_vectors"<b>)then</b><br> &nbsp;<b>produce(</b>recommendation<b>)</b><br>
+                       &nbsp;<b>write_on</b> “OutPut/Path” <b>then execute</b>
+                   </code>
+
+
+                </div>
+
+                <div class="col-lg-6 text-left" style="border: 1vw solid #a1a1a1;border-radius:25%;padding: 2% 2%; ">
+
+                    <p style="font-size: 150%;">This example demonstrates how an item-based recommender can be built.
+                        We had just to break each part of the algorithm into pieces of simple code.
+                        This way, we could build the item and user matrix in order to multiplicate
+                        both of them to generate the recommendation matrix that was written into the
+                        output path passed by the user. The image below ilustrates the whole processing </p>
+
+                </div>
+
+                <img src="http://2.bp.blogspot.com/-pgOdYWmcD3s/T4m2UkQ1rwI/AAAAAAAAAFM/0-WyV_vDTYI/s1600/shortEq.jpg" style="margin-top: 2%;border-radius: 10%">
+            </div>
+
+
+            <!--<div class="col-lg-9 col-lg-offset-1">-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um User Based Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION-->
+                    <!--neighbourhood_size 10</code>-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um Item Based Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using-->
+                    <!--PEARSON_CORRELATION</code>-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um Matrix Factorization Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using-->
+                    <!--ALS_FACTORIZER features 5-->
+                    <!--lambda 0.5 iterations 50</code>-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um User Based Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION-->
+                    <!--neighbourhood_size 10</code>-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um Item Based Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using-->
+                    <!--PEARSON_CORRELATION</code>-->
+
+                <!--<h2>-->
+                    <!--<li>Criando um Matrix Factorization Recommender</li>-->
+                <!--</h2>-->
+                <!--<code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using-->
+                    <!--ALS_FACTORIZER features 5-->
+                    <!--lambda 0.5 iterations 50</code>-->
+            <!--</div>-->
+            <!--end section Exemplos-->
+        </section>
+
         <section id="doc">
             <div class="row">
                 <div class="col-lg-12 text-center ">
@@ -113,90 +213,52 @@
                 <div class="col-lg-9 col-lg-offset-1">
                     <ul>
                         <h2>
-                            <li>on_dataset</li>
+                            <li>parse_data:</li>
                         </h2>
-                        <p>Solid assimilations lead to the ellipse.CursusRemTo the
-                            iced avocado add onion, rhubarb, rum and instant
-                            shrimps.arkable paralysis lead to the mind.
-                            primus acipenser est.</p>
+                        <p> it takes the path to the user`s dataset
+                            .</p>
 
                         <h2>
-                            <li>a</li>
+                            <li>then: </li>
                         </h2>
-                        <p>Solid assimilations lead to the ellipse.CursusRemTo the
-                            iced avocado add onion, rhubarb, rum and instant
-                            shrimps.arkable paralysis lead to the mind.
-                            primus acipenser est.</p>
+                        <p>it is used in order to take the output from the previous method and pass it to a next method.</p>
 
                         <h2>
-                            <li>using</li>
+                            <li>produce: </li>
                         </h2>
-                        <p>Solid assimilations lead to the ellipse.CursusRemTo the
-                            iced avocado add onion, rhubarb, rum and instant
-                            shrimps.arkable paralysis lead to the mind.
-                            primus acipenser est.</p>
+                        <p>it used in order to create a matrix that can represent either a user vector, or an item similarity matrix or a recommendation matrix.
+                            This way, it can take three different arguments: similarity_matrix/user_vectors/recommendation.</p>
 
                         <h2>
-                            <li>neighbourhood_size</li>
+                            <li>multiply:</li>
                         </h2>
-                        <p>Solid assimilations lead to the ellipse.CursusRemTo the
-                            iced avocado add onion, rhubarb, rum and instant
-                            shrimps.arkable paralysis lead to the mind.
-                            primus acipenser est.</p>
+                        <p>It mutiplies two matrix and returns the produced matrix.
+                        </p>
+
+                        <h2>
+                            <li>as:</li>
+                        </h2>
+                        <p> it creates a alias that is attached to a object, so that the user can use this object by calling its alias instead of object`s name.
+                        </p>
+
+                        <h2>
+                            <li>write_on: </li>
+                        </h2>
+                        <p> it takes a path in order to write into it an output detemined by the user.
+                        </p>
+
+                        <h2>
+                            <li>execute:</li>
+                        </h2>
+                        <p> it runs the whole command and that`s why it is always the last command written.
+                        </p>
                     </ul>
                 </div>
             </div>
             <!--end section Doc-->
         </section>
 
-        <section id="examples" class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h1 class="margin-title"><b>Exemplos</b></h1>
-                </div>
-            </div>
-            <div class="col-lg-9 col-lg-offset-1">
 
-                <h2>
-                    <li>Criando um User Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
-                    neighbourhood_size 10</code>
-
-                <h2>
-                    <li>Criando um Item Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using
-                    PEARSON_CORRELATION</code>
-
-                <h2>
-                    <li>Criando um Matrix Factorization Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
-                    ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
-
-                <h2>
-                    <li>Criando um User Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a USER_BASED_RECOMMENDER using PEARSON_CORRELATION
-                    neighbourhood_size 10</code>
-
-                <h2>
-                    <li>Criando um Item Based Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a ITEM_BASED_RECOMMENDER using
-                    PEARSON_CORRELATION</code>
-
-                <h2>
-                    <li>Criando um Matrix Factorization Recommender</li>
-                </h2>
-                <code>val rec = train on_dataset "data/intro1.csv" a MATRIX_FACTORIZATION_RECOMMENDER using
-                    ALS_FACTORIZER features 5
-                    lambda 0.5 iterations 50</code>
-            </div>
-            <!--end section Exemplos-->
-        </section>
     </div>
 
     <div class="container-fluid">
