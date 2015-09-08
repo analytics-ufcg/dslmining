@@ -172,13 +172,13 @@
                             <li>parse_data:</li>
                         </h2>
                         <p> it takes the path to the user's dataset.</p>
-                        <p>Example: <code>parse_data on ("Path/to/dataSet")</code></p>
+                        <p>Example: <br><code>parse_data on ("Path/to/dataSet")</code></p>
 
                         <h2>
                             <li>write_on: </li>
                         </h2>
                         <p> it takes a path in order to write into it an output detemined by the user.</p>
-                        <p>Example: <code>write_on “OutPut/Path”</code></p>
+                        <p>Example: <br><code>write_on “OutPut/Path”</code></p>
 
                         <h2>
                             <li>produce: </li>
@@ -203,25 +203,25 @@
                             <li>multiply:</li>
                         </h2>
                         <p>It mutiplies two matrix and returns the produced matrix.</p>
-                        <p>Example: <code>multiply("similarity_matrix"by "user_vectors")</code></p>
+                        <p>Example: <br><code>multiply("similarity_matrix"by "user_vectors")</code></p>
 
                         <h2>
                             <li>then: </li>
                         </h2>
                         <p>it is used in order to take the output from the previous method and pass it to a next method.</p>
-                        <p>Example: <code>parse_data on “Path/to/DataSet” <b>then</b>&nbsp;produce(user_vectors)</code></p>
+                        <p>Example: <br><code>parse_data on “Path/to/DataSet” <b>then</b>&nbsp;produce(user_vectors)</code></p>
 
                         <h2>
                             <li>as:</li>
                         </h2>
                         <p> it creates a alias that is attached to a object, so that the user can use this object by calling its alias instead of object`s name.</p>
-                        <p>Example: <code>produce(user_vectors <b>as</b> matrix_one)</code></p>
+                        <p>Example: <br><code>produce(user_vectors <b>as</b> matrix_one)</code></p>
 
                         <h2>
                             <li>execute:</li>
                         </h2>
                         <p> it runs the whole command and that's why it is always the last command written.</p>
-                        <p>Example: <code>parse_data on ("Path/to/dataSet") the produce (user_vectors) then <b>execute</b></code></p>
+                        <p>Example: <br><code>parse_data on ("Path/to/dataSet") the produce (user_vectors) then <b>execute</b></code></p>
                     </ul>
                 </div>
             </div>
