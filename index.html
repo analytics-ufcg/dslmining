@@ -101,7 +101,7 @@
 
             <div class="row">
                 <div class="col-lg-12 text-justify">
-                    <p style="font-size: 200%;">&nbsp;&nbsp;The main project’s goal is to create a tool that can assist data scientists to manipulate big data
+                    <p style="font-size: 200%;">&nbsp;&nbsp;nMiners is a tool that can assist data scientists to manipulate big data
                         in order to implement and run data mining algorithms in parallel.</p>
 
                         <p  style="font-size: 200%;">&nbsp;&nbsp;The tool is a DSL that was built using Scala language.
@@ -239,19 +239,46 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                        <p style="font-size: 150%;">We performed a set of experiments in order to compare of our DSL with Mahout-Spark. This way,
-                        We have used a computer cluster with zero (localhost), one, two and three slaves along with four
-                        different inputs: 10MB, 25MB, 50MB, 100MB. The results of the experiments are shown in the graphs below:</p>
-                        
-                        <img src="images/grafico1.png" width="50%" height="50%">
-                    
-                    
-                        <p style="font-size: 150%;"><br>Analyzing the results of the experiments above, we could conclude that there is no significant difference between the
-                            tools execution times</p>
+            <div class="row text-center" style="font-size:150%;">
+
+            	 <p >We executed a set of experiments in order to compare the execution time of our DSL to Mahout-Spark. Our goal 
+            	 		was to find out whether or not our implementation influenced the execution time negatively. In order to make the comparasion, 
+            	 		we executed the item-based collaborative filtering algorithm to build the similarity matrix.
+            	 		This way, we have used a computer cluster with zero (localhost), one, two and three slaves along with four
+                        different inputs: 10MB, 25MB, 50MB, 100MB. Each cluster node has the following configuration:
+                        <ul style="list-style-type: circle;">
+                        	<li>
+                        		320GB de HD
+                        	</li>
+                        	<li>
+                        		8 cores
+                        	</li>
+                        	<li>
+                        		8GB de Ram
+                        	</li>
+                        </ul>
+
+                        The results of the experiments are shown in the graphs below:</p>
+
+                 <div class="col-lg-6 text-center">
+	                 		<img class="img-responsive img-rounded" src="images/input10M.png" width="75%" height="75%" style="margin: 2% auto;">
+
+                          	<img class="img-responsive img-rounded"  src="images/input50M.png" width="75%" height="75%" style="margin: 0 auto;" ><br>
+                 </div>
+
+                <div class="col-lg-6 text-center">
+ 					  		  <img class="img-responsive img-rounded" src="images/input25M.png" width="75%" height="75%" style="margin: 2% auto;">
+
+            	               <img class="img-responsive img-rounded" src="images/input100M.png" width="75%" height="75%" style="margin: 0 auto;" ><br>
                 </div>
+
+			                <!-- <img src="images/MahoutSpark-tempo.png" width="50%" height="50%" style="margin-top:2%;"><br>                            -->
+                    
             </div>
+
+             <p style="font-size: 150%; margin-top:2%; text-align:center;">Analyzing the results of the experiments above, we could conclude that there is no significant difference between the
+                            tools execution times.</p>
+
 
 		</section>
 	</div>
