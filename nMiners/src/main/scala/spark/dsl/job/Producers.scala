@@ -48,7 +48,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     val userVectorDrm = UserVectorDriver.run(Array(
       "--input", pathToInput,
       "--output", pathToOutput.getOrElse(""),
-      "--master", "ec2-52-35-1-2.us-west-2.compute.amazonaws.com"
+      "--master", "local"
     ))
 
 
@@ -85,7 +85,7 @@ object similarity_matrix extends Producer[DrmLike[Int]] {
     val itemSimilarity = ItemSimilarityDriver.run(Array(user_vectors.produced.product), Array(
       "--input", pathToInput,
       "--output", this.pathToOutput.getOrElse(""),
-      "--master", "ec2-52-35-1-2.us-west-2.compute.amazonaws.com"
+      "--master", "local"
     ))(UserVectorDriver.getParser(),UserVectorDriver.getContext(), UserVectorDriver.indexedDataset)
 
     this.produced.product = itemSimilarity(0)

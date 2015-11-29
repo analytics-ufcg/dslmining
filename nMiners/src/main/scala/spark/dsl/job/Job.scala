@@ -76,10 +76,11 @@ trait Job {
         job.exec()
         lastOutput = job.pathToOutput.getOrElse("")
       })
+    } catch{
+      case e => println("Exception! "+e.printStackTrace()); throw e
     } finally {
       NotificationEndServer.stop
       UserVectorDriver.stop()
-
     }
   }
 
