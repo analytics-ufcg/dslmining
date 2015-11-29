@@ -18,3 +18,10 @@ libraryDependencies += "org.apache.camel" % "camel-core" % "2.15.2"
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
 libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "2.6.0"
 //libraryDependencies += "org.apache.hadoop" % "hadoop-core" % "1.2.1"
+
+test in assembly := {}
+
+assemblyMergeStrategy in assembly := {
+  case "META-INF/MANIFEST.MF" => MergeStrategy.discard 
+  case x => MergeStrategy.first
+}
