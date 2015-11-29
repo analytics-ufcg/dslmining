@@ -41,3 +41,11 @@ libraryDependencies += "org.apache.camel" % "camel-jetty" % "2.15.1"
 libraryDependencies += "org.apache.camel" % "camel-core" % "2.15.1"
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
 libraryDependencies += "com.typesafe" % "config" % "1.2.1"
+test in assembly := {}
+
+assemblyMergeStrategy in assembly := {
+  case "META-INF/MANIFEST.MF" => MergeStrategy.discard 
+  case x if x.toLowerCase.matches(".*\\.sf$") => MergeStrategy.discard
+  case x if x.toLowerCase.matches(".*\\.rsa$") => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
