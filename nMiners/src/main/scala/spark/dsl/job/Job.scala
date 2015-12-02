@@ -77,11 +77,7 @@ trait Job {
         lastOutput = job.pathToOutput.getOrElse("")
       })
     } catch{
-<<<<<<< Updated upstream
-      case e => println("Exception! "+e.printStackTrace()); throw e
-=======
       case e => println(e.printStackTrace()); throw e
->>>>>>> Stashed changes
     } finally {
       NotificationEndServer.stop
       UserVectorDriver.stop()
