@@ -2,6 +2,7 @@ package utils
 
 import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema}
+import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark;
 
 /**
  * Created by andryw on 20/07/15.
@@ -38,7 +39,11 @@ object Writer {
    */
 
   def writeDRM_userItem(drm:CheckpointedDrm[Int],path:String):Unit = {
-    val matrixWithNames = indexedDataset.create(drm,indexedDataset.rowIDs,indexedDataset.columnIDs)
-    matrixWithNames.dfsWrite(path,writeSchema)(context)
+    print("Vai escrever")
+    //val matrixWithNames = indexedDataset.create(drm,indexedDataset.rowIDs,indexedDataset.columnIDs)
+    //matrixWithNames.dfsWrite(path,writeSchema)(context)
+    val indexedDataSetSpark = new IndexedDatasetSpark(drm, indexedDataset.rowIDs, indexedDataset.columnIDs);
+    indexedDataSetSpark.dfsWrite(path, writeSchema)(context)
+    print("Escreveu!")
   }
 }

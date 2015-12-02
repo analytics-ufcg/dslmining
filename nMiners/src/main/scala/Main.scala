@@ -11,10 +11,11 @@ object Main {
 //    val dataset = "data/input.dat"
 //    val output = "src/main/resources/output2.dat"
 
-//    val dataset = "/home/andryw/Projects/dslmining/nMiners/data/input.dat"
-//     val output = "/home/andryw/OUT_TEST"
-    val dataset = args(0)
-    val output = args(1)
+     //val dataset = "/home/lucas/mestrado/CODE/generate-test-data/generated-input.csv"
+     //val dataset = "/home/lucas/mestrado/CODE/dslmining/nMiners/data/actions.csv"
+     //val output = "/home/lucas/mestrado/CODE/generate-test-data/out"
+     val dataset = args(0)
+     val output = args(1)
 
     parse_data on dataset then
       produce(user_vectors as "user_vector") then
