@@ -51,6 +51,7 @@ object UserVectorDriver extends nMinersSparkDriver{
   var drmsUserVector:Array[DrmLike[Int]] = _
   var indexedDataset: IndexedDataset = _
 
+
   /**
    * Entry point, not using Scala App trait
    * It's necessary start the spark before run the main. Use start()

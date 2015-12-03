@@ -14,7 +14,8 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
     "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver")
+    "appName" -> "ItemSimilarityDriver",
+    "master" -> "spark://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:7077")
 
   def createParse: Unit = {
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
@@ -62,6 +63,8 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
       //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
       parseGenericOptions()
+
+
 
       help("help") abbr ("h") text ("prints this usage text\n")
 
