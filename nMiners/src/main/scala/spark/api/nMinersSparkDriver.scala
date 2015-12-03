@@ -1,5 +1,6 @@
 package spark.api
 
+import spark.dsl.job.Context;
 import org.apache.mahout.drivers
 import org.apache.mahout.drivers.{MahoutSparkOptionParser}
 import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext}
@@ -19,6 +20,11 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
     "masterUrl" -> "spark://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:7077")
 
   def createParse: Unit = {
+
+    sparkConf.setMaster(Context.masterUrl)
+    sparkConf.setAppName(Context.jar)
+    sparkConf.setJars(Array(Context.jar))
+
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
       head("spark-itemsimilarity", "Mahout 0.10.0")
 
