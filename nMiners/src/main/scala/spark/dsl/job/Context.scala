@@ -6,6 +6,8 @@ import scala.reflect.ClassTag
 
 object Context {
 
+  val masterUrl: String = "local[*]"
+  val jar: String = ""
   val INPUT_PATH_KEY: String = "INPUT_PATH"
   val OUTPUT_PATH_KEY: String = "OUTPUT_PATH"
 

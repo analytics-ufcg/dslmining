@@ -43,6 +43,7 @@ import scala.collection.immutable.HashMap
  *       option.
  */
 object ItemSimilarityDriver extends nMinersSparkDriver {
+
   // define only the options specific to ItemSimilarity
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,

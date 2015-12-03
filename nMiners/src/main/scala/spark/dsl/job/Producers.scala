@@ -43,7 +43,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
 //    this.produced = new Produced(this.name,this)
     super.run()
     //REMOVE FROM HERE
-    UserVectorDriver.start()
+    UserVectorDriver.start(Context.masterUrl, Context.jar)
 
     val userVectorDrm = UserVectorDriver.run(Array(
       "--input", pathToInput,

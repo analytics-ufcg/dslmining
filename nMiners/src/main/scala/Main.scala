@@ -16,6 +16,11 @@ object Main {
      //val output = "/home/lucas/mestrado/CODE/generate-test-data/out"
      val dataset = args(0)
      val output = args(1)
+     val masterUrl = args(2)
+     val jar = args(3)
+
+    Context.masterUrl -> masterUrl
+    Context.jar -> jar
 
     parse_data on dataset then
       produce(user_vectors as "user_vector") then

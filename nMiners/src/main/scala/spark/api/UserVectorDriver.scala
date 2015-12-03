@@ -70,6 +70,14 @@ object UserVectorDriver extends nMinersSparkDriver{
     }
   }
 
+
+ def start(master:String, jar:String): Unit ={
+   sparkConf.setMaster(master)
+   sparkConf.setAppName(jar)
+   createParse
+   super.start()
+ }
+
   def createSchemas: Unit = {
     readSchema1 = new Schema("delim" -> parser.opts("inDelim").asInstanceOf[String],
       "filter" -> parser.opts("filter1").asInstanceOf[String],

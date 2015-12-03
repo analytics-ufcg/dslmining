@@ -15,7 +15,8 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
     "maxPrefs" -> 500,
     "maxSimilaritiesPerItem" -> 100,
     "appName" -> "ItemSimilarityDriver",
-    "master" -> "spark://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:7077")
+    "master" -> "spark://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:7077",
+    "masterUrl" -> "spark://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:7077")
 
   def createParse: Unit = {
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
