@@ -49,7 +49,7 @@ object NotificationEndServer {
   }
 
   def configureServer(conf: Configuration) = {
-    conf.set("job.end.notification.url", "http://localhost:9090/notification?jobId=$jobId&status=$jobStatus")
+    conf.set("job.end.notification.url", "http://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:9090/notification?jobId=$jobId&status=$jobStatus")
     conf.setInt("job.end.retry.attempts", 3)
     conf.setInt("job.end.retry.interval", 1000)
   }
@@ -67,7 +67,7 @@ object NotificationEndServer {
 
 object Router extends RouteBuilder {
   override def configure() = {
-    from("jetty:http://localhost:9090/notification?jobId={id}&status={status}").
+    from("jetty:http://ec2-52-35-103-113.us-west-2.compute.amazonaws.com:9090/notification?jobId={id}&status={status}").
       process(NotificationEndServer.handler)
   }
 
