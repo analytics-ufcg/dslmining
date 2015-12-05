@@ -40,7 +40,6 @@ import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
  *       option.
  */
 object UserVectorDriver extends nMinersSparkDriver{
-
   //The object parser needs to be visible outside. But parser is protected.
   def getParser(): MahoutOptionParser = parser
   def getContext(): DistributedContext = mc
@@ -50,7 +49,6 @@ object UserVectorDriver extends nMinersSparkDriver{
   private var readSchema2: Schema = _
   var drmsUserVector:Array[DrmLike[Int]] = _
   var indexedDataset: IndexedDataset = _
-
 
   /**
    * Entry point, not using Scala App trait
@@ -70,10 +68,7 @@ object UserVectorDriver extends nMinersSparkDriver{
     }
   }
 
-
  def start(master:String, jar:String): Unit ={
-   sparkConf.setMaster(master)
-   sparkConf.setAppName(jar)
    createParse
    super.start()
  }

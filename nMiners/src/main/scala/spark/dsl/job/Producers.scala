@@ -48,8 +48,9 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     println("\nStartou")
 
     val userVectorDrm = UserVectorDriver.run(Array(
-      "--input", pathToInput,
-      "--output", pathToOutput.getOrElse("")
+      "--input", "/generated-input.csv",
+      "--output", "/output",
+      "--master", "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
     ))
 
 

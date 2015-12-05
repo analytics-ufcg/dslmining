@@ -1,6 +1,5 @@
 package spark.api
 
-import spark.dsl.job.Context;
 import org.apache.mahout.drivers
 import org.apache.mahout.drivers.{MahoutSparkOptionParser}
 import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext}
@@ -15,16 +14,9 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
     "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver",
-    "master" -> Context.masterUrl,
-    "masterUrl" -> Context.masterUrl)
+    "appName" -> "ItemSimilarityDriver")
 
   def createParse: Unit = {
-
-    sparkConf.setMaster(Context.masterUrl)
-    sparkConf.setAppName(Context.jar)
-    sparkConf.setJars(Array(Context.jar))
-
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
       head("spark-itemsimilarity", "Mahout 0.10.0")
 
@@ -71,8 +63,6 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
       //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
       parseGenericOptions()
 
-
-
       help("help") abbr ("h") text ("prints this usage text\n")
 
     }
@@ -81,14 +71,10 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
   override def start(): Unit = {
     createParse
     super.start()
-
-
   }
 
   override def stop(): Unit = {
     super.stop()
   }
-
-//  def writeDRM(path:String): Unit
 
 }
