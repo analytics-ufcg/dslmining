@@ -68,9 +68,8 @@ object UserVectorDriver extends nMinersSparkDriver{
     }
   }
 
- def start(master:String, jar:String): Unit ={
-   sparkConf.setMaster(master)
-   sparkConf.setJars(Array(jar))
+ def start(master:String): Unit ={
+   sparkMasterUrl = master
    createParse
    super.start()
  }

@@ -44,14 +44,12 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     super.run()
     //REMOVE FROM HERE
     println("\nvai startar UserVectorDriver para o master "+Context.masterUrl)
-    UserVectorDriver.start(Context.masterUrl, Context.jar)
-    UserVectorDriver.sparkConf
+    UserVectorDriver.start(Context.masterUrl)
     println("\nStartou")
 
     val userVectorDrm = UserVectorDriver.run(Array(
       "--input", pathToInput,
-      "--output", pathToOutput.getOrElse(""),
-      "--master", "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
+      "--output", pathToOutput.getOrElse("")
     ))
 
 

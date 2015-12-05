@@ -17,9 +17,10 @@ object Main {
      val dataset = args(0)
      val output = args(1)
      //val masterUrl = args(2)
-     val jar = args(3)
+     //val jar = args(3)
 
-    Context.masterUrl -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
+    //Context.masterUrl -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
+    //Context.masterUrl -> "local"
     //Context.jar -> jar
 
     parse_data on dataset then

@@ -11,13 +11,15 @@ import scala.collection.immutable.HashMap
  */
 abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
+  implicit var sparkMasterUrl : String = "blablabla"
+
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
     "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver",
-    "master" -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077")
+    "appName" -> "ItemSimilarityDriver")
 
   def createParse: Unit = {
+    var sparkUrl: String = sparkMasterUrl
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
       head("spark-itemsimilarity", "Mahout 0.11.0")
 
@@ -61,7 +63,7 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
       //Spark config options--not driver specific
       parseSparkOptions() (sparkConf)
       opts = opts-("master")
-      opts = opts+("master"->"spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077")
+      opts = opts+("master"-> sparkUrl)
 
       //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
       parseGenericOptions()
@@ -73,7 +75,6 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
   override def start(): Unit = {
     createParse
-    parser.opts("master") -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
     super.start()
   }
 
