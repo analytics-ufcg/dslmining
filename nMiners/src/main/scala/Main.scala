@@ -11,15 +11,15 @@ object Main {
 //    val dataset = "data/input.dat"
 //    val output = "src/main/resources/output2.dat"
 
-     //val dataset = "/home/lucas/mestrado/CODE/generate-test-data/generated-input.csv"
+     //val dataset = "/home/lucas/mestrado/CODE/generate-test-data/a.csv"
      //val dataset = "/home/lucas/mestrado/CODE/dslmining/nMiners/data/actions.csv"
-     //val output = "/home/lucas/mestrado/CODE/generate-test-data/out"
+     //val output = "/home/lucas/mestrado/CODE/generate-test-data/out212"
      val dataset = args(0)
      val output = args(1)
-     val masterUrl = args(2)
+     //val masterUrl = args(2)
      val jar = args(3)
 
-    Context.masterUrl -> masterUrl
+    Context.masterUrl -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
     Context.jar -> jar
 
     parse_data on dataset then

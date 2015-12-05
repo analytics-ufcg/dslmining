@@ -14,11 +14,12 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
   private final val ItemSimilarityOptions = HashMap[String, Any](
     "maxPrefs" -> 500,
     "maxSimilaritiesPerItem" -> 100,
-    "appName" -> "ItemSimilarityDriver")
+    "appName" -> "ItemSimilarityDriver",
+    "master" -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077")
 
   def createParse: Unit = {
     parser = new MahoutSparkOptionParser(programName = "spark-itemsimilarity") {
-      head("spark-itemsimilarity", "Mahout 0.10.0")
+      head("spark-itemsimilarity", "Mahout 0.11.0")
 
       //Input output options, non-driver specific
       parseIOOptions(numInputs = 2)
@@ -58,7 +59,7 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
       parseIndexedDatasetFormatOptions()
 
       //Spark config options--not driver specific
-      parseSparkOptions()
+      parseSparkOptions() (sparkConf)
 
       //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
       parseGenericOptions()
@@ -70,6 +71,7 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
   override def start(): Unit = {
     createParse
+    parser.opts("master") -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
     super.start()
   }
 

@@ -69,7 +69,10 @@ object UserVectorDriver extends nMinersSparkDriver{
   }
 
  def start(master:String, jar:String): Unit ={
+   sparkConf.setMaster(master)
+   sparkConf.setJars(Array(jar))
    createParse
+   parser.opts("master") -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
    super.start()
  }
 
@@ -155,7 +158,7 @@ object UserVectorDriver extends nMinersSparkDriver{
 
   override def process(): Unit = {
     createSchemas
-
+    parser.opts("master").asInstanceOf[String]
     val indexedDatasets = readIndexedDatasets
     indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
