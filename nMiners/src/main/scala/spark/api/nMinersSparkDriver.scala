@@ -60,6 +60,8 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
       //Spark config options--not driver specific
       parseSparkOptions() (sparkConf)
+      opts = opts-("master")
+      opts = opts+("master"->"spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077")
 
       //Jar inclusion, this option can be set when executing the driver from compiled code, not when from CLI
       parseGenericOptions()

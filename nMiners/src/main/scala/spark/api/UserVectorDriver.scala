@@ -72,7 +72,6 @@ object UserVectorDriver extends nMinersSparkDriver{
    sparkConf.setMaster(master)
    sparkConf.setJars(Array(jar))
    createParse
-   parser.opts("master") -> "spark://ec2-52-33-227-29.us-west-2.compute.amazonaws.com:7077"
    super.start()
  }
 
