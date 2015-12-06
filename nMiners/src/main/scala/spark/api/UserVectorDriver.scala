@@ -69,11 +69,13 @@ object UserVectorDriver extends nMinersSparkDriver{
     }
   }
 
- def start(master:String): Unit ={
+ def start(master:String, jar:String): Unit ={
    Class.forName("org.apache.mahout.math.DenseVector")
    Class.forName("org.apache.mahout.math.Vector")
    println("forname ok")
    sparkMasterUrl = master
+   sparkConf.setJars(Array(jar))
+   mc
    createParse
    super.start()
  }
@@ -160,6 +162,7 @@ object UserVectorDriver extends nMinersSparkDriver{
 
   override def process(): Unit = {
     createSchemas
+    mc
     val indexedDatasets = readIndexedDatasets
     indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]

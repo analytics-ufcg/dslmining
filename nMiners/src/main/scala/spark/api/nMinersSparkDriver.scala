@@ -4,7 +4,9 @@ import org.apache.mahout.drivers
 import org.apache.mahout.drivers.{MahoutSparkOptionParser}
 import org.apache.mahout.math.drm.{CheckpointedDrm, DistributedContext}
 import org.apache.mahout.math.indexeddataset.{Schema, IndexedDataset}
+import scala.collection.{mutable, TraversableOnce}
 import scala.collection.immutable.HashMap
+import org.apache.mahout.sparkbindings._
 
 /**
  * Created by andryw on 14/07/15.
@@ -75,7 +77,23 @@ abstract class nMinersSparkDriver extends drivers.MahoutSparkDriver{
 
   override def start(): Unit = {
     createParse
-    super.start()
+    if (!_useExistingContext) {
+      sparkConf.set("spark.kryo.referenceTracking", "false")
+        .set("spark.kryoserializer.buffer.mb", "200")// this is default for Mahout optimizer, change it with -D option
+
+      if (parser.opts("sparkExecutorMem").asInstanceOf[String] != "")
+        sparkConf.set("spark.executor.memory", parser.opts("sparkExecutorMem").asInstanceOf[String])
+      //else leave as set in Spark config
+     // val trav = TraversableOnce[String]
+      val customJar = new mutable.ArrayBuffer[String]()
+      customJar.append(sparkConf.get("spark.jars"))
+
+      mc = mahoutSparkContext(
+        masterUrl = parser.opts("master").asInstanceOf[String],
+        appName = parser.opts("appName").asInstanceOf[String],
+        customJars = customJar,
+        sparkConf = sparkConf)
+    }
   }
 
   override def stop(): Unit = {

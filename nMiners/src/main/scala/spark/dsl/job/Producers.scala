@@ -44,7 +44,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     super.run()
     //REMOVE FROM HERE
     println("\nvai startar UserVectorDriver para o master "+Context.masterUrl)
-    UserVectorDriver.start(Context.masterUrl)
+    UserVectorDriver.start(Context.masterUrl, Context.jar)
     println("\nStartou")
 
     val userVectorDrm = UserVectorDriver.run(Array(
