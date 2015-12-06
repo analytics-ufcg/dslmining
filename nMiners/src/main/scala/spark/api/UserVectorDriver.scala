@@ -19,6 +19,7 @@ package spark.api
 
 import org.apache.mahout.common.HDFSPathSearch
 import org.apache.mahout.drivers.MahoutOptionParser
+import org.apache.mahout.math.DenseVector
 import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
@@ -69,6 +70,9 @@ object UserVectorDriver extends nMinersSparkDriver{
   }
 
  def start(master:String): Unit ={
+   Class.forName("org.apache.mahout.math.DenseVector")
+   Class.forName("org.apache.mahout.math.Vector")
+   println("forname ok")
    sparkMasterUrl = master
    createParse
    super.start()
@@ -156,7 +160,6 @@ object UserVectorDriver extends nMinersSparkDriver{
 
   override def process(): Unit = {
     createSchemas
-    parser.opts("master").asInstanceOf[String]
     val indexedDatasets = readIndexedDatasets
     indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
