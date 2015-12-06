@@ -70,7 +70,7 @@ object SimilarityAnalysis extends Serializable {
    *         cross-cooccurrence
    */
   def cooccurrences(drmARaw: DrmLike[Int], randomSeed: Int = 0xdeadbeef, maxInterestingItemsPerThing: Int = 50,
-                    maxNumInteractions: Int = 500, drmBs: Array[DrmLike[Int]] = Array()): List[DrmLike[Nothing]] = {
+                    maxNumInteractions: Int = 500, drmBs: Array[DrmLike[Int]] = Array()): List[DrmLike[Int]] = {
 
     implicit val distributedContext = drmARaw.context
 
@@ -150,7 +150,7 @@ object SimilarityAnalysis extends Serializable {
                         randomSeed: Int = 0xdeadbeef,
                         maxInterestingItemsPerThing: Int = 50,
                         maxNumInteractions: Int = 500):
-  List[DrmLike[Nothing]] = {
+  List[DrmLike[Int]] = {
     val primaryDrm = drms(0)
     val secondaryDrms = drms.drop(1)
     cooccurrences(primaryDrm, randomSeed, maxInterestingItemsPerThing,
