@@ -45,6 +45,8 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
       val columnIDDictionary = indexedDataset.columnIDs
       val columnIDDictionary_bcast = mc.broadcast(columnIDDictionary)
 
+      println(matrix.rdd.toDebugString)
+
       matrix.rdd.map { case (rowID, itemVector) =>
 
         // turn non-zeros into list for sorting

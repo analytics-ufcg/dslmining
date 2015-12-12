@@ -38,6 +38,7 @@ import scalabindings._
 import RLikeOps._
 import drm._
 import RLikeDrmOps._
+import utils.Holder
 import scala.collection.JavaConversions._
 import org.apache.mahout.math.stats.LogLikelihood
 import collection._
@@ -72,6 +73,7 @@ object SimilarityAnalysis extends Serializable {
   def cooccurrences(drmARaw: DrmLike[Int], randomSeed: Int = 0xdeadbeef, maxInterestingItemsPerThing: Int = 50,
                     maxNumInteractions: Int = 500, drmBs: Array[DrmLike[Int]] = Array()): List[DrmLike[Int]] = {
 
+    Holder.logger.info("started cooccurrences")
     implicit val distributedContext = drmARaw.context
 
     // backend allowed to optimize partitioning
@@ -133,6 +135,7 @@ object SimilarityAnalysis extends Serializable {
     val i = 0
 
     // Return list of similarity matrices
+    Holder.logger.info("Finished cooccurrences")
     similarityMatrices
   }
 
@@ -227,7 +230,7 @@ object SimilarityAnalysis extends Serializable {
                           crossCooccurrence: Boolean = true) = {
     drm.mapBlock() {
       case (keys, block) =>
-
+        Holder.logger.info("will compute similarities")
         val llrBlock = block.like()
         val numInteractionsB: Vector = bcastNumInteractionsB
         val numInteractionsA: Vector = bcastNumInteractionsA
@@ -271,7 +274,7 @@ object SimilarityAnalysis extends Serializable {
               llrBlock(index, otherThing) = llrScore
           }
         }
-
+        Holder.logger.info("Finished computing similarities")
         keys -> llrBlock
     }
   }
