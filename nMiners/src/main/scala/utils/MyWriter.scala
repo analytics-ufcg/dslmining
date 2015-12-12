@@ -14,6 +14,10 @@ import scala.collection.JavaConversions._
 /**
   * Created by lucas on 10/12/15.
   */
+
+object Holder extends Serializable{
+  @transient lazy val logger = Logger.getLogger(this.getClass.getCanonicalName)
+}
 trait MyWriter extends Writer[IndexedDatasetSpark]{
 
   protected def writer(
@@ -35,42 +39,44 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
       require (!dest.isEmpty,"No destination to write to")
 
       val matrix = indexedDataset.matrix.checkpoint()
-      println(matrix.rdd.toDebugString)
-      matrix.rdd.map {case (rowID, itemVector) =>
+      val rowIDDictionary = indexedDataset.rowIDs
+      val rowIDDictionary_bcast = mc.broadcast(rowIDDictionary)
+
+      val columnIDDictionary = indexedDataset.columnIDs
+      val columnIDDictionary_bcast = mc.broadcast(columnIDDictionary)
+
+      matrix.rdd.map { case (rowID, itemVector) =>
 
         // turn non-zeros into list for sorting
         var itemList = List[(Int, Double)]()
         for (ve <- itemVector.nonZeroes) {
           itemList = itemList :+ (ve.index, ve.get)
         }
-        println("passou for nonzeroes")
         //sort by highest value descending(-)
         val vector = if (sort) itemList.sortBy { elem => -elem._2 } else itemList
-        println("passou itemlist sort")
+
         // first get the external rowID token
         if (!vector.isEmpty){
-          println("vector n eh empty")
-          var line = rowID + rowKeyDelim
-          println("vai escrever line "+line)
+
+          Holder.logger.info("I got this rowID "+rowID)
+          var line = rowIDDictionary_bcast.value.inverse.getOrElse(rowID, "INVALID_ROW_ID") + rowKeyDelim
           // for the rest of the row, construct the vector contents of elements (external column ID, strength value)
           for (item <- vector) {
-            line += item._1
+            line += columnIDDictionary_bcast.value.inverse.getOrElse(item._1, "INVALID_COLUMN_ID")
             if (!omitScore) line += columnIdStrengthDelim + item._2
             line += elementDelim
           }
-          println("passou for item vector")
           // drop the last delimiter, not needed to end the line
           line.dropRight(1)
-          println("passou line dropright")
         } else {//no items so write a line with id but no values, no delimiters
-          println("caiu no else, return a rowid")
-          rowID
+          rowIDDictionary_bcast.value.inverse.getOrElse(rowID, "INVALID_ROW_ID")
         } // "if" returns a line of text so this must be last in the block
-      }.saveAsTextFile(dest)
+      }
+        .saveAsTextFile(dest)
+
     }catch{
       case cce: ClassCastException => {
         logger.error("Schema has illegal values"); throw cce}
     }
   }
-
 }
