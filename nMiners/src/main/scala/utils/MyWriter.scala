@@ -47,7 +47,7 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
 
       println(matrix.rdd.toDebugString)
 
-      matrix.rdd.map { case (rowID, itemVector) =>
+      val finalMap = matrix.rdd.map { case (rowID, itemVector) =>
 
         // turn non-zeros into list for sorting
         var itemList = List[(Int, Double)]()
@@ -74,7 +74,8 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
           rowIDDictionary_bcast.value.inverse.getOrElse(rowID, "INVALID_ROW_ID")
         } // "if" returns a line of text so this must be last in the block
       }
-        .saveAsTextFile(dest)
+      val repartitionedRdd = finalMap.repartition(14)
+      repartitionedRdd.saveAsTextFile(dest)
 
     }catch{
       case cce: ClassCastException => {

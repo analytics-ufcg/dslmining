@@ -7,7 +7,7 @@ import org.apache.mahout.math.drm
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.LoggerFactory
-import utils.Writer
+import utils.{Holder, Writer}
 
 /**
  * Producer is a class that produce results. These results (produceds) can be used by any next command, not only the immediately next command
@@ -55,6 +55,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
 
     this.produced.product = userVectorDrm(0)
     this.produced.producer = this
+    Holder.logger.info("USER VECTOR RDD ")
 
     Writer.context = UserVectorDriver.getContext()
     Writer.indexedDataset = UserVectorDriver.indexedDataset

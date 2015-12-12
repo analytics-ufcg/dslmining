@@ -22,7 +22,10 @@ import org.apache.mahout.drivers.MahoutOptionParser
 import org.apache.mahout.math.DenseVector
 import org.apache.mahout.math.drm.{DistributedContext, DrmLike}
 import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDatasetDFSReadElements}
+import org.apache.mahout.sparkbindings.drm.CheckpointedDrmSparkOps
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
+import org.apache.mahout.sparkbindings.drm
+import utils.Holder
 
 /**
  * **************************************************************************
@@ -166,6 +169,7 @@ object UserVectorDriver extends nMinersSparkDriver{
   override def process(): Unit = {
     createSchemas
     mc
+    for(a <- 1 to 100) println("uoui")
     val indexedDatasets = readIndexedDatasets
     indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
