@@ -50,11 +50,11 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
         // first get the external rowID token
         if (!vector.isEmpty){
           println("vector n eh empty")
-          var line = rowID.asInstanceOf[String] + rowKeyDelim
+          var line = rowID + rowKeyDelim
           println("vai escrever line "+line)
           // for the rest of the row, construct the vector contents of elements (external column ID, strength value)
           for (item <- vector) {
-            line += item._1.asInstanceOf[String]
+            line += item._1
             if (!omitScore) line += columnIdStrengthDelim + item._2
             line += elementDelim
           }
@@ -64,7 +64,7 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
           println("passou line dropright")
         } else {//no items so write a line with id but no values, no delimiters
           println("caiu no else, return a rowid")
-          rowID.asInstanceOf[String]
+          rowID
         } // "if" returns a line of text so this must be last in the block
       }.saveAsTextFile(dest)
     }catch{
