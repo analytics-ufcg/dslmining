@@ -75,6 +75,9 @@ object UserVectorDriver extends nMinersSparkDriver{
    println("forname ok")
    sparkMasterUrl = master
    sparkConf.setJars(Array(jar))
+   sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+   sparkConf.setExecutorEnv("SPARK_EXECUTOR_MEMORY", "6G")
+   //sparkConf.s
    mc
    createParse
    super.start()

@@ -35,6 +35,7 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
       require (!dest.isEmpty,"No destination to write to")
 
       val matrix = indexedDataset.matrix.checkpoint()
+      println(matrix.rdd.toDebugString)
       matrix.rdd.map {case (rowID, itemVector) =>
 
         // turn non-zeros into list for sorting
