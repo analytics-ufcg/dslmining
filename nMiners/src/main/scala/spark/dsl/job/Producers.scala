@@ -70,7 +70,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
           sys.exit(-1)
     }
     this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
-    println("*PARTITIONS "+partitions.asInstanceOf[String])
+    println("*PARTITIONS "+partitions)
     val t = this.produced.product.rdd.repartition(partitions)
     this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)
    // this.produced.product = t.asInstanceOf[DrmLike[Int]]
