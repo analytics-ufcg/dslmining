@@ -8,7 +8,10 @@ import hadoop.dsl.notification.NotificationEndServer
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.{Logger, LoggerFactory}
-import utils.Writer
+import org.apache.mahout.sparkbindings.drm.CheckpointedDrmSpark
+import org.apache.mahout.math.drm.{DrmLike, DrmLikeOps, DistributedContext, CheckpointedDrm}
+import org.apache.mahout.sparkbindings._
+import utils.{Holder, Writer}
 
 //import scala.tools.nsc.typechecker.PatternMatching.Logic.False
 
@@ -207,10 +210,19 @@ case class Multiplier(val producedOne: Produced[DrmLike[Int]], val producedTwo: 
     }
   }
   override def run() = {
+    Holder.logger.info("[MULT] Started")
     super.run()
 
+    val m1 = producedOne.product.asInstanceOf[CheckpointedDrmSpark[Int]]
+    m1.rdd.partitions.length
+
+    val m2 = producedTwo.product.checkpoint().asInstanceOf[CheckpointedDrmSpark[Int]]
+    m2.rdd.repartition(16)
+
     produced.product = producedOne.product %*% producedTwo.product
+
     Context.produceds += produced
+    Holder.logger.info("[MULTI] FINISHED")
   }
 }
 

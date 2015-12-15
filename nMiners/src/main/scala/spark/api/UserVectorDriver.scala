@@ -79,7 +79,7 @@ object UserVectorDriver extends nMinersSparkDriver{
    sparkMasterUrl = master
    sparkConf.setJars(Array(jar))
    sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-   sparkConf.setExecutorEnv("SPARK_EXECUTOR_MEMORY", "14G")
+   sparkConf.setExecutorEnv("SPARK_EXECUTOR_MEMORY", "1G")
    //sparkConf.s
    mc
    createParse
@@ -169,7 +169,6 @@ object UserVectorDriver extends nMinersSparkDriver{
   override def process(): Unit = {
     createSchemas
     mc
-    for(a <- 1 to 100) println("uoui")
     val indexedDatasets = readIndexedDatasets
     indexedDataset = indexedDatasets(0)
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
@@ -177,7 +176,6 @@ object UserVectorDriver extends nMinersSparkDriver{
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
     val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
     drmsUserVector = drms
-    val a = indexedDatasets(0).create(drms(0), indexedDatasets(0).columnIDs, indexedDatasets(0).columnIDs)
     val   writeSchema = new Schema(
       "rowKeyDelim" -> parser.opts("rowKeyDelim").asInstanceOf[String],
       "columnIdStrengthDelim" -> parser.opts("columnIdStrengthDelim").asInstanceOf[String],

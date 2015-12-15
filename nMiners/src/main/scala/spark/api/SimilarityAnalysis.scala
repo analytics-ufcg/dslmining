@@ -230,7 +230,7 @@ object SimilarityAnalysis extends Serializable {
                           crossCooccurrence: Boolean = true) = {
     drm.mapBlock() {
       case (keys, block) =>
-        Holder.logger.info("will compute similarities")
+        Holder.logger.info("[CS] will compute similarities")
         val llrBlock = block.like()
         val numInteractionsB: Vector = bcastNumInteractionsB
         val numInteractionsA: Vector = bcastNumInteractionsA
@@ -274,7 +274,7 @@ object SimilarityAnalysis extends Serializable {
               llrBlock(index, otherThing) = llrScore
           }
         }
-        Holder.logger.info("Finished computing similarities")
+        Holder.logger.info("[CS] Finished computing similarities")
         keys -> llrBlock
     }
   }
@@ -301,6 +301,7 @@ object SimilarityAnalysis extends Serializable {
 
     val downSampledDrmI = drmI.mapBlock() {
       case (keys, block) =>
+        Holder.logger.info("[SDB] Started ")
         val numInteractions: Vector = bcastNumInteractions
 
         // Use a hash of the unique first key to seed the RNG, makes this computation repeatable in case of
@@ -329,7 +330,7 @@ object SimilarityAnalysis extends Serializable {
             }
           }
         }
-
+        Holder.logger.info("[SDB] Finished")
         keys -> downsampledBlock
     }
 

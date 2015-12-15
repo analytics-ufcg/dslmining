@@ -1,5 +1,7 @@
 package spark.dsl.job
 
+import utils.Holder
+
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Queue
 import scala.reflect.ClassTag
@@ -21,7 +23,10 @@ object Context {
   def producedsByType[T <: Producer[_]](implicit tag: ClassTag[T]): Option[T] = produceds.find { p => p.producer match {
     case e => (e!= null) && (tag.runtimeClass equals e.getClass)
   }
-  }.map(_.producer.asInstanceOf[T])
+  }.map{
+    Holder.logger.info("[REC PBT] Started")
+    _.producer.asInstanceOf[T]
+  }
 
   def producedsByName(name: String) = produceds.find {
     _.name equals name

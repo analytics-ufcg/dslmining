@@ -47,8 +47,9 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
 
       println(matrix.rdd.toDebugString)
 
+      Holder.logger.info("VAI CHAMAR SAVE AS TEXT")
       val finalMap = matrix.rdd.map { case (rowID, itemVector) =>
-
+        Holder.logger.info("[FM] Started final MyWriter")
         // turn non-zeros into list for sorting
         var itemList = List[(Int, Double)]()
         for (ve <- itemVector.nonZeroes) {
@@ -73,9 +74,13 @@ trait MyWriter extends Writer[IndexedDatasetSpark]{
         } else {//no items so write a line with id but no values, no delimiters
           rowIDDictionary_bcast.value.inverse.getOrElse(rowID, "INVALID_ROW_ID")
         } // "if" returns a line of text so this must be last in the block
+        //Holder.logger.info("[FM] Finished final MyWriter")
       }
-      val repartitionedRdd = finalMap.repartition(14)
-      repartitionedRdd.saveAsTextFile(dest)
+
+      /*val qttExecutors = mc.getExecutorStorageStatus.length
+      val repartitionedRdd = finalMap.repartition(4)
+      repartitionedRdd.saveAsTextFile(dest)*/
+      finalMap.saveAsTextFile(dest)
 
     }catch{
       case cce: ClassCastException => {

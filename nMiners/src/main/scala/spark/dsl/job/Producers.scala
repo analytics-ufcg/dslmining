@@ -8,6 +8,10 @@ import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.LoggerFactory
 import utils.{Holder, Writer}
+import org.apache.mahout.sparkbindings.drm.{DrmRddInput, CheckpointedDrmSpark}
+import org.apache.mahout.math.drm.{DrmLike, DrmLikeOps, DistributedContext, CheckpointedDrm}
+import org.apache.mahout.sparkbindings._
+import org.apache.mahout.sparkbindings
 
 /**
  * Producer is a class that produce results. These results (produceds) can be used by any next command, not only the immediately next command
@@ -53,7 +57,14 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     ))
 
 
-    this.produced.product = userVectorDrm(0)
+    this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
+
+    val t = this.produced.product.rdd.repartition(16)
+    this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)
+   // this.produced.product = t.asInstanceOf[DrmLike[Int]]
+
+    this.produced.product.rdd.partitions.length
+
     this.produced.producer = this
     Holder.logger.info("USER VECTOR RDD ")
 

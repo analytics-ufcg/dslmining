@@ -12,8 +12,8 @@ object Main {
 //    val output = "src/main/resources/output2.dat"
 
      //val dataset = "/home/lucas/mestrado/CODE/generate-test-data/a.csv"
-     //val dataset = "/home/lucas/mestrado/CODE/dslmining/nMiners/data/b.csv"
-     //val output = "/home/lucas/mestrado/CODE/generate-test-data/outwwr"
+     //val dataset = "/home/lucas/mestrado/CODE/dslmining/nMiners/data/generated-input.csv"
+    // val output = "/home/lucas/mestrado/CODE/generate-test-data/outzwz"
      val dataset = args(0)
      val output = args(1)
      //val masterUrl = args(2)
