@@ -1,5 +1,8 @@
 package spark.dsl.job
 
+import java.io.FileInputStream
+import java.util.Properties
+
 import spark.api.{ItemSimilarityDriver, UserVectorDriver}
 
 import spark.api.UserVectorDriver
@@ -56,10 +59,19 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
       "--output", pathToOutput.getOrElse("")
     ))
 
-
+    var partitions = 4;
+    try{
+      val prop = new Properties()
+      prop.load(new FileInputStream("config.prop"))
+      partitions = new Integer(prop.getProperty("nMiners.partitions"))
+    } catch {
+        case e: Exception =>
+          e.printStackTrace()
+          sys.exit(-1)
+    }
     this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
-
-    val t = this.produced.product.rdd.repartition(24)
+    println("*PARTITIONS "+partitions.asInstanceOf[String])
+    val t = this.produced.product.rdd.repartition(partitions)
     this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)
    // this.produced.product = t.asInstanceOf[DrmLike[Int]]
 
