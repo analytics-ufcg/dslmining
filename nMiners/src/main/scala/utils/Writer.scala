@@ -46,12 +46,12 @@ object Writer {
     //val matrixWithNames = indexedDataset.create(drm,indexedDataset.rowIDs,indexedDataset.columnIDs)
     //matrixWithNames.dfsWrite(path,writeSchema)(context)
 
-    val indexedDataSetSpark = new IndexedDatasetSpark(drm, indexedDataset.rowIDs, indexedDataset.columnIDs)
+    //val indexedDataSetSpark = new IndexedDatasetSpark(drm, indexedDataset.rowIDs, indexedDataset.columnIDs)
     //indexedDataset.matrix.checkpoint().dfsWrite(path)
     //indexedDataSetSpark.dfsWrite(path, writeSchema)(UserVectorDriver.getContext())
     val myWriter = new TextDelimitedIndexedDatasetWriter(writeSchema, sort = false)(UserVectorDriver.getContext())
 
-    myWriter.writeTo(indexedDataSetSpark, path)
+    myWriter.writeTo(indexedDataset, path)
     print("Escreveu!")
   }
 

@@ -18,13 +18,13 @@ import scala.collection.JavaConversions._
 object Holder extends Serializable{
   @transient lazy val logger = Logger.getLogger(this.getClass.getCanonicalName)
 }
-trait MyWriter extends Writer[IndexedDatasetSpark]{
+trait MyWriter extends Writer[IndexedDataset]{
 
   protected def writer(
                         mc: DistributedContext,
                         writeSchema: Schema,
                         dest: String,
-                        indexedDataset: IndexedDatasetSpark,
+                        indexedDataset: IndexedDataset,
                         sort: Boolean = true): Unit = {
     @transient lazy val logger = Logger.getLogger(this.getClass.getCanonicalName)
     try {
