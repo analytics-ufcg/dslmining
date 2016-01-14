@@ -8,7 +8,7 @@ import scala.reflect.ClassTag
 
 object Context {
 
-  val masterUrl: String = "spark://ec2-52-33-80-107.us-west-2.compute.amazonaws.com:7077"
+  val masterUrl: String = "spark://ec2-52-89-66-26.us-west-2.compute.amazonaws.com:7077"
   //val masterUrl: String = "local[5]"
   val jar: String = "/opt/nMiners.jar"
   val INPUT_PATH_KEY: String = "INPUT_PATH"
