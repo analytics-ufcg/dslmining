@@ -52,7 +52,7 @@ object Writer {
     //indexedDataSetSpark.dfsWrite(path, writeSchema)(UserVectorDriver.getContext())
     val myWriter = new TextDelimitedIndexedDatasetWriter(writeSchema, sort = false)(UserVectorDriver.getContext())
 
-    myWriter.writeTo(indexedDataset, path)
+    myWriter.writeTo(indexedDataset.asInstanceOf[IndexedDatasetSpark], path)
     print("Escreveu!")
   }
 
