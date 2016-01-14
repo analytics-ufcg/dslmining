@@ -132,7 +132,7 @@ object recommendation extends Producer[DrmLike[Int]] {
 
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      this.produced.product = drmParallelize(this.produced.product, 16) (UserVectorDriver.getContext())
+      //this.produced.product = drmParallelize(this.produced.product, 16) (UserVectorDriver.getContext())
       Writer.writeDRM_userItem(this.produced.product, this.pathToOutput.get)
     }
   }
