@@ -3,16 +3,17 @@ package spark.dsl.job
 import java.io.FileInputStream
 import java.util.Properties
 
-import spark.api.{ItemSimilarityDriver, UserVectorDriver}
-
-import spark.api.UserVectorDriver
+import spark.api
+import spark.api.{UserVectorDriver, ItemSimilarityDriver}
 import org.apache.mahout.math.drm
+import org.apache.mahout.math.drm._
 import org.apache.mahout.math.drm.DrmLike
 import org.apache.mahout.math.drm.RLikeDrmOps._
 import org.slf4j.LoggerFactory
 import utils.{Holder, Writer}
 import org.apache.mahout.sparkbindings.drm.{DrmRddInput, CheckpointedDrmSpark}
 import org.apache.mahout.math.drm.{DrmLike, DrmLikeOps, DistributedContext, CheckpointedDrm}
+import org.apache.mahout.sparkbindings._
 import org.apache.mahout.sparkbindings._
 import org.apache.mahout.sparkbindings
 
@@ -69,11 +70,11 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
           e.printStackTrace()
           sys.exit(-1)
     }
-    this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
+    //this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
+    this.produced.product = drmParallelize(userVectorDrm(0), partitions) (UserVectorDriver.getContext())
     println("*PARTITIONS "+partitions)
-    val t = this.produced.product.rdd.repartition(partitions)
-    this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)
-   // this.produced.product = t.asInstanceOf[DrmLike[Int]]
+    //val t = this.produced.product.rdd.repartition(partitions)
+    //this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)
 
     this.produced.product.rdd.partitions.length
 
@@ -131,7 +132,8 @@ object recommendation extends Producer[DrmLike[Int]] {
 
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_userItem(this.produced.product.asInstanceOf[CheckpointedDrmSpark[Int]], this.pathToOutput.get)
+      this.produced.product = drmParallelize(this.produced.product, 16) (UserVectorDriver.getContext())
+      Writer.writeDRM_userItem(this.produced.product, this.pathToOutput.get)
     }
   }
 
