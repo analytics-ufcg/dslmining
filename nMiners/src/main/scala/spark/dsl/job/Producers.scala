@@ -41,7 +41,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
   override val logger = LoggerFactory.getLogger(this.getClass())
   override def afterJob(): Unit ={
     if (this.isWiretable) {
-      Writer.writeDRM_userItem(this.produced.product, this.pathToOutput.get)
+      Writer.writeDRM_userItem(this.produced.product.asInstanceOf[CheckpointedDrmSpark[Int]], this.pathToOutput.get)
 
     }
   }
