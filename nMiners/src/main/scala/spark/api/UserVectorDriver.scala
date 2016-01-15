@@ -123,7 +123,7 @@ object UserVectorDriver extends nMinersSparkDriver{
       Array()
     } else {
 
-      val datasetA = indexedDatasetDFSReadElements(inFiles, readSchema1)
+      val datasetA = indexedDatasetDFSReadElements(inFiles, readSchema1) (UserVectorDriver.getContext())
       if (parser.opts("writeAllDatasets").asInstanceOf[Boolean])
         datasetA.dfsWrite(parser.opts("output").asInstanceOf[String] + "../input-datasets/primary-interactions",
           schema = writeSchema)
@@ -136,7 +136,7 @@ object UserVectorDriver extends nMinersSparkDriver{
       // be supported (and are at least on Spark) or the row cardinality adjustment will not work.
       val datasetB = if (!inFiles2.isEmpty) {
         // get cross-cooccurrence interactions from separate files
-        val datasetB = indexedDatasetDFSReadElements(inFiles2, readSchema2, existingRowIDs = Some(datasetA.rowIDs))
+        val datasetB = indexedDatasetDFSReadElements(inFiles2, readSchema2, existingRowIDs = Some(datasetA.rowIDs)) (UserVectorDriver.getContext())
 
         datasetB
 
@@ -144,7 +144,7 @@ object UserVectorDriver extends nMinersSparkDriver{
         && parser.opts("filter2").asInstanceOf[String] != null) {
 
         // get cross-cooccurrences interactions by using two filters on a single set of files
-        val datasetB = indexedDatasetDFSReadElements(inFiles, readSchema2, existingRowIDs = Some(datasetA.rowIDs))
+        val datasetB = indexedDatasetDFSReadElements(inFiles, readSchema2, existingRowIDs = Some(datasetA.rowIDs)) (UserVectorDriver.getContext())
 
         datasetB
 
