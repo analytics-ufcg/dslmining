@@ -25,7 +25,11 @@ import org.apache.mahout.math.indexeddataset.{IndexedDataset, Schema, indexedDat
 import org.apache.mahout.sparkbindings.drm.CheckpointedDrmSparkOps
 import org.apache.mahout.sparkbindings.indexeddataset.IndexedDatasetSpark
 import org.apache.mahout.sparkbindings.drm
+import org.apache.mahout.sparkbindings.drm._
+import org.apache.mahout.math.drm._
+import spark.dsl.job.Context
 import utils.Holder
+import spark.dsl._;
 
 /**
  * **************************************************************************
@@ -174,7 +178,9 @@ object UserVectorDriver extends nMinersSparkDriver{
     val randomSeed = parser.opts("randomSeed").asInstanceOf[Int]
     val maxInterestingItemsPerThing = parser.opts("maxSimilaritiesPerItem").asInstanceOf[Int]
     val maxNumInteractions = parser.opts("maxPrefs").asInstanceOf[Int]
-    val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
+    //val drms = indexedDatasets.map(_.matrix.asInstanceOf[DrmLike[Int]])
+    var drms = new Array[DrmLike[Int]](1)
+    drms (0) = drmParallelize(indexedDataset.matrix, Context.partitions)
     drmsUserVector = drms
     val   writeSchema = new Schema(
       "rowKeyDelim" -> parser.opts("rowKeyDelim").asInstanceOf[String],

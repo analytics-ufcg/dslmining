@@ -72,6 +72,7 @@ object user_vectors extends Producer[drm.DrmLike[Int]] {
     }
     //this.produced.product = userVectorDrm(0).asInstanceOf[CheckpointedDrmSpark[Int]]
     this.produced.product = drmParallelize(userVectorDrm(0), partitions) (UserVectorDriver.getContext())
+    Context.partitions = partitions
     println("*PARTITIONS "+partitions)
     //val t = this.produced.product.rdd.repartition(partitions)
     //this.produced.product = drmWrap(t, this.produced.product.nrow, this.produced.product.ncol)

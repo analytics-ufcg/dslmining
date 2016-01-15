@@ -13,6 +13,7 @@ object Context {
   val jar: String = "/opt/nMiners.jar"
   val INPUT_PATH_KEY: String = "INPUT_PATH"
   val OUTPUT_PATH_KEY: String = "OUTPUT_PATH"
+  var partitions = 6
 
   var basePath: String = ""
 
